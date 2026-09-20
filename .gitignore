@@ -1,0 +1,13 @@
+# Datasets descargados y cache de HuggingFace (se regeneran con data_adapter.py)
+data/raw/
+data/processed/
+
+# Checkpoints de modelos (pesados)
+checkpoints/
+*.bin
+*.safetensors
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
