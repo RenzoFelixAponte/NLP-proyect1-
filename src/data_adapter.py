@@ -1,5 +1,5 @@
 """
-Adaptador de datasets para el Proyecto 1 (BERT vs DistilBERT).
+Adaptador de datasets para el Proyecto 1.
 
 Objetivo: que los 3 datasets (SST-2, AG News, Yelp) se vean EXACTAMENTE IGUAL
 para el resto del pipeline. Todos salen normalizados a:
@@ -15,7 +15,7 @@ Asi el codigo de fine-tuning no cambia: solo se cambia el nombre de la tarea.
     ds, info = load_task("yelp", subsample={"train": 50_000, "test": 10_000})
 """
 
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass
 from typing import Optional
 
 from datasets import load_dataset, DatasetDict
@@ -145,7 +145,6 @@ def load_task(task_name: str,
 
     # --- 3. Normalizar nombres de columna ---------------------------------
     def normalize(dataset):
-        cols = dataset.column_names
         if info.text_col != "text":
             dataset = dataset.rename_column(info.text_col, "text")
         if info.label_col != "label":

@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-09-20 16:19:54",
+  "tag": "final",
+  "modelo": "bert",
+  "modelo_nombre": "BERT-base",
+  "modelo_hf_id": "bert-base-uncased",
+  "capas": 12,
+  "tarea": "sst2",
+  "config": {
+    "model": "bert",
+    "task": "sst2",
+    "epochs": 1,
+    "batch_size": 32,
+    "lr": 2e-05,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "max_train": 15000,
+    "max_length": null,
+    "log_every": 200,
+    "eval_every": 400,
+    "no_amp": false,
+    "max_temp": 80,
+    "cooldown": 30,
+    "tag": "final",
+    "out": "results"
+  },
+  "n_train": 15000,
+  "n_val": 6735,
+  "n_test": 872,
+  "max_length": 64,
+  "desempeno_test": {
+    "accuracy": 0.8979357798165137,
+    "precision": 0.8988973791632122,
+    "recall": 0.8975014734360529,
+    "f1": 0.8977710861624508
+  },
+  "por_clase": [
+    {
+      "clase": "negative",
+      "precision": 0.9144254278728606,
+      "recall": 0.8738317757009346,
+      "f1": 0.8936678614097969,
+      "n": 428
+    },
+    {
+      "clase": "positive",
+      "precision": 0.8833693304535637,
+      "recall": 0.9211711711711712,
+      "f1": 0.9018743109151047,
+      "n": 444
+    }
+  ],
+  "matriz_confusion": [
+    [
+      374,
+      54
+    ],
+    [
+      35,
+      409
+    ]
+  ],
+  "eficiencia": {
+    "n_parametros": 109483778,
+    "tamano_mb": 417.65528106689453,
+    "latencia_ms_media": 10.422301999060437,
+    "latencia_ms_std": 1.7326028826386097,
+    "latencia_ms_mediana": 10.009949997765943,
+    "batch_size": 1,
+    "seq_len": 64,
+    "n_runs": 50,
+    "memoria_mb_pico": 1706.20068359375,
+    "memoria_mb_reservada": 1956.0
+  },
+  "tiempo_entrenamiento_s": 134.9445779323578,
+  "historia": [
+    {
+      "paso": 200,
+      "train_loss": 0.409296897649765,
+      "val_loss": null,
+      "lr": 1.2718676122931443e-05
+    },
+    {
+      "paso": 400,
+      "train_loss": 0.26194589734077456,
+      "val_loss": 0.21358110271923914,
+      "lr": 3.262411347517731e-06,
+      "val_accuracy": 0.9144766146993318
+    }
+  ]
+}

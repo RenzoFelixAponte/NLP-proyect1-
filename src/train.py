@@ -1,14 +1,18 @@
 """
-Fine-tuning de BERT (implementacion propia) para clasificacion de texto.
+Fine-tuning de BERT para clasificacion de texto.
 
-Bucle de entrenamiento escrito a mano: no se usa el Trainer de HuggingFace.
-De esa libreria solo se toma el tokenizador WordPiece, porque el vocabulario
-es parte del checkpoint pre-entrenado (usar otro romperia la correspondencia
-token <-> embedding).
+El bucle de entrenamiento esta escrito a mano (no se usa el Trainer de
+HuggingFace) para tener control explicito sobre el scheduler, el clipping
+y el registro de metricas por iteracion que pide el enunciado.
+
+Los modelos salen de `src/models.py`, con los pesos pre-entrenados.
 
 Uso:
     python -m src.train --task sst2 --epochs 2
-    python -m src.train --task sst2 --max-train 2000 --epochs 1   # prueba rapida
+    python -m src.train --task sst2 --max-train 15000 --epochs 1
+
+Control termico (util en laptop):
+    --max-temp 80 --cooldown 30    pausa 30 s si la GPU pasa de 80 C
 """
 
 import os
@@ -25,11 +29,12 @@ from torch.utils.data import DataLoader, TensorDataset
 import json
 import time
 import argparse
+import subprocess
 from pathlib import Path
 
 import numpy as np
 
-from bert import BertConfig, BertForSequenceClassification, load_pretrained, count_parameters
+from src.models import build_model, build_tokenizer, count_parameters
 from src.data_adapter import load_task
 from src.metrics import (
     classification_metrics,
@@ -40,7 +45,6 @@ from src.metrics import (
     model_size_mb,
 )
 
-MODEL_ID = "bert-base-uncased"
 SEED = 42
 
 
@@ -53,13 +57,43 @@ def set_seed(seed=SEED):
     torch.cuda.manual_seed_all(seed)
 
 
+def gpu_temperature():
+    """Temperatura de la GPU en grados Celsius, o None si no se puede leer."""
+    try:
+        salida = subprocess.run(
+            ["nvidia-smi", "--query-gpu=temperature.gpu", "--format=csv,noheader"],
+            capture_output=True, text=True, timeout=5,
+        )
+        return int(salida.stdout.strip().split("\n")[0])
+    except Exception:
+        return None
+
+
+def control_termico(max_temp, cooldown):
+    """
+    Pausa el entrenamiento si la GPU se calienta demasiado.
+
+    En una laptop, sostener 85+ C durante media hora castiga tambien a la
+    bateria y al VRM. Es preferible alargar el entrenamiento que forzar
+    el hardware.
+    """
+    if not max_temp:
+        return
+    t = gpu_temperature()
+    if t is not None and t >= max_temp:
+        print(f"  [termico] GPU a {t} C (limite {max_temp}). "
+              f"Pausando {cooldown} s...")
+        time.sleep(cooldown)
+        t2 = gpu_temperature()
+        print(f"  [termico] reanudando a {t2} C")
+
+
 def build_dataloader(split, tokenizer, max_length, batch_size, shuffle):
     """
     Tokeniza un split completo y lo envuelve en un DataLoader.
 
-    Se tokeniza todo de golpe con padding a max_length fijo. Para datasets
-    de este tamano cabe en RAM sin problema y evita re-tokenizar en cada
-    epoca.
+    Se tokeniza todo de golpe con padding a max_length fijo: para datasets
+    de este tamano cabe en RAM y evita re-tokenizar en cada epoca.
     """
     # list(...) es necesario: en datasets 5.x, split["text"] devuelve un
     # objeto Column, no una lista, y el tokenizador lo rechaza.
@@ -93,12 +127,12 @@ def evaluate(model, loader, device, use_amp):
 
         with torch.autocast(device_type=device.type, dtype=torch.float16,
                             enabled=use_amp):
-            loss, logits = model(input_ids, attention_mask=attention_mask,
-                                 labels=labels)
+            salida = model(input_ids=input_ids, attention_mask=attention_mask,
+                           labels=labels)
 
-        total_loss += loss.item()
+        total_loss += salida.loss.item()
         n_batches += 1
-        all_preds.append(logits.argmax(dim=-1).cpu())
+        all_preds.append(salida.logits.argmax(dim=-1).cpu())
         all_labels.append(labels.cpu())
 
     return (total_loss / max(n_batches, 1),
@@ -108,11 +142,12 @@ def evaluate(model, loader, device, use_amp):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model", default="bert", help="ver src/models.py")
     parser.add_argument("--task", default="sst2", help="sst2 | ag_news | yelp")
     parser.add_argument("--epochs", type=int, default=2)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=2e-5,
-                        help="El paper recomienda 5e-5, 3e-5 o 2e-5 para fine-tuning")
+                        help="El paper recomienda 5e-5, 3e-5 o 2e-5")
     parser.add_argument("--warmup-ratio", type=float, default=0.1)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--max-grad-norm", type=float, default=1.0)
@@ -120,12 +155,17 @@ def main():
                         help="Submuestrear el train (pruebas rapidas o Yelp)")
     parser.add_argument("--max-length", type=int, default=None,
                         help="Por defecto, el recomendado por el dataset")
-    parser.add_argument("--log-every", type=int, default=50,
-                        help="Cada cuantos pasos registrar la loss")
-    parser.add_argument("--eval-every", type=int, default=200,
-                        help="Cada cuantos pasos evaluar en validacion")
+    parser.add_argument("--log-every", type=int, default=100)
+    parser.add_argument("--eval-every", type=int, default=400)
     parser.add_argument("--no-amp", action="store_true",
                         help="Desactivar precision mixta fp16")
+    parser.add_argument("--max-temp", type=int, default=None,
+                        help="Pausar si la GPU supera esta temperatura (C)")
+    parser.add_argument("--cooldown", type=int, default=30,
+                        help="Segundos de pausa al superar --max-temp")
+    parser.add_argument("--tag", default=None,
+                        help="Etiqueta para distinguir corridas "
+                             "(ej. 'smoke', 'final', '3epocas')")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -133,23 +173,30 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     use_amp = (not args.no_amp) and device.type == "cuda"
 
+    # --- Datos -------------------------------------------------------------
+    subsample = {"train": args.max_train} if args.max_train else None
+    ds, info_ds = load_task(args.task, subsample=subsample)
+    max_length = args.max_length or info_ds.max_length
+
+    tokenizer = build_tokenizer(args.model)
+    model, info_m = build_model(args.model, num_labels=info_ds.num_labels)
+    model.to(device)
+
+    n_params = count_parameters(model)
+
     print("=" * 62)
-    print(f"Fine-tuning BERT-base (implementacion propia) | tarea: {args.task}")
+    print(f"Fine-tuning {info_m['nombre']} | tarea: {info_ds.name}")
     print("=" * 62)
     print(f"Dispositivo : {torch.cuda.get_device_name(0) if device.type=='cuda' else 'CPU'}")
     print(f"Precision   : {'fp16 (AMP)' if use_amp else 'fp32'}")
-
-    # --- Datos -------------------------------------------------------------
-    subsample = {"train": args.max_train} if args.max_train else None
-    ds, info = load_task(args.task, subsample=subsample)
-    max_length = args.max_length or info.max_length
-
-    from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
-
-    print(f"\nDataset     : {info.name} ({info.num_labels} clases)")
-    print(f"  train / val / test : {info.n_train:,} / {info.n_val:,} / {info.n_test:,}")
+    if args.max_temp:
+        print(f"Limite term.: {args.max_temp} C (pausa {args.cooldown} s)")
+    print(f"\nDataset     : {info_ds.name} ({info_ds.num_labels} clases)")
+    print(f"  train / val / test : {info_ds.n_train:,} / {info_ds.n_val:,} / {info_ds.n_test:,}")
     print(f"  max_length         : {max_length}")
+    print(f"\nModelo      : {info_m['hf_id']}")
+    print(f"  capas      : {info_m['capas']}")
+    print(f"  parametros : {n_params:,} ({model_size_mb(model):.1f} MB en fp32)")
 
     train_loader = build_dataloader(ds["train"], tokenizer, max_length,
                                     args.batch_size, shuffle=True)
@@ -158,18 +205,9 @@ def main():
     test_loader = build_dataloader(ds["test"], tokenizer, max_length,
                                    args.batch_size, shuffle=False)
 
-    # --- Modelo ------------------------------------------------------------
-    config = BertConfig.base()
-    model = BertForSequenceClassification(config, num_labels=info.num_labels)
-    load_pretrained(model, verbose=False)
-    model.to(device)
-
-    n_params = count_parameters(model)
-    print(f"\nModelo      : {n_params:,} parametros ({model_size_mb(model):.1f} MB en fp32)")
-
     # --- Optimizador -------------------------------------------------------
-    # No se aplica weight decay a bias ni a los parametros de LayerNorm:
-    # son terminos de escala/desplazamiento, penalizarlos degrada el modelo.
+    # No se aplica weight decay a bias ni a LayerNorm: son terminos de
+    # escala/desplazamiento, penalizarlos degrada el modelo.
     no_decay = ["bias", "LayerNorm.weight"]
     grouped = [
         {"params": [p for n, p in model.named_parameters()
@@ -203,7 +241,7 @@ def main():
     t0 = time.time()
 
     for epoca in range(args.epochs):
-        print(f"\n--- Epoca {epoca + 1}/{args.epochs} ---")
+        print(f"\n--- Epoca {epoca + 1}/{args.epochs} ---", flush=True)
         model.train()
         acum_loss, acum_n = 0.0, 0
 
@@ -215,8 +253,9 @@ def main():
             optimizer.zero_grad(set_to_none=True)
             with torch.autocast(device_type=device.type, dtype=torch.float16,
                                 enabled=use_amp):
-                loss, _ = model(input_ids, attention_mask=attention_mask,
-                                labels=labels)
+                salida = model(input_ids=input_ids, attention_mask=attention_mask,
+                               labels=labels)
+            loss = salida.loss
 
             scaler.scale(loss).backward()
             # Hay que des-escalar antes de recortar, o el umbral se aplica
@@ -244,24 +283,27 @@ def main():
                     registro["val_loss"] = val_loss
                     registro["val_accuracy"] = val_acc
                     print(f"  paso {paso_global:5d} | train_loss {train_loss:.4f} "
-                          f"| val_loss {val_loss:.4f} | val_acc {val_acc:.4f}")
+                          f"| val_loss {val_loss:.4f} | val_acc {val_acc:.4f}",
+                          flush=True)
                     model.train()
                 else:
-                    print(f"  paso {paso_global:5d} | train_loss {train_loss:.4f}")
+                    print(f"  paso {paso_global:5d} | train_loss {train_loss:.4f}",
+                          flush=True)
 
                 historia.append(registro)
+                control_termico(args.max_temp, args.cooldown)
 
         # Evaluacion al cierre de cada epoca
         val_loss, val_pred, val_true = evaluate(model, val_loader, device, use_amp)
         m = classification_metrics(val_true, val_pred)
         print(f"  [fin epoca {epoca+1}] val_loss {val_loss:.4f} | "
-              f"acc {m['accuracy']:.4f} | f1 {m['f1']:.4f}")
+              f"acc {m['accuracy']:.4f} | f1 {m['f1']:.4f}", flush=True)
 
         if m["f1"] > mejor_f1:
             mejor_f1 = m["f1"]
             mejor_estado = {k: v.detach().cpu().clone()
                             for k, v in model.state_dict().items()}
-            print(f"  -> mejor modelo hasta ahora (f1 = {mejor_f1:.4f})")
+            print(f"  -> mejor modelo hasta ahora (f1 = {mejor_f1:.4f})", flush=True)
 
     tiempo_entrenamiento = time.time() - t0
     print(f"\nEntrenamiento completado en {tiempo_entrenamiento/60:.1f} min")
@@ -274,7 +316,7 @@ def main():
     desempeno = classification_metrics(test_true, test_pred)
 
     print("\n" + "=" * 62)
-    print(f"RESULTADOS EN TEST ({info.name})")
+    print(f"RESULTADOS EN TEST | {info_m['nombre']} | {info_ds.name}")
     print("=" * 62)
     print(f"  Accuracy  : {desempeno['accuracy']:.4f}")
     print(f"  Precision : {desempeno['precision']:.4f}")
@@ -282,7 +324,7 @@ def main():
     print(f"  F1-score  : {desempeno['f1']:.4f}")
 
     print("\n  Por clase:")
-    for fila in per_class_report(test_true, test_pred, info.class_names):
+    for fila in per_class_report(test_true, test_pred, info_ds.class_names):
         print(f"    {fila['clase']:10s} P {fila['precision']:.3f}  "
               f"R {fila['recall']:.3f}  F1 {fila['f1']:.3f}  (n={fila['n']})")
 
@@ -303,13 +345,18 @@ def main():
     out_dir = Path(args.out)
     (out_dir / "metrics").mkdir(parents=True, exist_ok=True)
     resultado = {
-        "modelo": "bert-base-uncased (implementacion propia)",
-        "tarea": info.name,
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "tag": args.tag,
+        "modelo": args.model,
+        "modelo_nombre": info_m["nombre"],
+        "modelo_hf_id": info_m["hf_id"],
+        "capas": info_m["capas"],
+        "tarea": info_ds.name,
         "config": vars(args),
-        "n_train": info.n_train, "n_val": info.n_val, "n_test": info.n_test,
+        "n_train": info_ds.n_train, "n_val": info_ds.n_val, "n_test": info_ds.n_test,
         "max_length": max_length,
         "desempeno_test": desempeno,
-        "por_clase": per_class_report(test_true, test_pred, info.class_names),
+        "por_clase": per_class_report(test_true, test_pred, info_ds.class_names),
         "matriz_confusion": confusion(test_true, test_pred),
         "eficiencia": {
             "n_parametros": n_params,
@@ -319,7 +366,15 @@ def main():
         "tiempo_entrenamiento_s": tiempo_entrenamiento,
         "historia": historia,
     }
-    destino = out_dir / "metrics" / f"bert_{info.name}.json"
+    # Nombre UNICO por corrida: modelo_tarea[_tag]_fecha-hora.json
+    # Nunca se sobrescribe nada. Antes los archivos se llamaban solo
+    # modelo_tarea.json y una prueba rapida borraba el resultado bueno.
+    partes = [args.model, info_ds.name]
+    if args.tag:
+        partes.append(args.tag)
+    partes.append(time.strftime("%Y%m%d-%H%M%S"))
+    destino = out_dir / "metrics" / ("_".join(partes) + ".json")
+
     destino.write_text(json.dumps(resultado, indent=2, ensure_ascii=False),
                        encoding="utf-8")
     print(f"\nResultados guardados en {destino}")
