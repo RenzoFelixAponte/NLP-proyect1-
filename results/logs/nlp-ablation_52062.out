@@ -1,0 +1,2149 @@
+=== job 52062 en g002 ===
+NVIDIA RTX A6000, 49140 MiB
+=== modelo=distilbert tareas='sst2 ag_news yelp' configs=6 (6) ===
+
+############ distilbert | sst2 | abl-lineal ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4280.78it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,364,418 (253.2 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,364,418 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+/home/diego.quispe/NLP/NLP-proyect1-/src/train.py:328: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scheduler.step()
+  paso   100 | train_loss 0.6639
+  paso   200 | train_loss 0.4039
+  paso   300 | train_loss 0.3101
+  paso   400 | train_loss 0.2909
+  paso   500 | train_loss 0.2669 | val_loss 0.2353 | val_acc 0.9041
+  paso   600 | train_loss 0.2601
+  paso   700 | train_loss 0.2404
+  paso   800 | train_loss 0.2382
+  paso   900 | train_loss 0.2199
+  paso  1000 | train_loss 0.2286 | val_loss 0.1929 | val_acc 0.9247
+  paso  1100 | train_loss 0.2199
+  paso  1200 | train_loss 0.1992
+  paso  1300 | train_loss 0.2137
+  paso  1400 | train_loss 0.2142
+  paso  1500 | train_loss 0.2032 | val_loss 0.1861 | val_acc 0.9321
+  paso  1600 | train_loss 0.1873
+  paso  1700 | train_loss 0.1889
+  paso  1800 | train_loss 0.1594
+  [fin epoca 1] val_loss 0.1742 | acc 0.9387 | f1 0.9380
+  -> mejor modelo hasta ahora (f1 = 0.9380)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1183
+  paso  2000 | train_loss 0.1282 | val_loss 0.1748 | val_acc 0.9430
+  paso  2100 | train_loss 0.1249
+  paso  2200 | train_loss 0.1163
+  paso  2300 | train_loss 0.1197
+  paso  2400 | train_loss 0.1162
+  paso  2500 | train_loss 0.1082 | val_loss 0.1746 | val_acc 0.9437
+  paso  2600 | train_loss 0.1140
+  paso  2700 | train_loss 0.1250
+  paso  2800 | train_loss 0.1257
+  paso  2900 | train_loss 0.1181
+  paso  3000 | train_loss 0.1323 | val_loss 0.1662 | val_acc 0.9458
+  paso  3100 | train_loss 0.1149
+  paso  3200 | train_loss 0.1131
+  paso  3300 | train_loss 0.1312
+  paso  3400 | train_loss 0.1117
+  paso  3500 | train_loss 0.1081 | val_loss 0.1680 | val_acc 0.9464
+  paso  3600 | train_loss 0.1121
+  paso  3700 | train_loss 0.1147
+  [fin epoca 2] val_loss 0.1687 | acc 0.9488 | f1 0.9483
+  -> mejor modelo hasta ahora (f1 = 0.9483)
+
+Entrenamiento completado en 1.7 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9094
+  Precision : 0.9099
+  Recall    : 0.9091
+  F1-score  : 0.9093
+
+  Por clase:
+    negative   P 0.920  R 0.893  F1 0.906  (n=428)
+    positive   P 0.899  R 0.926  F1 0.912  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,364,418
+  Tamano (fp32)     : 253.2 MB
+  Latencia (batch=1): 1.70 +/- 0.03 ms
+  Memoria GPU pico  : 1047.3 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-lineal_20260921-011419.json
+
+############ distilbert | sst2 | abl-h128 ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2900.48it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,461,570 (253.5 MB en fp32)
+  cabeza     : [128] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,461,570 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6858
+  paso   200 | train_loss 0.4614
+  paso   300 | train_loss 0.3324
+  paso   400 | train_loss 0.2864
+  paso   500 | train_loss 0.2662 | val_loss 0.2437 | val_acc 0.9051
+  paso   600 | train_loss 0.2475
+  paso   700 | train_loss 0.2614
+  paso   800 | train_loss 0.2326
+  paso   900 | train_loss 0.2467
+  paso  1000 | train_loss 0.2250 | val_loss 0.2033 | val_acc 0.9272
+  paso  1100 | train_loss 0.2242
+  paso  1200 | train_loss 0.2088
+  paso  1300 | train_loss 0.2047
+  paso  1400 | train_loss 0.1857
+  paso  1500 | train_loss 0.1979 | val_loss 0.1791 | val_acc 0.9375
+  paso  1600 | train_loss 0.1725
+  paso  1700 | train_loss 0.1840
+  paso  1800 | train_loss 0.1787
+  [fin epoca 1] val_loss 0.1666 | acc 0.9437 | f1 0.9433
+  -> mejor modelo hasta ahora (f1 = 0.9433)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1975
+  paso  2000 | train_loss 0.1074 | val_loss 0.1903 | val_acc 0.9430
+  paso  2100 | train_loss 0.1223
+  paso  2200 | train_loss 0.1195
+  paso  2300 | train_loss 0.1261
+  paso  2400 | train_loss 0.1230
+  paso  2500 | train_loss 0.1421 | val_loss 0.1893 | val_acc 0.9421
+  paso  2600 | train_loss 0.1220
+  paso  2700 | train_loss 0.1543
+  paso  2800 | train_loss 0.1279
+  paso  2900 | train_loss 0.1317
+  paso  3000 | train_loss 0.1218 | val_loss 0.1691 | val_acc 0.9479
+  paso  3100 | train_loss 0.1179
+  paso  3200 | train_loss 0.1086
+  paso  3300 | train_loss 0.1241
+  paso  3400 | train_loss 0.1277
+  paso  3500 | train_loss 0.1225 | val_loss 0.1712 | val_acc 0.9474
+  paso  3600 | train_loss 0.1247
+  paso  3700 | train_loss 0.1219
+  [fin epoca 2] val_loss 0.1679 | acc 0.9485 | f1 0.9480
+  -> mejor modelo hasta ahora (f1 = 0.9480)
+
+Entrenamiento completado en 2.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9140
+  Precision : 0.9142
+  Recall    : 0.9138
+  F1-score  : 0.9139
+
+  Por clase:
+    negative   P 0.919  R 0.904  F1 0.912  (n=428)
+    positive   P 0.909  R 0.923  F1 0.916  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,461,570
+  Tamano (fp32)     : 253.5 MB
+  Latencia (batch=1): 1.77 +/- 0.02 ms
+  Memoria GPU pico  : 1048.3 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-h128_20260921-011700.json
+
+############ distilbert | sst2 | abl-h768 ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4567.17it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,955,010 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6800
+  paso   200 | train_loss 0.4173
+  paso   300 | train_loss 0.3305
+  paso   400 | train_loss 0.2875
+  paso   500 | train_loss 0.2686 | val_loss 0.2474 | val_acc 0.9060
+  paso   600 | train_loss 0.2714
+  paso   700 | train_loss 0.2307
+  paso   800 | train_loss 0.2461
+  paso   900 | train_loss 0.2279
+  paso  1000 | train_loss 0.2244 | val_loss 0.1973 | val_acc 0.9247
+  paso  1100 | train_loss 0.2270
+  paso  1200 | train_loss 0.1929
+  paso  1300 | train_loss 0.1839
+  paso  1400 | train_loss 0.2013
+  paso  1500 | train_loss 0.1830 | val_loss 0.1861 | val_acc 0.9323
+  paso  1600 | train_loss 0.1886
+  paso  1700 | train_loss 0.1770
+  paso  1800 | train_loss 0.1814
+  [fin epoca 1] val_loss 0.1624 | acc 0.9431 | f1 0.9426
+  -> mejor modelo hasta ahora (f1 = 0.9426)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.0984
+  paso  2000 | train_loss 0.1028 | val_loss 0.2031 | val_acc 0.9416
+  paso  2100 | train_loss 0.1397
+  paso  2200 | train_loss 0.1282
+  paso  2300 | train_loss 0.1428
+  paso  2400 | train_loss 0.1106
+  paso  2500 | train_loss 0.1161 | val_loss 0.1817 | val_acc 0.9455
+  paso  2600 | train_loss 0.1235
+  paso  2700 | train_loss 0.1279
+  paso  2800 | train_loss 0.1327
+  paso  2900 | train_loss 0.1146
+  paso  3000 | train_loss 0.1140 | val_loss 0.1861 | val_acc 0.9460
+  paso  3100 | train_loss 0.1234
+  paso  3200 | train_loss 0.1035
+  paso  3300 | train_loss 0.1365
+  paso  3400 | train_loss 0.1165
+  paso  3500 | train_loss 0.1138 | val_loss 0.1692 | val_acc 0.9479
+  paso  3600 | train_loss 0.1054
+  paso  3700 | train_loss 0.1292
+  [fin epoca 2] val_loss 0.1667 | acc 0.9489 | f1 0.9485
+  -> mejor modelo hasta ahora (f1 = 0.9485)
+
+Entrenamiento completado en 2.7 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9025
+  Precision : 0.9026
+  Recall    : 0.9024
+  F1-score  : 0.9025
+
+  Por clase:
+    negative   P 0.905  R 0.895  F1 0.900  (n=428)
+    positive   P 0.900  R 0.910  F1 0.905  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 3.50 +/- 0.05 ms
+  Memoria GPU pico  : 1056.4 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-h768_20260921-012013.json
+
+############ distilbert | sst2 | abl-h2048 ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 5590.84it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 67,941,890 (259.2 MB en fp32)
+  cabeza     : [2048] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 67,941,890 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6904
+  paso   200 | train_loss 0.4078
+  paso   300 | train_loss 0.3150
+  paso   400 | train_loss 0.3173
+  paso   500 | train_loss 0.2934 | val_loss 0.2455 | val_acc 0.9038
+  paso   600 | train_loss 0.2524
+  paso   700 | train_loss 0.2559
+  paso   800 | train_loss 0.2167
+  paso   900 | train_loss 0.2242
+  paso  1000 | train_loss 0.2232 | val_loss 0.2258 | val_acc 0.9166
+  paso  1100 | train_loss 0.2034
+  paso  1200 | train_loss 0.2113
+  paso  1300 | train_loss 0.1936
+  paso  1400 | train_loss 0.2041
+  paso  1500 | train_loss 0.1922 | val_loss 0.1763 | val_acc 0.9365
+  paso  1600 | train_loss 0.1832
+  paso  1700 | train_loss 0.1795
+  paso  1800 | train_loss 0.1918
+  [fin epoca 1] val_loss 0.1746 | acc 0.9416 | f1 0.9413
+  -> mejor modelo hasta ahora (f1 = 0.9413)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1115
+  paso  2000 | train_loss 0.1274 | val_loss 0.1872 | val_acc 0.9415
+  paso  2100 | train_loss 0.1273
+  paso  2200 | train_loss 0.1273
+  paso  2300 | train_loss 0.1134
+  paso  2400 | train_loss 0.1296
+  paso  2500 | train_loss 0.1137 | val_loss 0.1920 | val_acc 0.9437
+  paso  2600 | train_loss 0.1156
+  paso  2700 | train_loss 0.1314
+  paso  2800 | train_loss 0.1150
+  paso  2900 | train_loss 0.1074
+  paso  3000 | train_loss 0.1316 | val_loss 0.1621 | val_acc 0.9465
+  paso  3100 | train_loss 0.1088
+  paso  3200 | train_loss 0.1143
+  paso  3300 | train_loss 0.1130
+  paso  3400 | train_loss 0.1221
+  paso  3500 | train_loss 0.1272 | val_loss 0.1720 | val_acc 0.9464
+  paso  3600 | train_loss 0.1033
+  paso  3700 | train_loss 0.1259
+  [fin epoca 2] val_loss 0.1700 | acc 0.9474 | f1 0.9470
+  -> mejor modelo hasta ahora (f1 = 0.9470)
+
+Entrenamiento completado en 2.7 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9025
+  Precision : 0.9030
+  Recall    : 0.9022
+  F1-score  : 0.9024
+
+  Por clase:
+    negative   P 0.913  R 0.886  F1 0.899  (n=428)
+    positive   P 0.893  R 0.919  F1 0.906  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 67,941,890
+  Tamano (fp32)     : 259.2 MB
+  Latencia (batch=1): 3.41 +/- 0.05 ms
+  Memoria GPU pico  : 1070.5 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-h2048_20260921-012326.json
+
+############ distilbert | sst2 | abl-c2 ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2688.50it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,888,450 (255.2 MB en fp32)
+  cabeza     : [512, 256] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,888,450 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6866
+  paso   200 | train_loss 0.5000
+  paso   300 | train_loss 0.3589
+  paso   400 | train_loss 0.3106
+  paso   500 | train_loss 0.2790 | val_loss 0.2409 | val_acc 0.9081
+  paso   600 | train_loss 0.2410
+  paso   700 | train_loss 0.2454
+  paso   800 | train_loss 0.2391
+  paso   900 | train_loss 0.2415
+  paso  1000 | train_loss 0.2292 | val_loss 0.2058 | val_acc 0.9223
+  paso  1100 | train_loss 0.2265
+  paso  1200 | train_loss 0.2192
+  paso  1300 | train_loss 0.1678
+  paso  1400 | train_loss 0.1889
+  paso  1500 | train_loss 0.2002 | val_loss 0.1805 | val_acc 0.9342
+  paso  1600 | train_loss 0.1969
+  paso  1700 | train_loss 0.2083
+  paso  1800 | train_loss 0.1825
+  [fin epoca 1] val_loss 0.1684 | acc 0.9419 | f1 0.9414
+  -> mejor modelo hasta ahora (f1 = 0.9414)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1178
+  paso  2000 | train_loss 0.1256 | val_loss 0.1869 | val_acc 0.9367
+  paso  2100 | train_loss 0.1415
+  paso  2200 | train_loss 0.1161
+  paso  2300 | train_loss 0.1266
+  paso  2400 | train_loss 0.1312
+  paso  2500 | train_loss 0.1402 | val_loss 0.1697 | val_acc 0.9449
+  paso  2600 | train_loss 0.1298
+  paso  2700 | train_loss 0.1304
+  paso  2800 | train_loss 0.1351
+  paso  2900 | train_loss 0.1102
+  paso  3000 | train_loss 0.1404 | val_loss 0.1680 | val_acc 0.9461
+  paso  3100 | train_loss 0.1138
+  paso  3200 | train_loss 0.1253
+  paso  3300 | train_loss 0.1216
+  paso  3400 | train_loss 0.1008
+  paso  3500 | train_loss 0.1135 | val_loss 0.1782 | val_acc 0.9480
+  paso  3600 | train_loss 0.1091
+  paso  3700 | train_loss 0.1200
+  [fin epoca 2] val_loss 0.1719 | acc 0.9480 | f1 0.9476
+  -> mejor modelo hasta ahora (f1 = 0.9476)
+
+Entrenamiento completado en 2.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9025
+  Precision : 0.9032
+  Recall    : 0.9022
+  F1-score  : 0.9024
+
+  Por clase:
+    negative   P 0.915  R 0.883  F1 0.899  (n=428)
+    positive   P 0.891  R 0.921  F1 0.906  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,888,450
+  Tamano (fp32)     : 255.2 MB
+  Latencia (batch=1): 1.80 +/- 0.02 ms
+  Memoria GPU pico  : 1057.5 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-c2_20260921-012608.json
+
+############ distilbert | sst2 | abl-frz ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 5084.19it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=True capas=None
+  entrenables: 592,130 (0.9% del total)
+Optimizador : AdamW lr=0.001, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6228
+  paso   200 | train_loss 0.4547
+  paso   300 | train_loss 0.4243
+  paso   400 | train_loss 0.4152
+  paso   500 | train_loss 0.3943 | val_loss 0.3631 | val_acc 0.8343
+  paso   600 | train_loss 0.4012
+  paso   700 | train_loss 0.3974
+  paso   800 | train_loss 0.3927
+  paso   900 | train_loss 0.3778
+  paso  1000 | train_loss 0.3979 | val_loss 0.3513 | val_acc 0.8466
+  paso  1100 | train_loss 0.3960
+  paso  1200 | train_loss 0.3916
+  paso  1300 | train_loss 0.3751
+  paso  1400 | train_loss 0.3880
+  paso  1500 | train_loss 0.3716 | val_loss 0.3281 | val_acc 0.8514
+  paso  1600 | train_loss 0.3793
+  paso  1700 | train_loss 0.3735
+  paso  1800 | train_loss 0.3647
+  [fin epoca 1] val_loss 0.3295 | acc 0.8567 | f1 0.8563
+  -> mejor modelo hasta ahora (f1 = 0.8563)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.3669
+  paso  2000 | train_loss 0.3576 | val_loss 0.3229 | val_acc 0.8548
+  paso  2100 | train_loss 0.3606
+  paso  2200 | train_loss 0.3796
+  paso  2300 | train_loss 0.3622
+  paso  2400 | train_loss 0.3758
+  paso  2500 | train_loss 0.3601 | val_loss 0.3177 | val_acc 0.8595
+  paso  2600 | train_loss 0.3502
+  paso  2700 | train_loss 0.3724
+  paso  2800 | train_loss 0.3853
+  paso  2900 | train_loss 0.3611
+  paso  3000 | train_loss 0.3507 | val_loss 0.3278 | val_acc 0.8581
+  paso  3100 | train_loss 0.3503
+  paso  3200 | train_loss 0.3614
+  paso  3300 | train_loss 0.3403
+  paso  3400 | train_loss 0.3508
+  paso  3500 | train_loss 0.3548 | val_loss 0.3175 | val_acc 0.8581
+  paso  3600 | train_loss 0.3523
+  paso  3700 | train_loss 0.3506
+  [fin epoca 2] val_loss 0.3129 | acc 0.8586 | f1 0.8574
+  -> mejor modelo hasta ahora (f1 = 0.8574)
+
+Entrenamiento completado en 0.5 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.8326
+  Precision : 0.8326
+  Recall    : 0.8327
+  F1-score  : 0.8326
+
+  Por clase:
+    negative   P 0.823  R 0.839  F1 0.831  (n=428)
+    positive   P 0.842  R 0.827  F1 0.834  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 1.77 +/- 0.02 ms
+  Memoria GPU pico  : 282.6 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_abl-frz_20260921-012709.json
+
+############ distilbert | ag_news | abl-lineal ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 3632.88it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,365,956 (253.2 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,365,956 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3845
+  paso   200 | train_loss 0.7130
+  paso   300 | train_loss 0.3331
+  paso   400 | train_loss 0.3109
+  paso   500 | train_loss 0.2901 | val_loss 0.2687 | val_acc 0.9087
+  paso   600 | train_loss 0.2743
+  paso   700 | train_loss 0.2591
+  paso   800 | train_loss 0.2542
+  paso   900 | train_loss 0.2383
+  paso  1000 | train_loss 0.2525 | val_loss 0.2394 | val_acc 0.9170
+  paso  1100 | train_loss 0.2253
+  paso  1200 | train_loss 0.2165
+  paso  1300 | train_loss 0.2327
+  paso  1400 | train_loss 0.2153
+  paso  1500 | train_loss 0.2485 | val_loss 0.2124 | val_acc 0.9270
+  paso  1600 | train_loss 0.2205
+  paso  1700 | train_loss 0.1984
+  paso  1800 | train_loss 0.2351
+  paso  1900 | train_loss 0.2061
+  paso  2000 | train_loss 0.2043 | val_loss 0.1912 | val_acc 0.9363
+  paso  2100 | train_loss 0.2094
+  paso  2200 | train_loss 0.1900
+  paso  2300 | train_loss 0.1926
+  paso  2400 | train_loss 0.1927
+  paso  2500 | train_loss 0.1833 | val_loss 0.1927 | val_acc 0.9367
+  paso  2600 | train_loss 0.1996
+  paso  2700 | train_loss 0.1734
+  paso  2800 | train_loss 0.1928
+  paso  2900 | train_loss 0.1724
+  paso  3000 | train_loss 0.1873 | val_loss 0.1767 | val_acc 0.9389
+  paso  3100 | train_loss 0.1762
+  paso  3200 | train_loss 0.1624
+  paso  3300 | train_loss 0.1950
+  [fin epoca 1] val_loss 0.1751 | acc 0.9411 | f1 0.9407
+  -> mejor modelo hasta ahora (f1 = 0.9407)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1123
+  paso  3500 | train_loss 0.1594 | val_loss 0.1809 | val_acc 0.9405
+  paso  3600 | train_loss 0.1347
+  paso  3700 | train_loss 0.1451
+  paso  3800 | train_loss 0.1468
+  paso  3900 | train_loss 0.1308
+  paso  4000 | train_loss 0.1546 | val_loss 0.1818 | val_acc 0.9391
+  paso  4100 | train_loss 0.1254
+  paso  4200 | train_loss 0.1458
+  paso  4300 | train_loss 0.1325
+  paso  4400 | train_loss 0.1470
+  paso  4500 | train_loss 0.1420 | val_loss 0.1791 | val_acc 0.9431
+  paso  4600 | train_loss 0.1315
+  paso  4700 | train_loss 0.1424
+  paso  4800 | train_loss 0.1310
+  paso  4900 | train_loss 0.1264
+  paso  5000 | train_loss 0.1331 | val_loss 0.1762 | val_acc 0.9433
+  paso  5100 | train_loss 0.1350
+  paso  5200 | train_loss 0.1224
+  paso  5300 | train_loss 0.1448
+  paso  5400 | train_loss 0.1392
+  paso  5500 | train_loss 0.1195 | val_loss 0.1774 | val_acc 0.9443
+  paso  5600 | train_loss 0.1382
+  paso  5700 | train_loss 0.1279
+  paso  5800 | train_loss 0.1096
+  paso  5900 | train_loss 0.1134
+  paso  6000 | train_loss 0.1393 | val_loss 0.1731 | val_acc 0.9464
+  paso  6100 | train_loss 0.1234
+  paso  6200 | train_loss 0.1234
+  paso  6300 | train_loss 0.1414
+  paso  6400 | train_loss 0.1304
+  paso  6500 | train_loss 0.1347 | val_loss 0.1684 | val_acc 0.9473
+  paso  6600 | train_loss 0.1279
+  paso  6700 | train_loss 0.1280
+  [fin epoca 2] val_loss 0.1691 | acc 0.9465 | f1 0.9462
+  -> mejor modelo hasta ahora (f1 = 0.9462)
+
+Entrenamiento completado en 5.4 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9442
+  Precision : 0.9443
+  Recall    : 0.9442
+  F1-score  : 0.9442
+
+  Por clase:
+    World      P 0.960  R 0.950  F1 0.955  (n=1900)
+    Sports     P 0.986  R 0.989  F1 0.988  (n=1900)
+    Business   P 0.923  R 0.908  F1 0.916  (n=1900)
+    Sci/Tech   P 0.908  R 0.929  F1 0.919  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,365,956
+  Tamano (fp32)     : 253.2 MB
+  Latencia (batch=1): 3.48 +/- 0.05 ms
+  Memoria GPU pico  : 1053.9 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-lineal_20260921-013324.json
+
+############ distilbert | ag_news | abl-h128 ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2417.70it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,461,828 (253.5 MB en fp32)
+  cabeza     : [128] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,461,828 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3571
+  paso   200 | train_loss 0.9494
+  paso   300 | train_loss 0.4434
+  paso   400 | train_loss 0.3482
+  paso   500 | train_loss 0.3259 | val_loss 0.2940 | val_acc 0.9067
+  paso   600 | train_loss 0.3098
+  paso   700 | train_loss 0.2861
+  paso   800 | train_loss 0.2838
+  paso   900 | train_loss 0.2592
+  paso  1000 | train_loss 0.2791 | val_loss 0.2425 | val_acc 0.9212
+  paso  1100 | train_loss 0.2429
+  paso  1200 | train_loss 0.2314
+  paso  1300 | train_loss 0.2573
+  paso  1400 | train_loss 0.2390
+  paso  1500 | train_loss 0.2243 | val_loss 0.2129 | val_acc 0.9269
+  paso  1600 | train_loss 0.2101
+  paso  1700 | train_loss 0.2192
+  paso  1800 | train_loss 0.2189
+  paso  1900 | train_loss 0.2054
+  paso  2000 | train_loss 0.1990 | val_loss 0.2173 | val_acc 0.9279
+  paso  2100 | train_loss 0.2178
+  paso  2200 | train_loss 0.2080
+  paso  2300 | train_loss 0.2138
+  paso  2400 | train_loss 0.2096
+  paso  2500 | train_loss 0.1913 | val_loss 0.2056 | val_acc 0.9298
+  paso  2600 | train_loss 0.2060
+  paso  2700 | train_loss 0.1959
+  paso  2800 | train_loss 0.2003
+  paso  2900 | train_loss 0.1905
+  paso  3000 | train_loss 0.2054 | val_loss 0.1924 | val_acc 0.9357
+  paso  3100 | train_loss 0.2080
+  paso  3200 | train_loss 0.1980
+  paso  3300 | train_loss 0.1753
+  [fin epoca 1] val_loss 0.1902 | acc 0.9361 | f1 0.9354
+  -> mejor modelo hasta ahora (f1 = 0.9354)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1539
+  paso  3500 | train_loss 0.1255 | val_loss 0.1909 | val_acc 0.9365
+  paso  3600 | train_loss 0.1670
+  paso  3700 | train_loss 0.1316
+  paso  3800 | train_loss 0.1435
+  paso  3900 | train_loss 0.1572
+  paso  4000 | train_loss 0.1348 | val_loss 0.1825 | val_acc 0.9415
+  paso  4100 | train_loss 0.1460
+  paso  4200 | train_loss 0.1383
+  paso  4300 | train_loss 0.1448
+  paso  4400 | train_loss 0.1407
+  paso  4500 | train_loss 0.1459 | val_loss 0.1806 | val_acc 0.9411
+  paso  4600 | train_loss 0.1558
+  paso  4700 | train_loss 0.1509
+  paso  4800 | train_loss 0.1433
+  paso  4900 | train_loss 0.1221
+  paso  5000 | train_loss 0.1752 | val_loss 0.1780 | val_acc 0.9428
+  paso  5100 | train_loss 0.1310
+  paso  5200 | train_loss 0.1442
+  paso  5300 | train_loss 0.1363
+  paso  5400 | train_loss 0.1373
+  paso  5500 | train_loss 0.1561 | val_loss 0.1782 | val_acc 0.9425
+  paso  5600 | train_loss 0.1440
+  paso  5700 | train_loss 0.1582
+  paso  5800 | train_loss 0.1415
+  paso  5900 | train_loss 0.1504
+  paso  6000 | train_loss 0.1344 | val_loss 0.1754 | val_acc 0.9446
+  paso  6100 | train_loss 0.1413
+  paso  6200 | train_loss 0.1492
+  paso  6300 | train_loss 0.1298
+  paso  6400 | train_loss 0.1261
+  paso  6500 | train_loss 0.1416 | val_loss 0.1730 | val_acc 0.9457
+  paso  6600 | train_loss 0.1273
+  paso  6700 | train_loss 0.1182
+  [fin epoca 2] val_loss 0.1731 | acc 0.9457 | f1 0.9454
+  -> mejor modelo hasta ahora (f1 = 0.9454)
+
+Entrenamiento completado en 5.5 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9446
+  Precision : 0.9448
+  Recall    : 0.9446
+  F1-score  : 0.9446
+
+  Por clase:
+    World      P 0.964  R 0.945  F1 0.954  (n=1900)
+    Sports     P 0.986  R 0.991  F1 0.988  (n=1900)
+    Business   P 0.918  R 0.912  F1 0.915  (n=1900)
+    Sci/Tech   P 0.911  R 0.931  F1 0.921  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,461,828
+  Tamano (fp32)     : 253.5 MB
+  Latencia (batch=1): 3.52 +/- 0.05 ms
+  Memoria GPU pico  : 1055.4 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-h128_20260921-013943.json
+
+############ distilbert | ag_news | abl-h768 ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2642.46it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,956,548 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,956,548 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3629
+  paso   200 | train_loss 0.9569
+  paso   300 | train_loss 0.4138
+  paso   400 | train_loss 0.3182
+  paso   500 | train_loss 0.3172 | val_loss 0.2876 | val_acc 0.9064
+  paso   600 | train_loss 0.2989
+  paso   700 | train_loss 0.2872
+  paso   800 | train_loss 0.2601
+  paso   900 | train_loss 0.2532
+  paso  1000 | train_loss 0.2305 | val_loss 0.2427 | val_acc 0.9205
+  paso  1100 | train_loss 0.2563
+  paso  1200 | train_loss 0.2328
+  paso  1300 | train_loss 0.2360
+  paso  1400 | train_loss 0.2236
+  paso  1500 | train_loss 0.2330 | val_loss 0.2135 | val_acc 0.9264
+  paso  1600 | train_loss 0.2037
+  paso  1700 | train_loss 0.2199
+  paso  1800 | train_loss 0.2069
+  paso  1900 | train_loss 0.2176
+  paso  2000 | train_loss 0.2219 | val_loss 0.2028 | val_acc 0.9297
+  paso  2100 | train_loss 0.2163
+  paso  2200 | train_loss 0.1818
+  paso  2300 | train_loss 0.2145
+  paso  2400 | train_loss 0.2106
+  paso  2500 | train_loss 0.1893 | val_loss 0.1926 | val_acc 0.9333
+  paso  2600 | train_loss 0.1805
+  paso  2700 | train_loss 0.1956
+  paso  2800 | train_loss 0.1970
+  paso  2900 | train_loss 0.1996
+  paso  3000 | train_loss 0.1960 | val_loss 0.1824 | val_acc 0.9384
+  paso  3100 | train_loss 0.1951
+  paso  3200 | train_loss 0.1845
+  paso  3300 | train_loss 0.1796
+  [fin epoca 1] val_loss 0.1806 | acc 0.9384 | f1 0.9381
+  -> mejor modelo hasta ahora (f1 = 0.9381)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1958
+  paso  3500 | train_loss 0.1601 | val_loss 0.1787 | val_acc 0.9414
+  paso  3600 | train_loss 0.1354
+  paso  3700 | train_loss 0.1357
+  paso  3800 | train_loss 0.1489
+  paso  3900 | train_loss 0.1402
+  paso  4000 | train_loss 0.1440 | val_loss 0.1851 | val_acc 0.9418
+  paso  4100 | train_loss 0.1484
+  paso  4200 | train_loss 0.1494
+  paso  4300 | train_loss 0.1334
+  paso  4400 | train_loss 0.1351
+  paso  4500 | train_loss 0.1348 | val_loss 0.1826 | val_acc 0.9414
+  paso  4600 | train_loss 0.1525
+  paso  4700 | train_loss 0.1463
+  paso  4800 | train_loss 0.1437
+  paso  4900 | train_loss 0.1453
+  paso  5000 | train_loss 0.1180 | val_loss 0.1827 | val_acc 0.9403
+  paso  5100 | train_loss 0.1393
+  paso  5200 | train_loss 0.1370
+  paso  5300 | train_loss 0.1531
+  paso  5400 | train_loss 0.1341
+  paso  5500 | train_loss 0.1239 | val_loss 0.1810 | val_acc 0.9413
+  paso  5600 | train_loss 0.1314
+  paso  5700 | train_loss 0.1407
+  paso  5800 | train_loss 0.1229
+  paso  5900 | train_loss 0.1314
+  paso  6000 | train_loss 0.1333 | val_loss 0.1751 | val_acc 0.9427
+  paso  6100 | train_loss 0.1257
+  paso  6200 | train_loss 0.1347
+  paso  6300 | train_loss 0.1271
+  paso  6400 | train_loss 0.1269
+  paso  6500 | train_loss 0.1263 | val_loss 0.1751 | val_acc 0.9429
+  paso  6600 | train_loss 0.1378
+  paso  6700 | train_loss 0.1304
+  [fin epoca 2] val_loss 0.1748 | acc 0.9429 | f1 0.9427
+  -> mejor modelo hasta ahora (f1 = 0.9427)
+
+Entrenamiento completado en 5.5 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9441
+  Precision : 0.9444
+  Recall    : 0.9441
+  F1-score  : 0.9442
+
+  Por clase:
+    World      P 0.965  R 0.945  F1 0.955  (n=1900)
+    Sports     P 0.986  R 0.986  F1 0.986  (n=1900)
+    Business   P 0.921  R 0.914  F1 0.918  (n=1900)
+    Sci/Tech   P 0.906  R 0.932  F1 0.919  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,956,548
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 3.54 +/- 0.04 ms
+  Memoria GPU pico  : 1062.2 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-h768_20260921-014615.json
+
+############ distilbert | ag_news | abl-h2048 ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2501.66it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 67,945,988 (259.2 MB en fp32)
+  cabeza     : [2048] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 67,945,988 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3622
+  paso   200 | train_loss 0.8594
+  paso   300 | train_loss 0.4071
+  paso   400 | train_loss 0.3146
+  paso   500 | train_loss 0.2954 | val_loss 0.2807 | val_acc 0.9075
+  paso   600 | train_loss 0.2939
+  paso   700 | train_loss 0.2625
+  paso   800 | train_loss 0.2838
+  paso   900 | train_loss 0.2623
+  paso  1000 | train_loss 0.2476 | val_loss 0.2431 | val_acc 0.9177
+  paso  1100 | train_loss 0.2301
+  paso  1200 | train_loss 0.2373
+  paso  1300 | train_loss 0.2134
+  paso  1400 | train_loss 0.2081
+  paso  1500 | train_loss 0.2153 | val_loss 0.2122 | val_acc 0.9259
+  paso  1600 | train_loss 0.2011
+  paso  1700 | train_loss 0.2140
+  paso  1800 | train_loss 0.2325
+  paso  1900 | train_loss 0.2005
+  paso  2000 | train_loss 0.1901 | val_loss 0.2042 | val_acc 0.9325
+  paso  2100 | train_loss 0.2140
+  paso  2200 | train_loss 0.2046
+  paso  2300 | train_loss 0.1977
+  paso  2400 | train_loss 0.2142
+  paso  2500 | train_loss 0.1914 | val_loss 0.1925 | val_acc 0.9357
+  paso  2600 | train_loss 0.1761
+  paso  2700 | train_loss 0.1864
+  paso  2800 | train_loss 0.1937
+  paso  2900 | train_loss 0.1788
+  paso  3000 | train_loss 0.1869 | val_loss 0.1834 | val_acc 0.9383
+  paso  3100 | train_loss 0.1885
+  paso  3200 | train_loss 0.1852
+  paso  3300 | train_loss 0.1840
+  [fin epoca 1] val_loss 0.1826 | acc 0.9380 | f1 0.9376
+  -> mejor modelo hasta ahora (f1 = 0.9376)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1457
+  paso  3500 | train_loss 0.1327 | val_loss 0.1860 | val_acc 0.9398
+  paso  3600 | train_loss 0.1414
+  paso  3700 | train_loss 0.1363
+  paso  3800 | train_loss 0.1413
+  paso  3900 | train_loss 0.1478
+  paso  4000 | train_loss 0.1312 | val_loss 0.1829 | val_acc 0.9420
+  paso  4100 | train_loss 0.1467
+  paso  4200 | train_loss 0.1453
+  paso  4300 | train_loss 0.1356
+  paso  4400 | train_loss 0.1487
+  paso  4500 | train_loss 0.1285 | val_loss 0.1815 | val_acc 0.9433
+  paso  4600 | train_loss 0.1484
+  paso  4700 | train_loss 0.1451
+  paso  4800 | train_loss 0.1419
+  paso  4900 | train_loss 0.1325
+  paso  5000 | train_loss 0.1357 | val_loss 0.1735 | val_acc 0.9447
+  paso  5100 | train_loss 0.1250
+  paso  5200 | train_loss 0.1419
+  paso  5300 | train_loss 0.1553
+  paso  5400 | train_loss 0.1542
+  paso  5500 | train_loss 0.1405 | val_loss 0.1757 | val_acc 0.9421
+  paso  5600 | train_loss 0.1257
+  paso  5700 | train_loss 0.1323
+  paso  5800 | train_loss 0.1331
+  paso  5900 | train_loss 0.1305
+  paso  6000 | train_loss 0.1415 | val_loss 0.1690 | val_acc 0.9452
+  paso  6100 | train_loss 0.0971
+  paso  6200 | train_loss 0.1214
+  paso  6300 | train_loss 0.1378
+  paso  6400 | train_loss 0.1175
+  paso  6500 | train_loss 0.1246 | val_loss 0.1743 | val_acc 0.9455
+  paso  6600 | train_loss 0.1335
+  paso  6700 | train_loss 0.1404
+  [fin epoca 2] val_loss 0.1731 | acc 0.9462 | f1 0.9459
+  -> mejor modelo hasta ahora (f1 = 0.9459)
+
+Entrenamiento completado en 5.4 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9446
+  Precision : 0.9450
+  Recall    : 0.9446
+  F1-score  : 0.9446
+
+  Por clase:
+    World      P 0.964  R 0.944  F1 0.954  (n=1900)
+    Sports     P 0.985  R 0.990  F1 0.988  (n=1900)
+    Business   P 0.927  R 0.903  F1 0.915  (n=1900)
+    Sci/Tech   P 0.903  R 0.942  F1 0.922  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 67,945,988
+  Tamano (fp32)     : 259.2 MB
+  Latencia (batch=1): 3.49 +/- 0.06 ms
+  Memoria GPU pico  : 1078.8 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-h2048_20260921-015230.json
+
+############ distilbert | ag_news | abl-c2 ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2221.68it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,888,964 (255.2 MB en fp32)
+  cabeza     : [512, 256] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,888,964 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3732
+  paso   200 | train_loss 1.1496
+  paso   300 | train_loss 0.6803
+  paso   400 | train_loss 0.4498
+  paso   500 | train_loss 0.3717 | val_loss 0.3337 | val_acc 0.8985
+  paso   600 | train_loss 0.3205
+  paso   700 | train_loss 0.3012
+  paso   800 | train_loss 0.2795
+  paso   900 | train_loss 0.2825
+  paso  1000 | train_loss 0.2556 | val_loss 0.2596 | val_acc 0.9143
+  paso  1100 | train_loss 0.2716
+  paso  1200 | train_loss 0.2609
+  paso  1300 | train_loss 0.2389
+  paso  1400 | train_loss 0.2401
+  paso  1500 | train_loss 0.2357 | val_loss 0.2265 | val_acc 0.9237
+  paso  1600 | train_loss 0.2179
+  paso  1700 | train_loss 0.2370
+  paso  1800 | train_loss 0.2312
+  paso  1900 | train_loss 0.2321
+  paso  2000 | train_loss 0.2078 | val_loss 0.2030 | val_acc 0.9303
+  paso  2100 | train_loss 0.2105
+  paso  2200 | train_loss 0.2104
+  paso  2300 | train_loss 0.2190
+  paso  2400 | train_loss 0.2154
+  paso  2500 | train_loss 0.1912 | val_loss 0.1951 | val_acc 0.9341
+  paso  2600 | train_loss 0.2067
+  paso  2700 | train_loss 0.2000
+  paso  2800 | train_loss 0.1854
+  paso  2900 | train_loss 0.2107
+  paso  3000 | train_loss 0.1870 | val_loss 0.1820 | val_acc 0.9369
+  paso  3100 | train_loss 0.1815
+  paso  3200 | train_loss 0.1948
+  paso  3300 | train_loss 0.1739
+  [fin epoca 1] val_loss 0.1852 | acc 0.9384 | f1 0.9380
+  -> mejor modelo hasta ahora (f1 = 0.9380)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1768
+  paso  3500 | train_loss 0.1529 | val_loss 0.1899 | val_acc 0.9388
+  paso  3600 | train_loss 0.1700
+  paso  3700 | train_loss 0.1401
+  paso  3800 | train_loss 0.1484
+  paso  3900 | train_loss 0.1577
+  paso  4000 | train_loss 0.1457 | val_loss 0.1882 | val_acc 0.9381
+  paso  4100 | train_loss 0.1535
+  paso  4200 | train_loss 0.1535
+  paso  4300 | train_loss 0.1518
+  paso  4400 | train_loss 0.1479
+  paso  4500 | train_loss 0.1568 | val_loss 0.1831 | val_acc 0.9397
+  paso  4600 | train_loss 0.1261
+  paso  4700 | train_loss 0.1450
+  paso  4800 | train_loss 0.1639
+  paso  4900 | train_loss 0.1409
+  paso  5000 | train_loss 0.1359 | val_loss 0.1821 | val_acc 0.9412
+  paso  5100 | train_loss 0.1404
+  paso  5200 | train_loss 0.1260
+  paso  5300 | train_loss 0.1531
+  paso  5400 | train_loss 0.1484
+  paso  5500 | train_loss 0.1366 | val_loss 0.1774 | val_acc 0.9433
+  paso  5600 | train_loss 0.1392
+  paso  5700 | train_loss 0.1325
+  paso  5800 | train_loss 0.1522
+  paso  5900 | train_loss 0.1353
+  paso  6000 | train_loss 0.1399 | val_loss 0.1766 | val_acc 0.9437
+  paso  6100 | train_loss 0.1361
+  paso  6200 | train_loss 0.1376
+  paso  6300 | train_loss 0.1216
+  paso  6400 | train_loss 0.1484
+  paso  6500 | train_loss 0.1224 | val_loss 0.1768 | val_acc 0.9447
+  paso  6600 | train_loss 0.1360
+  paso  6700 | train_loss 0.1209
+  [fin epoca 2] val_loss 0.1752 | acc 0.9437 | f1 0.9434
+  -> mejor modelo hasta ahora (f1 = 0.9434)
+
+Entrenamiento completado en 5.5 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9447
+  Precision : 0.9450
+  Recall    : 0.9447
+  F1-score  : 0.9448
+
+  Por clase:
+    World      P 0.963  R 0.948  F1 0.955  (n=1900)
+    Sports     P 0.987  R 0.986  F1 0.987  (n=1900)
+    Business   P 0.921  R 0.911  F1 0.916  (n=1900)
+    Sci/Tech   P 0.909  R 0.935  F1 0.922  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,888,964
+  Tamano (fp32)     : 255.2 MB
+  Latencia (batch=1): 1.88 +/- 0.02 ms
+  Memoria GPU pico  : 1062.9 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-c2_20260921-015850.json
+
+############ distilbert | ag_news | abl-frz ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4709.16it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,956,548 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=True capas=None
+  entrenables: 593,668 (0.9% del total)
+Optimizador : AdamW lr=0.001, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.1561
+  paso   200 | train_loss 0.4767
+  paso   300 | train_loss 0.3577
+  paso   400 | train_loss 0.3292
+  paso   500 | train_loss 0.3493 | val_loss 0.3396 | val_acc 0.8812
+  paso   600 | train_loss 0.3424
+  paso   700 | train_loss 0.3582
+  paso   800 | train_loss 0.3490
+  paso   900 | train_loss 0.3359
+  paso  1000 | train_loss 0.3066 | val_loss 0.3047 | val_acc 0.8882
+  paso  1100 | train_loss 0.3482
+  paso  1200 | train_loss 0.3289
+  paso  1300 | train_loss 0.3273
+  paso  1400 | train_loss 0.3148
+  paso  1500 | train_loss 0.3261 | val_loss 0.2971 | val_acc 0.8913
+  paso  1600 | train_loss 0.2878
+  paso  1700 | train_loss 0.3223
+  paso  1800 | train_loss 0.3216
+  paso  1900 | train_loss 0.3162
+  paso  2000 | train_loss 0.3009 | val_loss 0.2823 | val_acc 0.8965
+  paso  2100 | train_loss 0.3114
+  paso  2200 | train_loss 0.2719
+  paso  2300 | train_loss 0.3088
+  paso  2400 | train_loss 0.3007
+  paso  2500 | train_loss 0.2938 | val_loss 0.2780 | val_acc 0.8972
+  paso  2600 | train_loss 0.2869
+  paso  2700 | train_loss 0.2916
+  paso  2800 | train_loss 0.3139
+  paso  2900 | train_loss 0.3105
+  paso  3000 | train_loss 0.3005 | val_loss 0.2764 | val_acc 0.8991
+  paso  3100 | train_loss 0.2827
+  paso  3200 | train_loss 0.2903
+  paso  3300 | train_loss 0.2833
+  [fin epoca 1] val_loss 0.2626 | acc 0.9028 | f1 0.9022
+  -> mejor modelo hasta ahora (f1 = 0.9022)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.2883
+  paso  3500 | train_loss 0.3067 | val_loss 0.2639 | val_acc 0.9014
+  paso  3600 | train_loss 0.2736
+  paso  3700 | train_loss 0.2742
+  paso  3800 | train_loss 0.2900
+  paso  3900 | train_loss 0.2540
+  paso  4000 | train_loss 0.2674 | val_loss 0.2709 | val_acc 0.8990
+  paso  4100 | train_loss 0.2936
+  paso  4200 | train_loss 0.2744
+  paso  4300 | train_loss 0.2656
+  paso  4400 | train_loss 0.2784
+  paso  4500 | train_loss 0.2539 | val_loss 0.2642 | val_acc 0.9030
+  paso  4600 | train_loss 0.2862
+  paso  4700 | train_loss 0.2701
+  paso  4800 | train_loss 0.2746
+  paso  4900 | train_loss 0.2816
+  paso  5000 | train_loss 0.2444 | val_loss 0.2580 | val_acc 0.9056
+  paso  5100 | train_loss 0.2636
+  paso  5200 | train_loss 0.2530
+  paso  5300 | train_loss 0.2859
+  paso  5400 | train_loss 0.2727
+  paso  5500 | train_loss 0.2565 | val_loss 0.2511 | val_acc 0.9039
+  paso  5600 | train_loss 0.2673
+  paso  5700 | train_loss 0.2839
+  paso  5800 | train_loss 0.2599
+  paso  5900 | train_loss 0.2678
+  paso  6000 | train_loss 0.2692 | val_loss 0.2464 | val_acc 0.9078
+  paso  6100 | train_loss 0.2598
+  paso  6200 | train_loss 0.2562
+  paso  6300 | train_loss 0.2640
+  paso  6400 | train_loss 0.2624
+  paso  6500 | train_loss 0.2568 | val_loss 0.2452 | val_acc 0.9084
+  paso  6600 | train_loss 0.2779
+  paso  6700 | train_loss 0.2530
+  [fin epoca 2] val_loss 0.2443 | acc 0.9089 | f1 0.9084
+  -> mejor modelo hasta ahora (f1 = 0.9084)
+
+Entrenamiento completado en 1.8 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9101
+  Precision : 0.9105
+  Recall    : 0.9101
+  F1-score  : 0.9101
+
+  Por clase:
+    World      P 0.934  R 0.895  F1 0.914  (n=1900)
+    Sports     P 0.969  R 0.984  F1 0.977  (n=1900)
+    Business   P 0.875  R 0.855  F1 0.865  (n=1900)
+    Sci/Tech   P 0.864  R 0.906  F1 0.885  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,956,548
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 1.86 +/- 0.02 ms
+  Memoria GPU pico  : 285.3 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_abl-frz_20260921-020125.json
+
+############ distilbert | yelp | abl-lineal ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2913.40it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,364,418 (253.2 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,364,418 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6674
+  paso   200 | train_loss 0.3595
+  paso   300 | train_loss 0.2313
+  paso   400 | train_loss 0.2077
+  paso   500 | train_loss 0.1852 | val_loss 0.1725 | val_acc 0.9302
+  paso   600 | train_loss 0.1811
+  paso   700 | train_loss 0.1775
+  paso   800 | train_loss 0.1899
+  paso   900 | train_loss 0.1659
+  paso  1000 | train_loss 0.1718 | val_loss 0.1529 | val_acc 0.9429
+  paso  1100 | train_loss 0.1712
+  paso  1200 | train_loss 0.1541
+  paso  1300 | train_loss 0.1486
+  paso  1400 | train_loss 0.1450
+  paso  1500 | train_loss 0.1392 | val_loss 0.1549 | val_acc 0.9425
+  paso  1600 | train_loss 0.1534
+  paso  1700 | train_loss 0.1538
+  paso  1800 | train_loss 0.1363
+  paso  1900 | train_loss 0.1301
+  paso  2000 | train_loss 0.1343 | val_loss 0.1480 | val_acc 0.9468
+  paso  2100 | train_loss 0.1378
+  paso  2200 | train_loss 0.1258
+  paso  2300 | train_loss 0.1463
+  paso  2400 | train_loss 0.1276
+  paso  2500 | train_loss 0.1335 | val_loss 0.1300 | val_acc 0.9522
+  paso  2600 | train_loss 0.1326
+  paso  2700 | train_loss 0.1365
+  paso  2800 | train_loss 0.1345
+  paso  2900 | train_loss 0.1323
+  paso  3000 | train_loss 0.1315 | val_loss 0.1133 | val_acc 0.9565
+  paso  3100 | train_loss 0.1209
+  [fin epoca 1] val_loss 0.1291 | acc 0.9532 | f1 0.9531
+  -> mejor modelo hasta ahora (f1 = 0.9531)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0897
+  paso  3300 | train_loss 0.0974
+  paso  3400 | train_loss 0.0775
+  paso  3500 | train_loss 0.0879 | val_loss 0.1386 | val_acc 0.9557
+  paso  3600 | train_loss 0.0847
+  paso  3700 | train_loss 0.0807
+  paso  3800 | train_loss 0.0810
+  paso  3900 | train_loss 0.0806
+  paso  4000 | train_loss 0.0935 | val_loss 0.1320 | val_acc 0.9567
+  paso  4100 | train_loss 0.0815
+  paso  4200 | train_loss 0.0992
+  paso  4300 | train_loss 0.0761
+  paso  4400 | train_loss 0.0978
+  paso  4500 | train_loss 0.0831 | val_loss 0.1321 | val_acc 0.9579
+  paso  4600 | train_loss 0.0848
+  paso  4700 | train_loss 0.0823
+  paso  4800 | train_loss 0.0827
+  paso  4900 | train_loss 0.0694
+  paso  5000 | train_loss 0.0891 | val_loss 0.1346 | val_acc 0.9569
+  paso  5100 | train_loss 0.0705
+  paso  5200 | train_loss 0.0724
+  paso  5300 | train_loss 0.1044
+  paso  5400 | train_loss 0.0807
+  paso  5500 | train_loss 0.0962 | val_loss 0.1206 | val_acc 0.9597
+  paso  5600 | train_loss 0.0771
+  paso  5700 | train_loss 0.0774
+  paso  5800 | train_loss 0.0801
+  paso  5900 | train_loss 0.0891
+  paso  6000 | train_loss 0.0734 | val_loss 0.1266 | val_acc 0.9605
+  paso  6100 | train_loss 0.0833
+  paso  6200 | train_loss 0.0795
+  [fin epoca 2] val_loss 0.1254 | acc 0.9604 | f1 0.9603
+  -> mejor modelo hasta ahora (f1 = 0.9603)
+
+Entrenamiento completado en 8.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9610
+  Precision : 0.9610
+  Recall    : 0.9610
+  F1-score  : 0.9610
+
+  Por clase:
+    negative   P 0.960  R 0.962  F1 0.961  (n=19000)
+    positive   P 0.962  R 0.960  F1 0.961  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,364,418
+  Tamano (fp32)     : 253.2 MB
+  Latencia (batch=1): 2.76 +/- 0.05 ms
+  Memoria GPU pico  : 1058.0 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-lineal_20260921-021120.json
+
+############ distilbert | yelp | abl-h128 ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2056.83it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,461,570 (253.5 MB en fp32)
+  cabeza     : [128] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,461,570 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6873
+  paso   200 | train_loss 0.4436
+  paso   300 | train_loss 0.2235
+  paso   400 | train_loss 0.2270
+  paso   500 | train_loss 0.2111 | val_loss 0.2094 | val_acc 0.9244
+  paso   600 | train_loss 0.2081
+  paso   700 | train_loss 0.1856
+  paso   800 | train_loss 0.1879
+  paso   900 | train_loss 0.1748
+  paso  1000 | train_loss 0.1511 | val_loss 0.1541 | val_acc 0.9443
+  paso  1100 | train_loss 0.1724
+  paso  1200 | train_loss 0.1762
+  paso  1300 | train_loss 0.1592
+  paso  1400 | train_loss 0.1574
+  paso  1500 | train_loss 0.1520 | val_loss 0.1480 | val_acc 0.9448
+  paso  1600 | train_loss 0.1374
+  paso  1700 | train_loss 0.1361
+  paso  1800 | train_loss 0.1443
+  paso  1900 | train_loss 0.1313
+  paso  2000 | train_loss 0.1331 | val_loss 0.1290 | val_acc 0.9519
+  paso  2100 | train_loss 0.1526
+  paso  2200 | train_loss 0.1377
+  paso  2300 | train_loss 0.1395
+  paso  2400 | train_loss 0.1397
+  paso  2500 | train_loss 0.1286 | val_loss 0.1222 | val_acc 0.9536
+  paso  2600 | train_loss 0.1412
+  paso  2700 | train_loss 0.1196
+  paso  2800 | train_loss 0.1338
+  paso  2900 | train_loss 0.1294
+  paso  3000 | train_loss 0.1328 | val_loss 0.1255 | val_acc 0.9513
+  paso  3100 | train_loss 0.1255
+  [fin epoca 1] val_loss 0.1227 | acc 0.9555 | f1 0.9555
+  -> mejor modelo hasta ahora (f1 = 0.9555)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0869
+  paso  3300 | train_loss 0.0857
+  paso  3400 | train_loss 0.0923
+  paso  3500 | train_loss 0.0891 | val_loss 0.1361 | val_acc 0.9548
+  paso  3600 | train_loss 0.1023
+  paso  3700 | train_loss 0.0941
+  paso  3800 | train_loss 0.0957
+  paso  3900 | train_loss 0.0946
+  paso  4000 | train_loss 0.1048 | val_loss 0.1280 | val_acc 0.9567
+  paso  4100 | train_loss 0.0908
+  paso  4200 | train_loss 0.0891
+  paso  4300 | train_loss 0.0778
+  paso  4400 | train_loss 0.0799
+  paso  4500 | train_loss 0.0908 | val_loss 0.1295 | val_acc 0.9578
+  paso  4600 | train_loss 0.0794
+  paso  4700 | train_loss 0.0862
+  paso  4800 | train_loss 0.1039
+  paso  4900 | train_loss 0.0691
+  paso  5000 | train_loss 0.0960 | val_loss 0.1309 | val_acc 0.9564
+  paso  5100 | train_loss 0.0964
+  paso  5200 | train_loss 0.0916
+  paso  5300 | train_loss 0.0764
+  paso  5400 | train_loss 0.0819
+  paso  5500 | train_loss 0.0790 | val_loss 0.1268 | val_acc 0.9584
+  paso  5600 | train_loss 0.0863
+  paso  5700 | train_loss 0.0772
+  paso  5800 | train_loss 0.0831
+  paso  5900 | train_loss 0.0696
+  paso  6000 | train_loss 0.0864 | val_loss 0.1291 | val_acc 0.9588
+  paso  6100 | train_loss 0.0802
+  paso  6200 | train_loss 0.0882
+  [fin epoca 2] val_loss 0.1263 | acc 0.9593 | f1 0.9593
+  -> mejor modelo hasta ahora (f1 = 0.9593)
+
+Entrenamiento completado en 8.3 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9606
+  Precision : 0.9606
+  Recall    : 0.9606
+  F1-score  : 0.9606
+
+  Por clase:
+    negative   P 0.959  R 0.962  F1 0.961  (n=19000)
+    positive   P 0.962  R 0.959  F1 0.961  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,461,570
+  Tamano (fp32)     : 253.5 MB
+  Latencia (batch=1): 2.76 +/- 0.03 ms
+  Memoria GPU pico  : 1060.8 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-h128_20260921-022119.json
+
+############ distilbert | yelp | abl-h768 ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 1992.66it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,955,010 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6705
+  paso   200 | train_loss 0.3572
+  paso   300 | train_loss 0.2395
+  paso   400 | train_loss 0.2075
+  paso   500 | train_loss 0.2016 | val_loss 0.1747 | val_acc 0.9344
+  paso   600 | train_loss 0.1841
+  paso   700 | train_loss 0.1835
+  paso   800 | train_loss 0.1718
+  paso   900 | train_loss 0.1632
+  paso  1000 | train_loss 0.1712 | val_loss 0.1554 | val_acc 0.9391
+  paso  1100 | train_loss 0.1637
+  paso  1200 | train_loss 0.1556
+  paso  1300 | train_loss 0.1628
+  paso  1400 | train_loss 0.1503
+  paso  1500 | train_loss 0.1503 | val_loss 0.1472 | val_acc 0.9455
+  paso  1600 | train_loss 0.1391
+  paso  1700 | train_loss 0.1543
+  paso  1800 | train_loss 0.1374
+  paso  1900 | train_loss 0.1462
+  paso  2000 | train_loss 0.1298 | val_loss 0.1358 | val_acc 0.9498
+  paso  2100 | train_loss 0.1381
+  paso  2200 | train_loss 0.1312
+  paso  2300 | train_loss 0.1311
+  paso  2400 | train_loss 0.1549
+  paso  2500 | train_loss 0.1421 | val_loss 0.1286 | val_acc 0.9509
+  paso  2600 | train_loss 0.1224
+  paso  2700 | train_loss 0.1381
+  paso  2800 | train_loss 0.1420
+  paso  2900 | train_loss 0.1302
+  paso  3000 | train_loss 0.1317 | val_loss 0.1225 | val_acc 0.9562
+  paso  3100 | train_loss 0.1234
+  [fin epoca 1] val_loss 0.1222 | acc 0.9560 | f1 0.9560
+  -> mejor modelo hasta ahora (f1 = 0.9560)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0880
+  paso  3300 | train_loss 0.0938
+  paso  3400 | train_loss 0.0961
+  paso  3500 | train_loss 0.0928 | val_loss 0.1315 | val_acc 0.9568
+  paso  3600 | train_loss 0.0883
+  paso  3700 | train_loss 0.0939
+  paso  3800 | train_loss 0.0861
+  paso  3900 | train_loss 0.0823
+  paso  4000 | train_loss 0.0713 | val_loss 0.1515 | val_acc 0.9547
+  paso  4100 | train_loss 0.0966
+  paso  4200 | train_loss 0.0808
+  paso  4300 | train_loss 0.0983
+  paso  4400 | train_loss 0.0913
+  paso  4500 | train_loss 0.0819 | val_loss 0.1340 | val_acc 0.9583
+  paso  4600 | train_loss 0.0772
+  paso  4700 | train_loss 0.0769
+  paso  4800 | train_loss 0.0805
+  paso  4900 | train_loss 0.0835
+  paso  5000 | train_loss 0.0951 | val_loss 0.1286 | val_acc 0.9586
+  paso  5100 | train_loss 0.0758
+  paso  5200 | train_loss 0.0916
+  paso  5300 | train_loss 0.0860
+  paso  5400 | train_loss 0.0881
+  paso  5500 | train_loss 0.0847 | val_loss 0.1267 | val_acc 0.9602
+  paso  5600 | train_loss 0.0790
+  paso  5700 | train_loss 0.0858
+  paso  5800 | train_loss 0.0973
+  paso  5900 | train_loss 0.0888
+  paso  6000 | train_loss 0.0877 | val_loss 0.1227 | val_acc 0.9593
+  paso  6100 | train_loss 0.0713
+  paso  6200 | train_loss 0.0842
+  [fin epoca 2] val_loss 0.1248 | acc 0.9597 | f1 0.9596
+  -> mejor modelo hasta ahora (f1 = 0.9596)
+
+Entrenamiento completado en 8.1 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9598
+  Precision : 0.9599
+  Recall    : 0.9598
+  F1-score  : 0.9598
+
+  Por clase:
+    negative   P 0.962  R 0.958  F1 0.960  (n=19000)
+    positive   P 0.958  R 0.962  F1 0.960  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 2.77 +/- 0.06 ms
+  Memoria GPU pico  : 1070.4 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-h768_20260921-023110.json
+
+############ distilbert | yelp | abl-h2048 ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4874.89it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 67,941,890 (259.2 MB en fp32)
+  cabeza     : [2048] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 67,941,890 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6899
+  paso   200 | train_loss 0.4228
+  paso   300 | train_loss 0.2496
+  paso   400 | train_loss 0.2105
+  paso   500 | train_loss 0.1938 | val_loss 0.1775 | val_acc 0.9312
+  paso   600 | train_loss 0.1781
+  paso   700 | train_loss 0.1758
+  paso   800 | train_loss 0.1756
+  paso   900 | train_loss 0.1596
+  paso  1000 | train_loss 0.1474 | val_loss 0.1835 | val_acc 0.9415
+  paso  1100 | train_loss 0.1765
+  paso  1200 | train_loss 0.1556
+  paso  1300 | train_loss 0.1652
+  paso  1400 | train_loss 0.1554
+  paso  1500 | train_loss 0.1497 | val_loss 0.1728 | val_acc 0.9392
+  paso  1600 | train_loss 0.1704
+  paso  1700 | train_loss 0.1453
+  paso  1800 | train_loss 0.1293
+  paso  1900 | train_loss 0.1457
+  paso  2000 | train_loss 0.1568 | val_loss 0.1541 | val_acc 0.9442
+  paso  2100 | train_loss 0.1412
+  paso  2200 | train_loss 0.1325
+  paso  2300 | train_loss 0.1304
+  paso  2400 | train_loss 0.1417
+  paso  2500 | train_loss 0.1304 | val_loss 0.1262 | val_acc 0.9536
+  paso  2600 | train_loss 0.1258
+  paso  2700 | train_loss 0.1265
+  paso  2800 | train_loss 0.1265
+  paso  2900 | train_loss 0.1354
+  paso  3000 | train_loss 0.1202 | val_loss 0.1272 | val_acc 0.9541
+  paso  3100 | train_loss 0.1191
+  [fin epoca 1] val_loss 0.1239 | acc 0.9558 | f1 0.9558
+  -> mejor modelo hasta ahora (f1 = 0.9558)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0800
+  paso  3300 | train_loss 0.0981
+  paso  3400 | train_loss 0.0884
+  paso  3500 | train_loss 0.0879 | val_loss 0.1330 | val_acc 0.9577
+  paso  3600 | train_loss 0.0925
+  paso  3700 | train_loss 0.0937
+  paso  3800 | train_loss 0.1063
+  paso  3900 | train_loss 0.0915
+  paso  4000 | train_loss 0.0808 | val_loss 0.1285 | val_acc 0.9578
+  paso  4100 | train_loss 0.0916
+  paso  4200 | train_loss 0.0865
+  paso  4300 | train_loss 0.0804
+  paso  4400 | train_loss 0.0775
+  paso  4500 | train_loss 0.0909 | val_loss 0.1343 | val_acc 0.9577
+  paso  4600 | train_loss 0.0840
+  paso  4700 | train_loss 0.0865
+  paso  4800 | train_loss 0.0879
+  paso  4900 | train_loss 0.0914
+  paso  5000 | train_loss 0.0889 | val_loss 0.1328 | val_acc 0.9567
+  paso  5100 | train_loss 0.0807
+  paso  5200 | train_loss 0.0745
+  paso  5300 | train_loss 0.0882
+  paso  5400 | train_loss 0.0793
+  paso  5500 | train_loss 0.0850 | val_loss 0.1234 | val_acc 0.9593
+  paso  5600 | train_loss 0.0975
+  paso  5700 | train_loss 0.0724
+  paso  5800 | train_loss 0.0633
+  paso  5900 | train_loss 0.0911
+  paso  6000 | train_loss 0.0834 | val_loss 0.1210 | val_acc 0.9603
+  paso  6100 | train_loss 0.0767
+  paso  6200 | train_loss 0.0753
+  [fin epoca 2] val_loss 0.1219 | acc 0.9601 | f1 0.9601
+  -> mejor modelo hasta ahora (f1 = 0.9601)
+
+Entrenamiento completado en 8.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9613
+  Precision : 0.9613
+  Recall    : 0.9613
+  F1-score  : 0.9613
+
+  Por clase:
+    negative   P 0.960  R 0.963  F1 0.961  (n=19000)
+    positive   P 0.963  R 0.960  F1 0.961  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 67,941,890
+  Tamano (fp32)     : 259.2 MB
+  Latencia (batch=1): 2.79 +/- 0.05 ms
+  Memoria GPU pico  : 1088.0 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-h2048_20260921-024104.json
+
+############ distilbert | yelp | abl-c2 ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 2130.47it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,888,450 (255.2 MB en fp32)
+  cabeza     : [512, 256] (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 66,888,450 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6907
+  paso   200 | train_loss 0.5206
+  paso   300 | train_loss 0.2760
+  paso   400 | train_loss 0.2505
+  paso   500 | train_loss 0.1993 | val_loss 0.1932 | val_acc 0.9322
+  paso   600 | train_loss 0.2028
+  paso   700 | train_loss 0.1963
+  paso   800 | train_loss 0.1925
+  paso   900 | train_loss 0.1596
+  paso  1000 | train_loss 0.1834 | val_loss 0.1701 | val_acc 0.9396
+  paso  1100 | train_loss 0.1446
+  paso  1200 | train_loss 0.1511
+  paso  1300 | train_loss 0.1616
+  paso  1400 | train_loss 0.1482
+  paso  1500 | train_loss 0.1501 | val_loss 0.1858 | val_acc 0.9349
+  paso  1600 | train_loss 0.1612
+  paso  1700 | train_loss 0.1463
+  paso  1800 | train_loss 0.1508
+  paso  1900 | train_loss 0.1287
+  paso  2000 | train_loss 0.1403 | val_loss 0.1254 | val_acc 0.9522
+  paso  2100 | train_loss 0.1365
+  paso  2200 | train_loss 0.1359
+  paso  2300 | train_loss 0.1463
+  paso  2400 | train_loss 0.1430
+  paso  2500 | train_loss 0.1358 | val_loss 0.1227 | val_acc 0.9537
+  paso  2600 | train_loss 0.1383
+  paso  2700 | train_loss 0.1303
+  paso  2800 | train_loss 0.1357
+  paso  2900 | train_loss 0.1364
+  paso  3000 | train_loss 0.1163 | val_loss 0.1290 | val_acc 0.9563
+  paso  3100 | train_loss 0.1246
+  [fin epoca 1] val_loss 0.1162 | acc 0.9574 | f1 0.9573
+  -> mejor modelo hasta ahora (f1 = 0.9573)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0955
+  paso  3300 | train_loss 0.0996
+  paso  3400 | train_loss 0.0962
+  paso  3500 | train_loss 0.0860 | val_loss 0.1271 | val_acc 0.9574
+  paso  3600 | train_loss 0.0901
+  paso  3700 | train_loss 0.0810
+  paso  3800 | train_loss 0.0787
+  paso  3900 | train_loss 0.0797
+  paso  4000 | train_loss 0.0905 | val_loss 0.1295 | val_acc 0.9583
+  paso  4100 | train_loss 0.0949
+  paso  4200 | train_loss 0.0839
+  paso  4300 | train_loss 0.0777
+  paso  4400 | train_loss 0.0886
+  paso  4500 | train_loss 0.0835 | val_loss 0.1375 | val_acc 0.9579
+  paso  4600 | train_loss 0.0975
+  paso  4700 | train_loss 0.0862
+  paso  4800 | train_loss 0.0877
+  paso  4900 | train_loss 0.0953
+  paso  5000 | train_loss 0.0808 | val_loss 0.1289 | val_acc 0.9584
+  paso  5100 | train_loss 0.0859
+  paso  5200 | train_loss 0.0752
+  paso  5300 | train_loss 0.0762
+  paso  5400 | train_loss 0.0948
+  paso  5500 | train_loss 0.0775 | val_loss 0.1262 | val_acc 0.9597
+  paso  5600 | train_loss 0.0939
+  paso  5700 | train_loss 0.0776
+  paso  5800 | train_loss 0.0809
+  paso  5900 | train_loss 0.0820
+  paso  6000 | train_loss 0.0877 | val_loss 0.1208 | val_acc 0.9605
+  paso  6100 | train_loss 0.0770
+  paso  6200 | train_loss 0.0681
+  [fin epoca 2] val_loss 0.1228 | acc 0.9604 | f1 0.9604
+  -> mejor modelo hasta ahora (f1 = 0.9604)
+
+Entrenamiento completado en 8.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9615
+  Precision : 0.9615
+  Recall    : 0.9615
+  F1-score  : 0.9615
+
+  Por clase:
+    negative   P 0.960  R 0.963  F1 0.962  (n=19000)
+    positive   P 0.963  R 0.960  F1 0.961  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,888,450
+  Tamano (fp32)     : 255.2 MB
+  Latencia (batch=1): 2.77 +/- 0.06 ms
+  Memoria GPU pico  : 1071.5 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-c2_20260921-025100.json
+
+############ distilbert | yelp | abl-frz ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 3942.61it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.weight  | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+  cabeza     : [768] (dropout 0.1)
+  congelado  : encoder=True capas=None
+  entrenables: 592,130 (0.9% del total)
+Optimizador : AdamW lr=0.001, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6100
+  paso   200 | train_loss 0.3643
+  paso   300 | train_loss 0.3137
+  paso   400 | train_loss 0.2939
+  paso   500 | train_loss 0.3062 | val_loss 0.2603 | val_acc 0.8924
+  paso   600 | train_loss 0.3164
+  paso   700 | train_loss 0.3078
+  paso   800 | train_loss 0.3003
+  paso   900 | train_loss 0.2944
+  paso  1000 | train_loss 0.2889 | val_loss 0.2772 | val_acc 0.8797
+  paso  1100 | train_loss 0.2939
+  paso  1200 | train_loss 0.2991
+  paso  1300 | train_loss 0.2898
+  paso  1400 | train_loss 0.2753
+  paso  1500 | train_loss 0.3015 | val_loss 0.2502 | val_acc 0.8931
+  paso  1600 | train_loss 0.2844
+  paso  1700 | train_loss 0.3030
+  paso  1800 | train_loss 0.2737
+  paso  1900 | train_loss 0.2958
+  paso  2000 | train_loss 0.2680 | val_loss 0.2472 | val_acc 0.8966
+  paso  2100 | train_loss 0.2733
+  paso  2200 | train_loss 0.2861
+  paso  2300 | train_loss 0.2745
+  paso  2400 | train_loss 0.2924
+  paso  2500 | train_loss 0.2803 | val_loss 0.2530 | val_acc 0.8921
+  paso  2600 | train_loss 0.2679
+  paso  2700 | train_loss 0.2847
+  paso  2800 | train_loss 0.2850
+  paso  2900 | train_loss 0.2783
+  paso  3000 | train_loss 0.2836 | val_loss 0.2481 | val_acc 0.8953
+  paso  3100 | train_loss 0.2714
+  [fin epoca 1] val_loss 0.2434 | acc 0.8972 | f1 0.8972
+  -> mejor modelo hasta ahora (f1 = 0.8972)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.2601
+  paso  3300 | train_loss 0.2599
+  paso  3400 | train_loss 0.2751
+  paso  3500 | train_loss 0.2695 | val_loss 0.2421 | val_acc 0.8991
+  paso  3600 | train_loss 0.2756
+  paso  3700 | train_loss 0.2551
+  paso  3800 | train_loss 0.2795
+  paso  3900 | train_loss 0.2655
+  paso  4000 | train_loss 0.2588 | val_loss 0.2398 | val_acc 0.8982
+  paso  4100 | train_loss 0.2757
+  paso  4200 | train_loss 0.2721
+  paso  4300 | train_loss 0.2645
+  paso  4400 | train_loss 0.2549
+  paso  4500 | train_loss 0.2562 | val_loss 0.2400 | val_acc 0.8989
+  paso  4600 | train_loss 0.2645
+  paso  4700 | train_loss 0.2578
+  paso  4800 | train_loss 0.2511
+  paso  4900 | train_loss 0.2697
+  paso  5000 | train_loss 0.2630 | val_loss 0.2389 | val_acc 0.8993
+  paso  5100 | train_loss 0.2659
+  paso  5200 | train_loss 0.2562
+  paso  5300 | train_loss 0.2607
+  paso  5400 | train_loss 0.2627
+  paso  5500 | train_loss 0.2753 | val_loss 0.2391 | val_acc 0.8992
+  paso  5600 | train_loss 0.2509
+  paso  5700 | train_loss 0.2562
+  paso  5800 | train_loss 0.2681
+  paso  5900 | train_loss 0.2635
+  paso  6000 | train_loss 0.2771 | val_loss 0.2378 | val_acc 0.9002
+  paso  6100 | train_loss 0.2458
+  paso  6200 | train_loss 0.2587
+  [fin epoca 2] val_loss 0.2373 | acc 0.9005 | f1 0.9005
+  -> mejor modelo hasta ahora (f1 = 0.9005)
+
+Entrenamiento completado en 3.7 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9032
+  Precision : 0.9033
+  Recall    : 0.9032
+  F1-score  : 0.9032
+
+  Por clase:
+    negative   P 0.906  R 0.900  F1 0.903  (n=19000)
+    positive   P 0.900  R 0.907  F1 0.904  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 2.78 +/- 0.03 ms
+  Memoria GPU pico  : 289.0 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_abl-frz_20260921-025626.json
+
+=== terminado: 6 configuraciones x 3 datasets, 0 fallos ===

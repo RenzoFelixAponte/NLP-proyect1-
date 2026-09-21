@@ -34,7 +34,12 @@ from pathlib import Path
 
 import numpy as np
 
-from src.models import build_model, build_tokenizer, count_parameters
+from src.models import (
+    build_model,
+    build_ablation_model,
+    build_tokenizer,
+    count_parameters,
+)
 from src.data_adapter import load_task
 from src.metrics import (
     classification_metrics,
@@ -153,6 +158,10 @@ def main():
     parser.add_argument("--max-grad-norm", type=float, default=1.0)
     parser.add_argument("--max-train", type=int, default=None,
                         help="Submuestrear el train (pruebas rapidas o Yelp)")
+    parser.add_argument("--max-val", type=int, default=None,
+                        help="Submuestrear la validacion. Util en Yelp, donde "
+                             "el 10%% del train son 56k ejemplos y evaluar "
+                             "cada --eval-every pasos cuesta mas que entrenar")
     parser.add_argument("--max-length", type=int, default=None,
                         help="Por defecto, el recomendado por el dataset")
     parser.add_argument("--log-every", type=int, default=100)
@@ -163,6 +172,16 @@ def main():
                         help="Pausar si la GPU supera esta temperatura (C)")
     parser.add_argument("--cooldown", type=int, default=30,
                         help="Segundos de pausa al superar --max-temp")
+    # --- Ablation study (ver README). Si se usa cualquiera de estos, el
+    # --- modelo pasa a ser encoder + cabeza propia (src/models.py).
+    parser.add_argument("--head-hidden", default=None,
+                        help="Capas ocultas de la cabeza, separadas por comas: "
+                             "'none' = lineal, '768' = una capa, '512,256' = dos")
+    parser.add_argument("--head-dropout", type=float, default=0.1)
+    parser.add_argument("--freeze-encoder", action="store_true",
+                        help="Congelar todo el transformer; solo entrena la cabeza")
+    parser.add_argument("--freeze-layers", type=int, default=0,
+                        help="Congelar embeddings + las primeras N capas")
     parser.add_argument("--tag", default=None,
                         help="Etiqueta para distinguir corridas "
                              "(ej. 'smoke', 'final', '3epocas')")
@@ -174,15 +193,42 @@ def main():
     use_amp = (not args.no_amp) and device.type == "cuda"
 
     # --- Datos -------------------------------------------------------------
-    subsample = {"train": args.max_train} if args.max_train else None
+    subsample = {}
+    if args.max_train:
+        subsample["train"] = args.max_train
+    if args.max_val:
+        subsample["validation"] = args.max_val
+    subsample = subsample or None
     ds, info_ds = load_task(args.task, subsample=subsample)
     max_length = args.max_length or info_ds.max_length
 
     tokenizer = build_tokenizer(args.model)
-    model, info_m = build_model(args.model, num_labels=info_ds.num_labels)
+
+    # Modo ablation: cualquiera de las tres opciones activa la version con
+    # cabeza configurable. Sin ellas se usa la cabeza estandar de HuggingFace,
+    # que es la que usan las corridas base del informe.
+    modo_ablation = (args.head_hidden is not None
+                     or args.freeze_encoder
+                     or args.freeze_layers > 0)
+    if modo_ablation:
+        # 'none' (o cadena vacia) = cabeza lineal, sin capa oculta. Se acepta
+        # la palabra porque un argumento vacio no siempre sobrevive al paso
+        # por sbatch/srun.
+        crudo = (args.head_hidden or "").strip().lower()
+        head_hidden = ([] if crudo in ("", "none", "0") else
+                       [int(h) for h in crudo.split(",") if h.strip()])
+        model, info_m, ablacion = build_ablation_model(
+            args.model, num_labels=info_ds.num_labels,
+            head_hidden=head_hidden, head_dropout=args.head_dropout,
+            freeze_encoder=args.freeze_encoder, freeze_layers=args.freeze_layers,
+        )
+    else:
+        model, info_m = build_model(args.model, num_labels=info_ds.num_labels)
+        ablacion = None
     model.to(device)
 
     n_params = count_parameters(model)
+    n_params_entrenables = count_parameters(model, only_trainable=True)
 
     print("=" * 62)
     print(f"Fine-tuning {info_m['nombre']} | tarea: {info_ds.name}")
@@ -197,6 +243,13 @@ def main():
     print(f"\nModelo      : {info_m['hf_id']}")
     print(f"  capas      : {info_m['capas']}")
     print(f"  parametros : {n_params:,} ({model_size_mb(model):.1f} MB en fp32)")
+    if ablacion:
+        print(f"  cabeza     : {ablacion['head_hidden'] or 'lineal'} "
+              f"(dropout {ablacion['head_dropout']})")
+        print(f"  congelado  : encoder={ablacion['freeze_encoder']} "
+              f"capas={ablacion['freeze_layers']}")
+        print(f"  entrenables: {n_params_entrenables:,} "
+              f"({100 * n_params_entrenables / n_params:.1f}% del total)")
 
     train_loader = build_dataloader(ds["train"], tokenizer, max_length,
                                     args.batch_size, shuffle=True)
@@ -208,12 +261,15 @@ def main():
     # --- Optimizador -------------------------------------------------------
     # No se aplica weight decay a bias ni a LayerNorm: son terminos de
     # escala/desplazamiento, penalizarlos degrada el modelo.
+    # Solo los parametros entrenables: si se congelo parte del encoder, sus
+    # pesos no deben llegar al optimizador.
     no_decay = ["bias", "LayerNorm.weight"]
+    entrenables = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
     grouped = [
-        {"params": [p for n, p in model.named_parameters()
+        {"params": [p for n, p in entrenables
                     if not any(nd in n for nd in no_decay)],
          "weight_decay": args.weight_decay},
-        {"params": [p for n, p in model.named_parameters()
+        {"params": [p for n, p in entrenables
                     if any(nd in n for nd in no_decay)],
          "weight_decay": 0.0},
     ]
@@ -235,8 +291,13 @@ def main():
 
     # --- Entrenamiento -----------------------------------------------------
     historia = []          # para el grafico "iteraciones vs loss"
+    # Metricas de validacion al cierre de cada epoca. Son las que deciden que
+    # configuracion gana el ablation study: el test se mira una sola vez, al
+    # final, y elegir con el seria elegir sobre el conjunto que se reporta.
+    historia_epocas = []
     paso_global = 0
     mejor_f1 = -1.0
+    mejor_epoca = None
     mejor_estado = None
     t0 = time.time()
 
@@ -299,8 +360,11 @@ def main():
         print(f"  [fin epoca {epoca+1}] val_loss {val_loss:.4f} | "
               f"acc {m['accuracy']:.4f} | f1 {m['f1']:.4f}", flush=True)
 
+        historia_epocas.append({"epoca": epoca + 1, "val_loss": val_loss, **m})
+
         if m["f1"] > mejor_f1:
             mejor_f1 = m["f1"]
+            mejor_epoca = epoca + 1
             mejor_estado = {k: v.detach().cpu().clone()
                             for k, v in model.state_dict().items()}
             print(f"  -> mejor modelo hasta ahora (f1 = {mejor_f1:.4f})", flush=True)
@@ -356,10 +420,14 @@ def main():
         "n_train": info_ds.n_train, "n_val": info_ds.n_val, "n_test": info_ds.n_test,
         "max_length": max_length,
         "desempeno_test": desempeno,
+        "desempeno_val": {"mejor_f1": mejor_f1, "mejor_epoca": mejor_epoca,
+                          "por_epoca": historia_epocas},
         "por_clase": per_class_report(test_true, test_pred, info_ds.class_names),
         "matriz_confusion": confusion(test_true, test_pred),
+        "ablacion": ablacion,
         "eficiencia": {
             "n_parametros": n_params,
+            "n_parametros_entrenables": n_params_entrenables,
             "tamano_mb": model_size_mb(model),
             **lat, **mem,
         },

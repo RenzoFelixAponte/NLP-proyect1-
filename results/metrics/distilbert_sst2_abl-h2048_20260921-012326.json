@@ -1,0 +1,344 @@
+{
+  "timestamp": "2026-09-21 01:23:26",
+  "tag": "abl-h2048",
+  "modelo": "distilbert",
+  "modelo_nombre": "DistilBERT-base",
+  "modelo_hf_id": "distilbert-base-uncased",
+  "capas": 6,
+  "tarea": "sst2",
+  "config": {
+    "model": "distilbert",
+    "task": "sst2",
+    "epochs": 2,
+    "batch_size": 32,
+    "lr": 2e-05,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "max_train": null,
+    "max_val": null,
+    "max_length": null,
+    "log_every": 100,
+    "eval_every": 500,
+    "no_amp": false,
+    "max_temp": null,
+    "cooldown": 30,
+    "head_hidden": "2048",
+    "head_dropout": 0.1,
+    "freeze_encoder": false,
+    "freeze_layers": 0,
+    "tag": "abl-h2048",
+    "out": "results"
+  },
+  "n_train": 60614,
+  "n_val": 6735,
+  "n_test": 872,
+  "max_length": 64,
+  "desempeno_test": {
+    "accuracy": 0.9025229357798165,
+    "precision": 0.9030160027418206,
+    "recall": 0.9022164688052539,
+    "f1": 0.9024150048121041
+  },
+  "desempeno_val": {
+    "mejor_f1": 0.9469613122505334,
+    "mejor_epoca": 2,
+    "por_epoca": [
+      {
+        "epoca": 1,
+        "val_loss": 0.17456731962931665,
+        "accuracy": 0.9416481069042316,
+        "precision": 0.9403520649966148,
+        "recall": 0.9428465589666379,
+        "f1": 0.9412900035886704
+      },
+      {
+        "epoca": 2,
+        "val_loss": 0.17000467146601156,
+        "accuracy": 0.9474387527839644,
+        "precision": 0.9468610248853344,
+        "recall": 0.9470643423236049,
+        "f1": 0.9469613122505334
+      }
+    ]
+  },
+  "por_clase": [
+    {
+      "clase": "negative",
+      "precision": 0.9132530120481928,
+      "recall": 0.8855140186915887,
+      "f1": 0.8991696322657177,
+      "n": 428
+    },
+    {
+      "clase": "positive",
+      "precision": 0.8927789934354485,
+      "recall": 0.918918918918919,
+      "f1": 0.9056603773584906,
+      "n": 444
+    }
+  ],
+  "matriz_confusion": [
+    [
+      379,
+      49
+    ],
+    [
+      36,
+      408
+    ]
+  ],
+  "ablacion": {
+    "head_hidden": [
+      2048
+    ],
+    "head_dropout": 0.1,
+    "freeze_encoder": false,
+    "freeze_layers": 0
+  },
+  "eficiencia": {
+    "n_parametros": 67941890,
+    "n_parametros_entrenables": 67941890,
+    "tamano_mb": 259.18164825439453,
+    "latencia_ms_media": 3.414491061703302,
+    "latencia_ms_std": 0.04812503812189285,
+    "latencia_ms_mediana": 3.4084670041920617,
+    "batch_size": 1,
+    "seq_len": 64,
+    "n_runs": 50,
+    "memoria_mb_pico": 1070.48779296875,
+    "memoria_mb_reservada": 1160.0
+  },
+  "tiempo_entrenamiento_s": 162.39729237556458,
+  "historia": [
+    {
+      "paso": 100,
+      "train_loss": 0.6904066467285156,
+      "val_loss": null,
+      "lr": 5.2770448548812665e-06
+    },
+    {
+      "paso": 200,
+      "train_loss": 0.4078074359893799,
+      "val_loss": null,
+      "lr": 1.0554089709762533e-05
+    },
+    {
+      "paso": 300,
+      "train_loss": 0.31503461122512816,
+      "val_loss": null,
+      "lr": 1.58311345646438e-05
+    },
+    {
+      "paso": 400,
+      "train_loss": 0.3173493587970734,
+      "val_loss": null,
+      "lr": 1.9876868953386104e-05
+    },
+    {
+      "paso": 500,
+      "train_loss": 0.29343874335289,
+      "val_loss": 0.24545261786447317,
+      "lr": 1.9290530636177075e-05,
+      "val_accuracy": 0.9037861915367483
+    },
+    {
+      "paso": 600,
+      "train_loss": 0.25244505524635313,
+      "val_loss": null,
+      "lr": 1.8704192318968045e-05
+    },
+    {
+      "paso": 700,
+      "train_loss": 0.2559116345643997,
+      "val_loss": null,
+      "lr": 1.8117854001759015e-05
+    },
+    {
+      "paso": 800,
+      "train_loss": 0.21673460841178893,
+      "val_loss": null,
+      "lr": 1.7531515684549986e-05
+    },
+    {
+      "paso": 900,
+      "train_loss": 0.22420232623815536,
+      "val_loss": null,
+      "lr": 1.6945177367340956e-05
+    },
+    {
+      "paso": 1000,
+      "train_loss": 0.22319592982530595,
+      "val_loss": 0.2257578343294243,
+      "lr": 1.6358839050131926e-05,
+      "val_accuracy": 0.9165553080920564
+    },
+    {
+      "paso": 1100,
+      "train_loss": 0.2034183982014656,
+      "val_loss": null,
+      "lr": 1.5772500732922896e-05
+    },
+    {
+      "paso": 1200,
+      "train_loss": 0.21128268122673036,
+      "val_loss": null,
+      "lr": 1.5186162415713868e-05
+    },
+    {
+      "paso": 1300,
+      "train_loss": 0.19363178223371505,
+      "val_loss": null,
+      "lr": 1.4599824098504837e-05
+    },
+    {
+      "paso": 1400,
+      "train_loss": 0.20413577273488046,
+      "val_loss": null,
+      "lr": 1.4013485781295807e-05
+    },
+    {
+      "paso": 1500,
+      "train_loss": 0.1922302310168743,
+      "val_loss": 0.17626675356055888,
+      "lr": 1.3427147464086778e-05,
+      "val_accuracy": 0.9364513734224202
+    },
+    {
+      "paso": 1600,
+      "train_loss": 0.18319179624319076,
+      "val_loss": null,
+      "lr": 1.2840809146877748e-05
+    },
+    {
+      "paso": 1700,
+      "train_loss": 0.17949801802635193,
+      "val_loss": null,
+      "lr": 1.2254470829668722e-05
+    },
+    {
+      "paso": 1800,
+      "train_loss": 0.19179378762841226,
+      "val_loss": null,
+      "lr": 1.1668132512459692e-05
+    },
+    {
+      "paso": 1900,
+      "train_loss": 0.1115102618932724,
+      "val_loss": null,
+      "lr": 1.1081794195250662e-05
+    },
+    {
+      "paso": 2000,
+      "train_loss": 0.1273828148841858,
+      "val_loss": 0.18723990581046915,
+      "lr": 1.049545587804163e-05,
+      "val_accuracy": 0.9414996288047514
+    },
+    {
+      "paso": 2100,
+      "train_loss": 0.1272721241414547,
+      "val_loss": null,
+      "lr": 9.909117560832601e-06
+    },
+    {
+      "paso": 2200,
+      "train_loss": 0.12728479966521264,
+      "val_loss": null,
+      "lr": 9.322779243623571e-06
+    },
+    {
+      "paso": 2300,
+      "train_loss": 0.11335586585104465,
+      "val_loss": null,
+      "lr": 8.736440926414542e-06
+    },
+    {
+      "paso": 2400,
+      "train_loss": 0.12964463382959365,
+      "val_loss": null,
+      "lr": 8.150102609205512e-06
+    },
+    {
+      "paso": 2500,
+      "train_loss": 0.11369101874530316,
+      "val_loss": 0.19199586624359066,
+      "lr": 7.563764291996482e-06,
+      "val_accuracy": 0.9437268002969562
+    },
+    {
+      "paso": 2600,
+      "train_loss": 0.11559105515480042,
+      "val_loss": null,
+      "lr": 6.9774259747874525e-06
+    },
+    {
+      "paso": 2700,
+      "train_loss": 0.13137673884630202,
+      "val_loss": null,
+      "lr": 6.391087657578423e-06
+    },
+    {
+      "paso": 2800,
+      "train_loss": 0.11496657587587833,
+      "val_loss": null,
+      "lr": 5.804749340369393e-06
+    },
+    {
+      "paso": 2900,
+      "train_loss": 0.10743993155658245,
+      "val_loss": null,
+      "lr": 5.218411023160363e-06
+    },
+    {
+      "paso": 3000,
+      "train_loss": 0.13159043841063978,
+      "val_loss": 0.16205524579043637,
+      "lr": 4.6320727059513345e-06,
+      "val_accuracy": 0.9465478841870824
+    },
+    {
+      "paso": 3100,
+      "train_loss": 0.10882540822029113,
+      "val_loss": null,
+      "lr": 4.045734388742305e-06
+    },
+    {
+      "paso": 3200,
+      "train_loss": 0.11433418147265911,
+      "val_loss": null,
+      "lr": 3.4593960715332747e-06
+    },
+    {
+      "paso": 3300,
+      "train_loss": 0.1130113536119461,
+      "val_loss": null,
+      "lr": 2.8730577543242454e-06
+    },
+    {
+      "paso": 3400,
+      "train_loss": 0.12208693780004978,
+      "val_loss": null,
+      "lr": 2.2867194371152157e-06
+    },
+    {
+      "paso": 3500,
+      "train_loss": 0.12718307316303254,
+      "val_loss": 0.17199180066868028,
+      "lr": 1.700381119906186e-06,
+      "val_accuracy": 0.9463994060876021
+    },
+    {
+      "paso": 3600,
+      "train_loss": 0.10332317307591438,
+      "val_loss": null,
+      "lr": 1.1140428026971563e-06
+    },
+    {
+      "paso": 3700,
+      "train_loss": 0.12591666504740714,
+      "val_loss": null,
+      "lr": 5.277044854881267e-07
+    }
+  ]
+}

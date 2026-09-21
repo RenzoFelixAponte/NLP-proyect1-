@@ -1,0 +1,137 @@
+=== job 52050 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model distilbert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task ag_news --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:10:17 2026).
+Flattening the indices:   0%|          | 0/108000 [00:00<?, ? examples/s]Flattening the indices:   5%|▍         | 5000/108000 [00:00<00:02, 43232.05 examples/s]Flattening the indices:  11%|█         | 12000/108000 [00:00<00:02, 40893.01 examples/s]Flattening the indices:  17%|█▋        | 18000/108000 [00:00<00:02, 40257.62 examples/s]Flattening the indices:  23%|██▎       | 25000/108000 [00:00<00:02, 39878.95 examples/s]Flattening the indices:  30%|██▉       | 32000/108000 [00:00<00:01, 39911.53 examples/s]Flattening the indices:  34%|███▍      | 37000/108000 [00:00<00:01, 39873.02 examples/s]Flattening the indices:  38%|███▊      | 41000/108000 [00:01<00:01, 39854.74 examples/s]Flattening the indices:  43%|████▎     | 46000/108000 [00:01<00:01, 39886.98 examples/s]Flattening the indices:  48%|████▊     | 52000/108000 [00:01<00:01, 39904.60 examples/s]Flattening the indices:  53%|█████▎    | 57000/108000 [00:01<00:01, 39862.85 examples/s]Flattening the indices:  56%|█████▋    | 61000/108000 [00:01<00:01, 39877.30 examples/s]Flattening the indices:  61%|██████    | 66000/108000 [00:01<00:01, 39913.76 examples/s]Flattening the indices:  67%|██████▋   | 72000/108000 [00:01<00:00, 40028.77 examples/s]Flattening the indices:  71%|███████▏  | 77000/108000 [00:01<00:00, 40007.31 examples/s]Flattening the indices:  76%|███████▌  | 82000/108000 [00:02<00:00, 40028.89 examples/s]Flattening the indices:  81%|████████▏ | 88000/108000 [00:02<00:00, 40076.31 examples/s]Flattening the indices:  86%|████████▌ | 93000/108000 [00:02<00:00, 40190.06 examples/s]Flattening the indices:  92%|█████████▏| 99000/108000 [00:02<00:00, 40430.54 examples/s]Flattening the indices:  97%|█████████▋| 105000/108000 [00:02<00:00, 40587.92 examples/s]Flattening the indices: 100%|██████████| 108000/108000 [00:03<00:00, 32884.86 examples/s]
+Flattening the indices:   0%|          | 0/12000 [00:00<?, ? examples/s]Flattening the indices:  42%|████▏     | 5000/12000 [00:00<00:00, 43008.18 examples/s]Flattening the indices:  83%|████████▎ | 10000/12000 [00:00<00:00, 41123.57 examples/s]Flattening the indices: 100%|██████████| 12000/12000 [00:00<00:00, 31440.05 examples/s]
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 3965.87it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+classifier.bias         | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+classifier.weight       | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,956,548 (255.4 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3579
+  paso   200 | train_loss 0.9036
+  paso   300 | train_loss 0.4162
+  paso   400 | train_loss 0.3575
+  paso   500 | train_loss 0.3003 | val_loss 0.3052 | val_acc 0.9012
+  paso   600 | train_loss 0.3064
+  paso   700 | train_loss 0.3045
+  paso   800 | train_loss 0.2789
+  paso   900 | train_loss 0.2533
+  paso  1000 | train_loss 0.2469 | val_loss 0.2343 | val_acc 0.9195
+  paso  1100 | train_loss 0.2572
+  paso  1200 | train_loss 0.2295
+  paso  1300 | train_loss 0.2300
+  paso  1400 | train_loss 0.2137
+  paso  1500 | train_loss 0.2149 | val_loss 0.2310 | val_acc 0.9218
+  paso  1600 | train_loss 0.2133
+  paso  1700 | train_loss 0.2108
+  paso  1800 | train_loss 0.2175
+  paso  1900 | train_loss 0.2149
+  paso  2000 | train_loss 0.1963 | val_loss 0.1981 | val_acc 0.9336
+  paso  2100 | train_loss 0.2142
+  paso  2200 | train_loss 0.1958
+  paso  2300 | train_loss 0.1992
+  paso  2400 | train_loss 0.2070
+  paso  2500 | train_loss 0.1944 | val_loss 0.1945 | val_acc 0.9332
+  paso  2600 | train_loss 0.1823
+  paso  2700 | train_loss 0.2019
+  paso  2800 | train_loss 0.1692
+  paso  2900 | train_loss 0.1906
+  paso  3000 | train_loss 0.1978 | val_loss 0.1855 | val_acc 0.9373
+  paso  3100 | train_loss 0.1835
+  paso  3200 | train_loss 0.1953
+  paso  3300 | train_loss 0.1819
+  [fin epoca 1] val_loss 0.1864 | acc 0.9391 | f1 0.9387
+  -> mejor modelo hasta ahora (f1 = 0.9387)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1336
+  paso  3500 | train_loss 0.1417 | val_loss 0.1838 | val_acc 0.9419
+  paso  3600 | train_loss 0.1526
+  paso  3700 | train_loss 0.1441
+  paso  3800 | train_loss 0.1505
+  paso  3900 | train_loss 0.1552
+  paso  4000 | train_loss 0.1489 | val_loss 0.1868 | val_acc 0.9410
+  paso  4100 | train_loss 0.1379
+  paso  4200 | train_loss 0.1418
+  paso  4300 | train_loss 0.1468
+  paso  4400 | train_loss 0.1417
+  paso  4500 | train_loss 0.1475 | val_loss 0.1803 | val_acc 0.9423
+  paso  4600 | train_loss 0.1366
+  paso  4700 | train_loss 0.1287
+  paso  4800 | train_loss 0.1328
+  paso  4900 | train_loss 0.1496
+  paso  5000 | train_loss 0.1507 | val_loss 0.1771 | val_acc 0.9434
+  paso  5100 | train_loss 0.1234
+  paso  5200 | train_loss 0.1344
+  paso  5300 | train_loss 0.1303
+  paso  5400 | train_loss 0.1415
+  paso  5500 | train_loss 0.1373 | val_loss 0.1763 | val_acc 0.9445
+  paso  5600 | train_loss 0.1296
+  paso  5700 | train_loss 0.1398
+  paso  5800 | train_loss 0.1425
+  paso  5900 | train_loss 0.1299
+  paso  6000 | train_loss 0.1383 | val_loss 0.1734 | val_acc 0.9444
+  paso  6100 | train_loss 0.1502
+  paso  6200 | train_loss 0.1285
+  paso  6300 | train_loss 0.1368
+  paso  6400 | train_loss 0.1412
+  paso  6500 | train_loss 0.1265 | val_loss 0.1721 | val_acc 0.9443
+  paso  6600 | train_loss 0.1379
+  paso  6700 | train_loss 0.1356
+  [fin epoca 2] val_loss 0.1725 | acc 0.9452 | f1 0.9449
+  -> mejor modelo hasta ahora (f1 = 0.9449)
+
+Entrenamiento completado en 5.5 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9450
+  Precision : 0.9452
+  Recall    : 0.9450
+  F1-score  : 0.9450
+
+  Por clase:
+    World      P 0.963  R 0.952  F1 0.957  (n=1900)
+    Sports     P 0.987  R 0.990  F1 0.988  (n=1900)
+    Business   P 0.924  R 0.905  F1 0.915  (n=1900)
+    Sci/Tech   P 0.906  R 0.933  F1 0.920  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 66,956,548
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 3.65 +/- 0.05 ms
+  Memoria GPU pico  : 1059.1 MB
+
+Resultados guardados en results/metrics/distilbert_ag_news_base_20260921-002137.json

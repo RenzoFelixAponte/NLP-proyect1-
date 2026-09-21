@@ -36,6 +36,12 @@ def load_all(metrics_dir=METRICS_DIR):
         except json.JSONDecodeError:
             print(f"  aviso: {archivo.name} no es un JSON valido, se omite")
             continue
+        # En results/metrics/ tambien viven los JSON de src/benchmark.py, que
+        # no son corridas de entrenamiento: no traen modelo, tarea ni metricas
+        # de test, y apareceria una fila de '?' con nan en el resumen.
+        if not (datos.get("modelo") and datos.get("tarea")
+                and datos.get("desempeno_test")):
+            continue
         datos["_archivo"] = archivo.name
         corridas.append(datos)
 

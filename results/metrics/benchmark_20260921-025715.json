@@ -1,0 +1,244 @@
+{
+  "timestamp": "2026-09-21 02:57:15",
+  "dispositivo": "NVIDIA RTX A6000",
+  "precision": "fp32",
+  "config": {
+    "models": [
+      "bert",
+      "distilbert"
+    ],
+    "num_labels": 2,
+    "batch_sizes": [
+      1,
+      8,
+      32
+    ],
+    "seq_lens": [
+      64,
+      128,
+      256
+    ],
+    "n_runs": 50,
+    "out": "results"
+  },
+  "modelos": [
+    {
+      "modelo": "bert",
+      "modelo_nombre": "BERT-base",
+      "modelo_hf_id": "bert-base-uncased",
+      "capas": 12,
+      "n_parametros": 109483778,
+      "tamano_mb": 417.65528106689453,
+      "mediciones": [
+        {
+          "batch_size": 1,
+          "seq_len": 64,
+          "latencia_ms_media": 5.560987680219114,
+          "latencia_ms_std": 0.059289423163689445,
+          "latencia_ms_mediana": 5.563141996390186,
+          "n_runs": 50,
+          "memoria_mb_pico": 429.92431640625,
+          "memoria_mb_reservada": 476.0,
+          "muestras_por_s": 179.82417108332777
+        },
+        {
+          "batch_size": 1,
+          "seq_len": 128,
+          "latencia_ms_media": 5.606262941146269,
+          "latencia_ms_std": 0.3757146188534453,
+          "latencia_ms_mediana": 5.561531987041235,
+          "n_runs": 50,
+          "memoria_mb_pico": 432.98779296875,
+          "memoria_mb_reservada": 474.0,
+          "muestras_por_s": 178.37194054182868
+        },
+        {
+          "batch_size": 1,
+          "seq_len": 256,
+          "latencia_ms_media": 5.107726556016132,
+          "latencia_ms_std": 0.214587552534443,
+          "latencia_ms_mediana": 4.953987488988787,
+          "n_runs": 50,
+          "memoria_mb_pico": 436.11474609375,
+          "memoria_mb_reservada": 478.0,
+          "muestras_por_s": 195.78181976522424
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 64,
+          "latencia_ms_media": 7.720282202935778,
+          "latencia_ms_std": 0.04478248981983857,
+          "latencia_ms_mediana": 7.712261503911577,
+          "n_runs": 50,
+          "memoria_mb_pico": 445.87255859375,
+          "memoria_mb_reservada": 494.0,
+          "muestras_por_s": 1036.2315508308563
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 128,
+          "latencia_ms_media": 13.617335300077684,
+          "latencia_ms_std": 0.10327644139130188,
+          "latencia_ms_mediana": 13.58445201185532,
+          "n_runs": 50,
+          "memoria_mb_pico": 461.50146484375,
+          "memoria_mb_reservada": 518.0,
+          "muestras_por_s": 587.4864519165039
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 256,
+          "latencia_ms_media": 26.592389039578848,
+          "latencia_ms_std": 0.1358919441314585,
+          "latencia_ms_mediana": 26.61735848232638,
+          "n_runs": 50,
+          "memoria_mb_pico": 493.89208984375,
+          "memoria_mb_reservada": 562.0,
+          "muestras_por_s": 300.83795736040037
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 64,
+          "latencia_ms_media": 24.966930859955028,
+          "latencia_ms_std": 0.13442625990838916,
+          "latencia_ms_mediana": 24.94248100265395,
+          "n_runs": 50,
+          "memoria_mb_pico": 493.89208984375,
+          "memoria_mb_reservada": 562.0,
+          "muestras_por_s": 1281.69538256404
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 128,
+          "latencia_ms_media": 49.84756430028938,
+          "latencia_ms_std": 0.18545034942813493,
+          "latencia_ms_mediana": 49.7946520044934,
+          "n_runs": 50,
+          "memoria_mb_pico": 559.92333984375,
+          "memoria_mb_reservada": 678.0,
+          "muestras_por_s": 641.9571437277675
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 256,
+          "latencia_ms_media": 98.09816186083481,
+          "latencia_ms_std": 0.3085325186518707,
+          "latencia_ms_mediana": 98.06125999602955,
+          "n_runs": 50,
+          "memoria_mb_pico": 691.98583984375,
+          "memoria_mb_reservada": 882.0,
+          "muestras_por_s": 326.2038696035531
+        }
+      ]
+    },
+    {
+      "modelo": "distilbert",
+      "modelo_nombre": "DistilBERT-base",
+      "modelo_hf_id": "distilbert-base-uncased",
+      "capas": 6,
+      "n_parametros": 66955010,
+      "tamano_mb": 255.41699981689453,
+      "mediciones": [
+        {
+          "batch_size": 1,
+          "seq_len": 64,
+          "latencia_ms_media": 2.6010655605932698,
+          "latencia_ms_std": 0.03756179302278632,
+          "latencia_ms_mediana": 2.592119504697621,
+          "n_runs": 50,
+          "memoria_mb_pico": 268.56103515625,
+          "memoria_mb_reservada": 294.0,
+          "muestras_por_s": 384.45782188277974
+        },
+        {
+          "batch_size": 1,
+          "seq_len": 128,
+          "latencia_ms_media": 2.6114228618098423,
+          "latencia_ms_std": 0.03976557993956992,
+          "latencia_ms_mediana": 2.600919993710704,
+          "n_runs": 50,
+          "memoria_mb_pico": 271.62451171875,
+          "memoria_mb_reservada": 296.0,
+          "muestras_por_s": 382.93300354541265
+        },
+        {
+          "batch_size": 1,
+          "seq_len": 256,
+          "latencia_ms_media": 2.739611001452431,
+          "latencia_ms_std": 0.11703498272581041,
+          "latencia_ms_mediana": 2.718774994718842,
+          "n_runs": 50,
+          "memoria_mb_pico": 274.75146484375,
+          "memoria_mb_reservada": 300.0,
+          "muestras_por_s": 365.0153249749108
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 64,
+          "latencia_ms_media": 4.010357800289057,
+          "latencia_ms_std": 0.018136094048098815,
+          "latencia_ms_mediana": 4.010964999906719,
+          "n_runs": 50,
+          "memoria_mb_pico": 284.50537109375,
+          "memoria_mb_reservada": 312.0,
+          "muestras_por_s": 1994.8344757226846
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 128,
+          "latencia_ms_media": 6.945949560613371,
+          "latencia_ms_std": 0.07314262839308024,
+          "latencia_ms_mediana": 6.932714502909221,
+          "n_runs": 50,
+          "memoria_mb_pico": 299.51318359375,
+          "memoria_mb_reservada": 336.0,
+          "muestras_por_s": 1151.7503733922233
+        },
+        {
+          "batch_size": 8,
+          "seq_len": 256,
+          "latencia_ms_media": 13.38608208054211,
+          "latencia_ms_std": 0.0674310041349448,
+          "latencia_ms_mediana": 13.410679501248524,
+          "n_runs": 50,
+          "memoria_mb_pico": 332.52880859375,
+          "memoria_mb_reservada": 382.0,
+          "muestras_por_s": 597.6356600732882
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 64,
+          "latencia_ms_media": 12.624744722270407,
+          "latencia_ms_std": 0.06666688744679435,
+          "latencia_ms_mediana": 12.611255500814877,
+          "n_runs": 50,
+          "memoria_mb_pico": 332.52880859375,
+          "memoria_mb_reservada": 380.0,
+          "muestras_por_s": 2534.70471712201
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 128,
+          "latencia_ms_media": 25.09583228151314,
+          "latencia_ms_std": 0.11936916326969986,
+          "latencia_ms_mediana": 25.125676504103467,
+          "n_runs": 50,
+          "memoria_mb_pico": 398.56005859375,
+          "memoria_mb_reservada": 460.0,
+          "muestras_por_s": 1275.1121238394958
+        },
+        {
+          "batch_size": 32,
+          "seq_len": 256,
+          "latencia_ms_media": 49.24630588153377,
+          "latencia_ms_std": 0.1824499389639768,
+          "latencia_ms_mediana": 49.222344503505155,
+          "n_runs": 50,
+          "memoria_mb_pico": 530.62255859375,
+          "memoria_mb_reservada": 630.0,
+          "muestras_por_s": 649.794932374801
+        }
+      ]
+    }
+  ]
+}

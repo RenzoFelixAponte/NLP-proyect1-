@@ -1,0 +1,72 @@
+=== job 52064 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args:  ===
+======================================================================
+Benchmark de eficiencia | NVIDIA RTX A6000
+======================================================================
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 3090.16it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+  BERT-base        batch   1 x len  64 |    5.56 ms |    179.8 muestras/s |   429.9 MB
+  BERT-base        batch   1 x len 128 |    5.61 ms |    178.4 muestras/s |   433.0 MB
+  BERT-base        batch   1 x len 256 |    5.11 ms |    195.8 muestras/s |   436.1 MB
+  BERT-base        batch   8 x len  64 |    7.72 ms |   1036.2 muestras/s |   445.9 MB
+  BERT-base        batch   8 x len 128 |   13.62 ms |    587.5 muestras/s |   461.5 MB
+  BERT-base        batch   8 x len 256 |   26.59 ms |    300.8 muestras/s |   493.9 MB
+  BERT-base        batch  32 x len  64 |   24.97 ms |   1281.7 muestras/s |   493.9 MB
+  BERT-base        batch  32 x len 128 |   49.85 ms |    642.0 muestras/s |   559.9 MB
+  BERT-base        batch  32 x len 256 |   98.10 ms |    326.2 muestras/s |   692.0 MB
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 5389.34it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+classifier.bias         | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+  DistilBERT-base  batch   1 x len  64 |    2.60 ms |    384.5 muestras/s |   268.6 MB
+  DistilBERT-base  batch   1 x len 128 |    2.61 ms |    382.9 muestras/s |   271.6 MB
+  DistilBERT-base  batch   1 x len 256 |    2.74 ms |    365.0 muestras/s |   274.8 MB
+  DistilBERT-base  batch   8 x len  64 |    4.01 ms |   1994.8 muestras/s |   284.5 MB
+  DistilBERT-base  batch   8 x len 128 |    6.95 ms |   1151.8 muestras/s |   299.5 MB
+  DistilBERT-base  batch   8 x len 256 |   13.39 ms |    597.6 muestras/s |   332.5 MB
+  DistilBERT-base  batch  32 x len  64 |   12.62 ms |   2534.7 muestras/s |   332.5 MB
+  DistilBERT-base  batch  32 x len 128 |   25.10 ms |   1275.1 muestras/s |   398.6 MB
+  DistilBERT-base  batch  32 x len 256 |   49.25 ms |    649.8 muestras/s |   530.6 MB
+
+Guardado en results/metrics/benchmark_20260921-025715.json
+
+DistilBERT-base frente a BERT-base:
+  parametros : 0.61x
+  batch   1 x len  64 : 2.14x mas rapido, 0.62x la memoria
+  batch   1 x len 128 : 2.15x mas rapido, 0.63x la memoria
+  batch   1 x len 256 : 1.86x mas rapido, 0.63x la memoria
+  batch   8 x len  64 : 1.93x mas rapido, 0.64x la memoria
+  batch   8 x len 128 : 1.96x mas rapido, 0.65x la memoria
+  batch   8 x len 256 : 1.99x mas rapido, 0.67x la memoria
+  batch  32 x len  64 : 1.98x mas rapido, 0.67x la memoria
+  batch  32 x len 128 : 1.99x mas rapido, 0.71x la memoria
+  batch  32 x len 256 : 1.99x mas rapido, 0.77x la memoria

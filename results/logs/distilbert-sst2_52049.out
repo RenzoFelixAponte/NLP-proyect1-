@@ -1,0 +1,105 @@
+=== job 52049 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model distilbert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task sst2 --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:11:13 2026).
+Flattening the indices:   0%|          | 0/60614 [00:00<?, ? examples/s]Flattening the indices:  10%|▉         | 6000/60614 [00:00<00:01, 44919.40 examples/s]Flattening the indices:  20%|█▉        | 12000/60614 [00:00<00:01, 42668.96 examples/s]Flattening the indices:  30%|██▉       | 18000/60614 [00:00<00:01, 41909.05 examples/s]Flattening the indices:  40%|███▉      | 24000/60614 [00:00<00:00, 41706.71 examples/s]Flattening the indices:  48%|████▊     | 29000/60614 [00:00<00:00, 41359.47 examples/s]Flattening the indices:  58%|█████▊    | 35000/60614 [00:00<00:00, 41275.00 examples/s]Flattening the indices:  68%|██████▊   | 41000/60614 [00:00<00:00, 41291.75 examples/s]Flattening the indices:  78%|███████▊  | 47000/60614 [00:01<00:00, 41342.75 examples/s]Flattening the indices:  87%|████████▋ | 53000/60614 [00:01<00:00, 41355.91 examples/s]Flattening the indices:  97%|█████████▋| 59000/60614 [00:01<00:00, 41348.72 examples/s]Flattening the indices: 100%|██████████| 60614/60614 [00:01<00:00, 38740.64 examples/s]
+Flattening the indices:   0%|          | 0/6735 [00:00<?, ? examples/s]Flattening the indices:  89%|████████▉ | 6000/6735 [00:00<00:00, 41787.31 examples/s]Flattening the indices: 100%|██████████| 6735/6735 [00:00<00:00, 37994.75 examples/s]
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4472.97it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+pre_classifier.bias     | MISSING    | 
+classifier.weight       | MISSING    | 
+classifier.bias         | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6853
+  paso   200 | train_loss 0.4969
+  paso   300 | train_loss 0.3272
+  paso   400 | train_loss 0.2845
+  paso   500 | train_loss 0.2734 | val_loss 0.2381 | val_acc 0.9056
+  paso   600 | train_loss 0.2587
+  paso   700 | train_loss 0.2535
+  paso   800 | train_loss 0.2677
+  paso   900 | train_loss 0.2163
+  paso  1000 | train_loss 0.2235 | val_loss 0.2053 | val_acc 0.9235
+  paso  1100 | train_loss 0.2098
+  paso  1200 | train_loss 0.2166
+  paso  1300 | train_loss 0.1828
+  paso  1400 | train_loss 0.2079
+  paso  1500 | train_loss 0.1983 | val_loss 0.1803 | val_acc 0.9363
+  paso  1600 | train_loss 0.1831
+  paso  1700 | train_loss 0.1679
+  paso  1800 | train_loss 0.1778
+  [fin epoca 1] val_loss 0.1694 | acc 0.9416 | f1 0.9411
+  -> mejor modelo hasta ahora (f1 = 0.9411)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1640
+  paso  2000 | train_loss 0.1261 | val_loss 0.1907 | val_acc 0.9397
+  paso  2100 | train_loss 0.1118
+  paso  2200 | train_loss 0.1366
+  paso  2300 | train_loss 0.1139
+  paso  2400 | train_loss 0.1138
+  paso  2500 | train_loss 0.1295 | val_loss 0.1753 | val_acc 0.9446
+  paso  2600 | train_loss 0.1171
+  paso  2700 | train_loss 0.1224
+  paso  2800 | train_loss 0.1283
+  paso  2900 | train_loss 0.1410
+  paso  3000 | train_loss 0.1297 | val_loss 0.1667 | val_acc 0.9465
+  paso  3100 | train_loss 0.1224
+  paso  3200 | train_loss 0.1087
+  paso  3300 | train_loss 0.1001
+  paso  3400 | train_loss 0.1127
+  paso  3500 | train_loss 0.1285 | val_loss 0.1628 | val_acc 0.9473
+  paso  3600 | train_loss 0.1024
+  paso  3700 | train_loss 0.1130
+  [fin epoca 2] val_loss 0.1664 | acc 0.9465 | f1 0.9461
+  -> mejor modelo hasta ahora (f1 = 0.9461)
+
+Entrenamiento completado en 2.7 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | sst2
+==============================================================
+  Accuracy  : 0.9128
+  Precision : 0.9134
+  Recall    : 0.9125
+  F1-score  : 0.9127
+
+  Por clase:
+    negative   P 0.925  R 0.895  F1 0.910  (n=428)
+    positive   P 0.902  R 0.930  F1 0.916  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 3.50 +/- 0.06 ms
+  Memoria GPU pico  : 1054.9 MB
+
+Resultados guardados en results/metrics/distilbert_sst2_base_20260921-001508.json

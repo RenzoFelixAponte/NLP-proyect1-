@@ -1,0 +1,103 @@
+=== job 52059 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model bert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task sst2 --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  30%|███       | 60/199 [00:00<00:00, 574.97it/s]Loading weights:  65%|██████▌   | 130/199 [00:00<00:00, 646.93it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 664.97it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning BERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,483,778 (417.7 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6781
+  paso   200 | train_loss 0.4198
+  paso   300 | train_loss 0.3049
+  paso   400 | train_loss 0.3038
+  paso   500 | train_loss 0.2533 | val_loss 0.2194 | val_acc 0.9176
+  paso   600 | train_loss 0.2513
+  paso   700 | train_loss 0.2264
+  paso   800 | train_loss 0.2090
+  paso   900 | train_loss 0.2108
+  paso  1000 | train_loss 0.2085 | val_loss 0.1739 | val_acc 0.9376
+  paso  1100 | train_loss 0.1812
+  paso  1200 | train_loss 0.2017
+  paso  1300 | train_loss 0.1827
+  paso  1400 | train_loss 0.1629
+  paso  1500 | train_loss 0.1767 | val_loss 0.1568 | val_acc 0.9443
+  paso  1600 | train_loss 0.1878
+  paso  1700 | train_loss 0.1740
+  paso  1800 | train_loss 0.1780
+  [fin epoca 1] val_loss 0.1543 | acc 0.9471 | f1 0.9465
+  -> mejor modelo hasta ahora (f1 = 0.9465)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.1287
+  paso  2000 | train_loss 0.1138 | val_loss 0.1711 | val_acc 0.9476
+  paso  2100 | train_loss 0.1073
+  paso  2200 | train_loss 0.1175
+  paso  2300 | train_loss 0.1116
+  paso  2400 | train_loss 0.1133
+  paso  2500 | train_loss 0.1066 | val_loss 0.1668 | val_acc 0.9509
+  paso  2600 | train_loss 0.1113
+  paso  2700 | train_loss 0.1120
+  paso  2800 | train_loss 0.1194
+  paso  2900 | train_loss 0.1196
+  paso  3000 | train_loss 0.1041 | val_loss 0.1489 | val_acc 0.9547
+  paso  3100 | train_loss 0.1048
+  paso  3200 | train_loss 0.1089
+  paso  3300 | train_loss 0.1056
+  paso  3400 | train_loss 0.1044
+  paso  3500 | train_loss 0.1029 | val_loss 0.1613 | val_acc 0.9538
+  paso  3600 | train_loss 0.1064
+  paso  3700 | train_loss 0.1225
+  [fin epoca 2] val_loss 0.1518 | acc 0.9550 | f1 0.9546
+  -> mejor modelo hasta ahora (f1 = 0.9546)
+
+Entrenamiento completado en 4.2 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | sst2
+==============================================================
+  Accuracy  : 0.9232
+  Precision : 0.9232
+  Recall    : 0.9231
+  F1-score  : 0.9231
+
+  Por clase:
+    negative   P 0.923  R 0.921  F1 0.922  (n=428)
+    positive   P 0.924  R 0.926  F1 0.925  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 109,483,778
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 3.16 +/- 0.04 ms
+  Memoria GPU pico  : 1714.0 MB
+
+Resultados guardados en results/metrics/bert_sst2_base_20260921-004400.json

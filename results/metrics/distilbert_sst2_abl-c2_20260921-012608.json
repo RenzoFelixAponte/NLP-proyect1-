@@ -1,0 +1,345 @@
+{
+  "timestamp": "2026-09-21 01:26:08",
+  "tag": "abl-c2",
+  "modelo": "distilbert",
+  "modelo_nombre": "DistilBERT-base",
+  "modelo_hf_id": "distilbert-base-uncased",
+  "capas": 6,
+  "tarea": "sst2",
+  "config": {
+    "model": "distilbert",
+    "task": "sst2",
+    "epochs": 2,
+    "batch_size": 32,
+    "lr": 2e-05,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "max_grad_norm": 1.0,
+    "max_train": null,
+    "max_val": null,
+    "max_length": null,
+    "log_every": 100,
+    "eval_every": 500,
+    "no_amp": false,
+    "max_temp": null,
+    "cooldown": 30,
+    "head_hidden": "512,256",
+    "head_dropout": 0.1,
+    "freeze_encoder": false,
+    "freeze_layers": 0,
+    "tag": "abl-c2",
+    "out": "results"
+  },
+  "n_train": 60614,
+  "n_val": 6735,
+  "n_test": 872,
+  "max_length": 64,
+  "desempeno_test": {
+    "accuracy": 0.9025229357798165,
+    "precision": 0.9031608877072486,
+    "recall": 0.9021743706323146,
+    "f1": 0.9023995849480461
+  },
+  "desempeno_val": {
+    "mejor_f1": 0.9475724690930558,
+    "mejor_epoca": 2,
+    "por_epoca": [
+      {
+        "epoca": 1,
+        "val_loss": 0.16835656084155584,
+        "accuracy": 0.9419450631031923,
+        "precision": 0.9413291098022007,
+        "recall": 0.9415050851753974,
+        "f1": 0.9414160537256155
+      },
+      {
+        "epoca": 2,
+        "val_loss": 0.17186231508639185,
+        "accuracy": 0.9480326651818857,
+        "precision": 0.9473769507803121,
+        "recall": 0.9477789583712344,
+        "f1": 0.9475724690930558
+      }
+    ]
+  },
+  "por_clase": [
+    {
+      "clase": "negative",
+      "precision": 0.9152542372881356,
+      "recall": 0.883177570093458,
+      "f1": 0.8989298454221165,
+      "n": 428
+    },
+    {
+      "clase": "positive",
+      "precision": 0.8910675381263616,
+      "recall": 0.9211711711711712,
+      "f1": 0.9058693244739756,
+      "n": 444
+    }
+  ],
+  "matriz_confusion": [
+    [
+      378,
+      50
+    ],
+    [
+      35,
+      409
+    ]
+  ],
+  "ablacion": {
+    "head_hidden": [
+      512,
+      256
+    ],
+    "head_dropout": 0.1,
+    "freeze_encoder": false,
+    "freeze_layers": 0
+  },
+  "eficiencia": {
+    "n_parametros": 66888450,
+    "n_parametros_entrenables": 66888450,
+    "tamano_mb": 255.16309356689453,
+    "latencia_ms_media": 1.7993044387549162,
+    "latencia_ms_std": 0.023191446004062297,
+    "latencia_ms_mediana": 1.8005854944931343,
+    "batch_size": 1,
+    "seq_len": 64,
+    "n_runs": 50,
+    "memoria_mb_pico": 1057.53857421875,
+    "memoria_mb_reservada": 1152.0
+  },
+  "tiempo_entrenamiento_s": 132.06414103507996,
+  "historia": [
+    {
+      "paso": 100,
+      "train_loss": 0.6866195678710938,
+      "val_loss": null,
+      "lr": 5.2770448548812665e-06
+    },
+    {
+      "paso": 200,
+      "train_loss": 0.49996807098388674,
+      "val_loss": null,
+      "lr": 1.0554089709762533e-05
+    },
+    {
+      "paso": 300,
+      "train_loss": 0.3588812637329102,
+      "val_loss": null,
+      "lr": 1.58311345646438e-05
+    },
+    {
+      "paso": 400,
+      "train_loss": 0.3106402349472046,
+      "val_loss": null,
+      "lr": 1.9876868953386104e-05
+    },
+    {
+      "paso": 500,
+      "train_loss": 0.27898799657821655,
+      "val_loss": 0.24093011756078891,
+      "lr": 1.9290530636177075e-05,
+      "val_accuracy": 0.9080920564216778
+    },
+    {
+      "paso": 600,
+      "train_loss": 0.2409582281112671,
+      "val_loss": null,
+      "lr": 1.8704192318968045e-05
+    },
+    {
+      "paso": 700,
+      "train_loss": 0.2453972351551056,
+      "val_loss": null,
+      "lr": 1.8117854001759015e-05
+    },
+    {
+      "paso": 800,
+      "train_loss": 0.23913453340530397,
+      "val_loss": null,
+      "lr": 1.7531515684549986e-05
+    },
+    {
+      "paso": 900,
+      "train_loss": 0.24150182962417602,
+      "val_loss": null,
+      "lr": 1.6945177367340956e-05
+    },
+    {
+      "paso": 1000,
+      "train_loss": 0.2291835981607437,
+      "val_loss": 0.20582124195392662,
+      "lr": 1.6358839050131926e-05,
+      "val_accuracy": 0.9223459539717892
+    },
+    {
+      "paso": 1100,
+      "train_loss": 0.22652702480554582,
+      "val_loss": null,
+      "lr": 1.5772500732922896e-05
+    },
+    {
+      "paso": 1200,
+      "train_loss": 0.219198579788208,
+      "val_loss": null,
+      "lr": 1.5186162415713868e-05
+    },
+    {
+      "paso": 1300,
+      "train_loss": 0.16784651458263397,
+      "val_loss": null,
+      "lr": 1.4599824098504837e-05
+    },
+    {
+      "paso": 1400,
+      "train_loss": 0.18886662542819976,
+      "val_loss": null,
+      "lr": 1.4013485781295807e-05
+    },
+    {
+      "paso": 1500,
+      "train_loss": 0.2001890456676483,
+      "val_loss": 0.18045281233945729,
+      "lr": 1.3427147464086778e-05,
+      "val_accuracy": 0.9342242019302153
+    },
+    {
+      "paso": 1600,
+      "train_loss": 0.1968932718038559,
+      "val_loss": null,
+      "lr": 1.2840809146877748e-05
+    },
+    {
+      "paso": 1700,
+      "train_loss": 0.20833043813705443,
+      "val_loss": null,
+      "lr": 1.2254470829668722e-05
+    },
+    {
+      "paso": 1800,
+      "train_loss": 0.18250153094530105,
+      "val_loss": null,
+      "lr": 1.1668132512459692e-05
+    },
+    {
+      "paso": 1900,
+      "train_loss": 0.11781075000762939,
+      "val_loss": null,
+      "lr": 1.1081794195250662e-05
+    },
+    {
+      "paso": 2000,
+      "train_loss": 0.12555141538381576,
+      "val_loss": 0.18693557198013738,
+      "lr": 1.049545587804163e-05,
+      "val_accuracy": 0.9367483296213809
+    },
+    {
+      "paso": 2100,
+      "train_loss": 0.14151822090148924,
+      "val_loss": null,
+      "lr": 9.909117560832601e-06
+    },
+    {
+      "paso": 2200,
+      "train_loss": 0.11608723744750023,
+      "val_loss": null,
+      "lr": 9.322779243623571e-06
+    },
+    {
+      "paso": 2300,
+      "train_loss": 0.12664233565330504,
+      "val_loss": null,
+      "lr": 8.736440926414542e-06
+    },
+    {
+      "paso": 2400,
+      "train_loss": 0.13120732247829436,
+      "val_loss": null,
+      "lr": 8.150102609205512e-06
+    },
+    {
+      "paso": 2500,
+      "train_loss": 0.1402250275015831,
+      "val_loss": 0.1696892690037099,
+      "lr": 7.563764291996482e-06,
+      "val_accuracy": 0.9449146250927988
+    },
+    {
+      "paso": 2600,
+      "train_loss": 0.12979555860161782,
+      "val_loss": null,
+      "lr": 6.9774259747874525e-06
+    },
+    {
+      "paso": 2700,
+      "train_loss": 0.130429690182209,
+      "val_loss": null,
+      "lr": 6.391087657578423e-06
+    },
+    {
+      "paso": 2800,
+      "train_loss": 0.135092643648386,
+      "val_loss": null,
+      "lr": 5.804749340369393e-06
+    },
+    {
+      "paso": 2900,
+      "train_loss": 0.11020115435123444,
+      "val_loss": null,
+      "lr": 5.218411023160363e-06
+    },
+    {
+      "paso": 3000,
+      "train_loss": 0.14042952179908752,
+      "val_loss": 0.16795469587448084,
+      "lr": 4.6320727059513345e-06,
+      "val_accuracy": 0.9461024498886415
+    },
+    {
+      "paso": 3100,
+      "train_loss": 0.11380116030573845,
+      "val_loss": null,
+      "lr": 4.045734388742305e-06
+    },
+    {
+      "paso": 3200,
+      "train_loss": 0.12525971740484237,
+      "val_loss": null,
+      "lr": 3.4593960715332747e-06
+    },
+    {
+      "paso": 3300,
+      "train_loss": 0.12158315777778625,
+      "val_loss": null,
+      "lr": 2.8730577543242454e-06
+    },
+    {
+      "paso": 3400,
+      "train_loss": 0.10082191288471222,
+      "val_loss": null,
+      "lr": 2.2867194371152157e-06
+    },
+    {
+      "paso": 3500,
+      "train_loss": 0.1135073184967041,
+      "val_loss": 0.17823385486105606,
+      "lr": 1.700381119906186e-06,
+      "val_accuracy": 0.9480326651818857
+    },
+    {
+      "paso": 3600,
+      "train_loss": 0.10907784268260003,
+      "val_loss": null,
+      "lr": 1.1140428026971563e-06
+    },
+    {
+      "paso": 3700,
+      "train_loss": 0.119988062530756,
+      "val_loss": null,
+      "lr": 5.277044854881267e-07
+    }
+  ]
+}

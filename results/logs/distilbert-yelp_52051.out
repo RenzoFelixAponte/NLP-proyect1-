@@ -1,0 +1,130 @@
+=== job 52051 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model distilbert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task yelp --max-train 100000 --max-val 20000 --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:10:39 2026).
+Flattening the indices:   0%|          | 0/100000 [00:00<?, ? examples/s]Flattening the indices:   5%|▌         | 5000/100000 [00:00<00:02, 37049.47 examples/s]Flattening the indices:   9%|▉         | 9000/100000 [00:00<00:02, 36698.58 examples/s]Flattening the indices:  13%|█▎        | 13000/100000 [00:00<00:02, 36281.45 examples/s]Flattening the indices:  17%|█▋        | 17000/100000 [00:00<00:02, 36700.28 examples/s]Flattening the indices:  21%|██        | 21000/100000 [00:00<00:02, 36996.37 examples/s]Flattening the indices:  25%|██▌       | 25000/100000 [00:00<00:02, 37252.96 examples/s]Flattening the indices:  29%|██▉       | 29000/100000 [00:00<00:01, 37392.93 examples/s]Flattening the indices:  33%|███▎      | 33000/100000 [00:00<00:01, 37481.91 examples/s]Flattening the indices:  37%|███▋      | 37000/100000 [00:00<00:01, 37555.71 examples/s]Flattening the indices:  41%|████      | 41000/100000 [00:01<00:01, 37604.36 examples/s]Flattening the indices:  45%|████▌     | 45000/100000 [00:01<00:01, 37943.32 examples/s]Flattening the indices:  49%|████▉     | 49000/100000 [00:01<00:01, 38217.52 examples/s]Flattening the indices:  53%|█████▎    | 53000/100000 [00:01<00:01, 38426.41 examples/s]Flattening the indices:  57%|█████▋    | 57000/100000 [00:01<00:01, 38518.31 examples/s]Flattening the indices:  61%|██████    | 61000/100000 [00:01<00:01, 38642.08 examples/s]Flattening the indices:  65%|██████▌   | 65000/100000 [00:01<00:00, 38709.92 examples/s]Flattening the indices:  69%|██████▉   | 69000/100000 [00:01<00:00, 38749.69 examples/s]Flattening the indices:  73%|███████▎  | 73000/100000 [00:01<00:00, 38788.23 examples/s]Flattening the indices:  77%|███████▋  | 77000/100000 [00:02<00:00, 38843.97 examples/s]Flattening the indices:  81%|████████  | 81000/100000 [00:02<00:00, 38534.37 examples/s]Flattening the indices:  85%|████████▌ | 85000/100000 [00:02<00:00, 38401.76 examples/s]Flattening the indices:  89%|████████▉ | 89000/100000 [00:02<00:00, 38268.27 examples/s]Flattening the indices:  93%|█████████▎| 93000/100000 [00:02<00:00, 38211.53 examples/s]Flattening the indices:  97%|█████████▋| 97000/100000 [00:02<00:00, 38158.40 examples/s]Flattening the indices: 100%|██████████| 100000/100000 [00:04<00:00, 23882.17 examples/s]
+Flattening the indices:   0%|          | 0/20000 [00:00<?, ? examples/s]Flattening the indices:  25%|██▌       | 5000/20000 [00:00<00:00, 39075.59 examples/s]Flattening the indices:  45%|████▌     | 9000/20000 [00:00<00:00, 38532.80 examples/s]Flattening the indices:  65%|██████▌   | 13000/20000 [00:00<00:00, 38375.04 examples/s]Flattening the indices:  85%|████████▌ | 17000/20000 [00:00<00:00, 38251.25 examples/s]Flattening the indices: 100%|██████████| 20000/20000 [00:00<00:00, 23983.55 examples/s]
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 3065.38it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_layer_norm.bias   | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_projector.bias    | UNEXPECTED | 
+pre_classifier.weight   | MISSING    | 
+classifier.bias         | MISSING    | 
+classifier.weight       | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning DistilBERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : distilbert-base-uncased
+  capas      : 6
+  parametros : 66,955,010 (255.4 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6886
+  paso   200 | train_loss 0.4683
+  paso   300 | train_loss 0.2402
+  paso   400 | train_loss 0.1983
+  paso   500 | train_loss 0.1946 | val_loss 0.2385 | val_acc 0.9077
+  paso   600 | train_loss 0.1771
+  paso   700 | train_loss 0.1693
+  paso   800 | train_loss 0.1800
+  paso   900 | train_loss 0.1658
+  paso  1000 | train_loss 0.1834 | val_loss 0.1716 | val_acc 0.9321
+  paso  1100 | train_loss 0.1709
+  paso  1200 | train_loss 0.1481
+  paso  1300 | train_loss 0.1505
+  paso  1400 | train_loss 0.1456
+  paso  1500 | train_loss 0.1595 | val_loss 0.1442 | val_acc 0.9462
+  paso  1600 | train_loss 0.1550
+  paso  1700 | train_loss 0.1559
+  paso  1800 | train_loss 0.1546
+  paso  1900 | train_loss 0.1439
+  paso  2000 | train_loss 0.1344 | val_loss 0.1563 | val_acc 0.9447
+  paso  2100 | train_loss 0.1423
+  paso  2200 | train_loss 0.1322
+  paso  2300 | train_loss 0.1335
+  paso  2400 | train_loss 0.1521
+  paso  2500 | train_loss 0.1353 | val_loss 0.1402 | val_acc 0.9504
+  paso  2600 | train_loss 0.1136
+  paso  2700 | train_loss 0.1231
+  paso  2800 | train_loss 0.1340
+  paso  2900 | train_loss 0.1216
+  paso  3000 | train_loss 0.1367 | val_loss 0.1163 | val_acc 0.9563
+  paso  3100 | train_loss 0.1336
+  [fin epoca 1] val_loss 0.1230 | acc 0.9567 | f1 0.9566
+  -> mejor modelo hasta ahora (f1 = 0.9566)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0768
+  paso  3300 | train_loss 0.0961
+  paso  3400 | train_loss 0.0836
+  paso  3500 | train_loss 0.0799 | val_loss 0.1285 | val_acc 0.9584
+  paso  3600 | train_loss 0.0928
+  paso  3700 | train_loss 0.0787
+  paso  3800 | train_loss 0.0844
+  paso  3900 | train_loss 0.0841
+  paso  4000 | train_loss 0.0942 | val_loss 0.1330 | val_acc 0.9575
+  paso  4100 | train_loss 0.0835
+  paso  4200 | train_loss 0.0907
+  paso  4300 | train_loss 0.0956
+  paso  4400 | train_loss 0.0842
+  paso  4500 | train_loss 0.0805 | val_loss 0.1252 | val_acc 0.9593
+  paso  4600 | train_loss 0.0688
+  paso  4700 | train_loss 0.0977
+  paso  4800 | train_loss 0.0796
+  paso  4900 | train_loss 0.0873
+  paso  5000 | train_loss 0.0897 | val_loss 0.1241 | val_acc 0.9590
+  paso  5100 | train_loss 0.0926
+  paso  5200 | train_loss 0.0828
+  paso  5300 | train_loss 0.0912
+  paso  5400 | train_loss 0.0867
+  paso  5500 | train_loss 0.0786 | val_loss 0.1254 | val_acc 0.9600
+  paso  5600 | train_loss 0.0823
+  paso  5700 | train_loss 0.0805
+  paso  5800 | train_loss 0.0741
+  paso  5900 | train_loss 0.0958
+  paso  6000 | train_loss 0.0863 | val_loss 0.1221 | val_acc 0.9612
+  paso  6100 | train_loss 0.0744
+  paso  6200 | train_loss 0.0825
+  [fin epoca 2] val_loss 0.1218 | acc 0.9611 | f1 0.9611
+  -> mejor modelo hasta ahora (f1 = 0.9611)
+
+Entrenamiento completado en 8.2 min
+
+==============================================================
+RESULTADOS EN TEST | DistilBERT-base | yelp
+==============================================================
+  Accuracy  : 0.9606
+  Precision : 0.9606
+  Recall    : 0.9606
+  F1-score  : 0.9606
+
+  Por clase:
+    negative   P 0.958  R 0.963  F1 0.961  (n=19000)
+    positive   P 0.963  R 0.958  F1 0.960  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 66,955,010
+  Tamano (fp32)     : 255.4 MB
+  Latencia (batch=1): 2.78 +/- 0.05 ms
+  Memoria GPU pico  : 1070.4 MB
+
+Resultados guardados en results/metrics/distilbert_yelp_base_20260921-003151.json

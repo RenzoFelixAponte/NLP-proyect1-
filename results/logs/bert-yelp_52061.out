@@ -1,0 +1,128 @@
+=== job 52061 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model bert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task yelp --max-train 100000 --max-val 20000 --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2065.37it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning BERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,483,778 (417.7 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6734
+  paso   200 | train_loss 0.4029
+  paso   300 | train_loss 0.2261
+  paso   400 | train_loss 0.2022
+  paso   500 | train_loss 0.1872 | val_loss 0.1637 | val_acc 0.9402
+  paso   600 | train_loss 0.1736
+  paso   700 | train_loss 0.1827
+  paso   800 | train_loss 0.1539
+  paso   900 | train_loss 0.1413
+  paso  1000 | train_loss 0.1494 | val_loss 0.1306 | val_acc 0.9505
+  paso  1100 | train_loss 0.1408
+  paso  1200 | train_loss 0.1335
+  paso  1300 | train_loss 0.1342
+  paso  1400 | train_loss 0.1297
+  paso  1500 | train_loss 0.1344 | val_loss 0.1288 | val_acc 0.9543
+  paso  1600 | train_loss 0.1443
+  paso  1700 | train_loss 0.1346
+  paso  1800 | train_loss 0.1327
+  paso  1900 | train_loss 0.1338
+  paso  2000 | train_loss 0.1281 | val_loss 0.1198 | val_acc 0.9571
+  paso  2100 | train_loss 0.1183
+  paso  2200 | train_loss 0.1302
+  paso  2300 | train_loss 0.1163
+  paso  2400 | train_loss 0.1322
+  paso  2500 | train_loss 0.1210 | val_loss 0.1122 | val_acc 0.9607
+  paso  2600 | train_loss 0.1331
+  paso  2700 | train_loss 0.1250
+  paso  2800 | train_loss 0.1103
+  paso  2900 | train_loss 0.1103
+  paso  3000 | train_loss 0.1135 | val_loss 0.1127 | val_acc 0.9608
+  paso  3100 | train_loss 0.1102
+  [fin epoca 1] val_loss 0.1107 | acc 0.9614 | f1 0.9614
+  -> mejor modelo hasta ahora (f1 = 0.9614)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0798
+  paso  3300 | train_loss 0.0765
+  paso  3400 | train_loss 0.0708
+  paso  3500 | train_loss 0.0769 | val_loss 0.1154 | val_acc 0.9622
+  paso  3600 | train_loss 0.0723
+  paso  3700 | train_loss 0.0582
+  paso  3800 | train_loss 0.0746
+  paso  3900 | train_loss 0.0783
+  paso  4000 | train_loss 0.0636 | val_loss 0.1392 | val_acc 0.9605
+  paso  4100 | train_loss 0.0762
+  paso  4200 | train_loss 0.0739
+  paso  4300 | train_loss 0.0745
+  paso  4400 | train_loss 0.0753
+  paso  4500 | train_loss 0.0812 | val_loss 0.1211 | val_acc 0.9629
+  paso  4600 | train_loss 0.0843
+  paso  4700 | train_loss 0.0750
+  paso  4800 | train_loss 0.0716
+  paso  4900 | train_loss 0.0609
+  paso  5000 | train_loss 0.0648 | val_loss 0.1360 | val_acc 0.9624
+  paso  5100 | train_loss 0.0747
+  paso  5200 | train_loss 0.0776
+  paso  5300 | train_loss 0.0813
+  paso  5400 | train_loss 0.0568
+  paso  5500 | train_loss 0.0713 | val_loss 0.1195 | val_acc 0.9641
+  paso  5600 | train_loss 0.0563
+  paso  5700 | train_loss 0.0806
+  paso  5800 | train_loss 0.0649
+  paso  5900 | train_loss 0.0580
+  paso  6000 | train_loss 0.0644 | val_loss 0.1175 | val_acc 0.9648
+  paso  6100 | train_loss 0.0670
+  paso  6200 | train_loss 0.0542
+  [fin epoca 2] val_loss 0.1175 | acc 0.9644 | f1 0.9643
+  -> mejor modelo hasta ahora (f1 = 0.9643)
+
+Entrenamiento completado en 16.0 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | yelp
+==============================================================
+  Accuracy  : 0.9652
+  Precision : 0.9652
+  Recall    : 0.9652
+  F1-score  : 0.9652
+
+  Por clase:
+    negative   P 0.966  R 0.964  F1 0.965  (n=19000)
+    positive   P 0.964  R 0.966  F1 0.965  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 109,483,778
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 5.36 +/- 0.01 ms
+  Memoria GPU pico  : 1723.0 MB
+
+Resultados guardados en results/metrics/bert_yelp_base_20260921-011204.json

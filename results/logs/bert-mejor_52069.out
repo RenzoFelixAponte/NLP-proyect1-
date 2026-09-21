@@ -1,0 +1,372 @@
+=== job 52069 en g002 ===
+NVIDIA RTX A6000, 49140 MiB
+=== modelo=bert tareas='sst2 ag_news yelp' configs=mejor (1) ===
+
+############ bert | sst2 | abl-lineal ############
+Using the latest cached version of the dataset since nyu-mll/glue couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'sst2' at data/raw/nyu-mll___glue/sst2/0.0.0/bcdcba79d07bc864c1c254ccfcedcce55bcc9a8c (last modified on Mon Sep 21 00:15:48 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2237.14it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning BERT-base | tarea: sst2
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : sst2 (2 clases)
+  train / val / test : 60,614 / 6,735 / 872
+  max_length         : 64
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,483,778 (417.7 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 109,483,778 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 379/3790 pasos
+
+--- Epoca 1/2 ---
+/home/diego.quispe/NLP/NLP-proyect1-/src/train.py:328: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scheduler.step()
+  paso   100 | train_loss 0.6631
+  paso   200 | train_loss 0.3890
+  paso   300 | train_loss 0.2939
+  paso   400 | train_loss 0.2559
+  paso   500 | train_loss 0.2441 | val_loss 0.2123 | val_acc 0.9179
+  paso   600 | train_loss 0.2477
+  paso   700 | train_loss 0.2207
+  paso   800 | train_loss 0.2264
+  paso   900 | train_loss 0.2090
+  paso  1000 | train_loss 0.1969 | val_loss 0.1910 | val_acc 0.9311
+  paso  1100 | train_loss 0.2317
+  paso  1200 | train_loss 0.1869
+  paso  1300 | train_loss 0.1918
+  paso  1400 | train_loss 0.1923
+  paso  1500 | train_loss 0.1769 | val_loss 0.1938 | val_acc 0.9317
+  paso  1600 | train_loss 0.1720
+  paso  1700 | train_loss 0.1744
+  paso  1800 | train_loss 0.1553
+  [fin epoca 1] val_loss 0.1633 | acc 0.9507 | f1 0.9502
+  -> mejor modelo hasta ahora (f1 = 0.9502)
+
+--- Epoca 2/2 ---
+  paso  1900 | train_loss 0.0783
+  paso  2000 | train_loss 0.1111 | val_loss 0.1684 | val_acc 0.9486
+  paso  2100 | train_loss 0.1085
+  paso  2200 | train_loss 0.1008
+  paso  2300 | train_loss 0.1102
+  paso  2400 | train_loss 0.1113
+  paso  2500 | train_loss 0.0941 | val_loss 0.1666 | val_acc 0.9509
+  paso  2600 | train_loss 0.0947
+  paso  2700 | train_loss 0.1176
+  paso  2800 | train_loss 0.1062
+  paso  2900 | train_loss 0.1148
+  paso  3000 | train_loss 0.1193 | val_loss 0.1566 | val_acc 0.9514
+  paso  3100 | train_loss 0.0990
+  paso  3200 | train_loss 0.0978
+  paso  3300 | train_loss 0.1270
+  paso  3400 | train_loss 0.1061
+  paso  3500 | train_loss 0.1096 | val_loss 0.1603 | val_acc 0.9537
+  paso  3600 | train_loss 0.1010
+  paso  3700 | train_loss 0.0984
+  [fin epoca 2] val_loss 0.1631 | acc 0.9546 | f1 0.9541
+  -> mejor modelo hasta ahora (f1 = 0.9541)
+
+Entrenamiento completado en 4.2 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | sst2
+==============================================================
+  Accuracy  : 0.9289
+  Precision : 0.9294
+  Recall    : 0.9286
+  F1-score  : 0.9288
+
+  Por clase:
+    negative   P 0.940  R 0.914  F1 0.927  (n=428)
+    positive   P 0.919  R 0.944  F1 0.931  (n=444)
+
+--- Eficiencia ---
+  Parametros        : 109,483,778
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 3.28 +/- 0.03 ms
+  Memoria GPU pico  : 1708.1 MB
+
+Resultados guardados en results/metrics/bert_sst2_abl-lineal_20260921-030159.json
+
+############ bert | ag_news | abl-lineal ############
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2894.36it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning BERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,485,316 (417.7 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 109,485,316 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+/home/diego.quispe/NLP/NLP-proyect1-/src/train.py:328: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  scheduler.step()
+  paso   100 | train_loss 1.3674
+  paso   200 | train_loss 0.6041
+  paso   300 | train_loss 0.3211
+  paso   400 | train_loss 0.3011
+  paso   500 | train_loss 0.2646 | val_loss 0.2592 | val_acc 0.9121
+  paso   600 | train_loss 0.2760
+  paso   700 | train_loss 0.2561
+  paso   800 | train_loss 0.2424
+  paso   900 | train_loss 0.2218
+  paso  1000 | train_loss 0.2468 | val_loss 0.2559 | val_acc 0.9117
+  paso  1100 | train_loss 0.2217
+  paso  1200 | train_loss 0.2165
+  paso  1300 | train_loss 0.2224
+  paso  1400 | train_loss 0.2005
+  paso  1500 | train_loss 0.2308 | val_loss 0.1986 | val_acc 0.9347
+  paso  1600 | train_loss 0.2135
+  paso  1700 | train_loss 0.1899
+  paso  1800 | train_loss 0.2180
+  paso  1900 | train_loss 0.1967
+  paso  2000 | train_loss 0.1946 | val_loss 0.1921 | val_acc 0.9383
+  paso  2100 | train_loss 0.2024
+  paso  2200 | train_loss 0.1819
+  paso  2300 | train_loss 0.1835
+  paso  2400 | train_loss 0.1840
+  paso  2500 | train_loss 0.1839 | val_loss 0.1882 | val_acc 0.9362
+  paso  2600 | train_loss 0.1931
+  paso  2700 | train_loss 0.1655
+  paso  2800 | train_loss 0.1831
+  paso  2900 | train_loss 0.1670
+  paso  3000 | train_loss 0.1817 | val_loss 0.1697 | val_acc 0.9421
+  paso  3100 | train_loss 0.1712
+  paso  3200 | train_loss 0.1531
+  paso  3300 | train_loss 0.1937
+  [fin epoca 1] val_loss 0.1710 | acc 0.9434 | f1 0.9431
+  -> mejor modelo hasta ahora (f1 = 0.9431)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1014
+  paso  3500 | train_loss 0.1523 | val_loss 0.1708 | val_acc 0.9453
+  paso  3600 | train_loss 0.1126
+  paso  3700 | train_loss 0.1360
+  paso  3800 | train_loss 0.1450
+  paso  3900 | train_loss 0.1265
+  paso  4000 | train_loss 0.1408 | val_loss 0.1769 | val_acc 0.9430
+  paso  4100 | train_loss 0.1226
+  paso  4200 | train_loss 0.1354
+  paso  4300 | train_loss 0.1269
+  paso  4400 | train_loss 0.1376
+  paso  4500 | train_loss 0.1301 | val_loss 0.1742 | val_acc 0.9448
+  paso  4600 | train_loss 0.1231
+  paso  4700 | train_loss 0.1282
+  paso  4800 | train_loss 0.1233
+  paso  4900 | train_loss 0.1175
+  paso  5000 | train_loss 0.1277 | val_loss 0.1720 | val_acc 0.9462
+  paso  5100 | train_loss 0.1242
+  paso  5200 | train_loss 0.1165
+  paso  5300 | train_loss 0.1324
+  paso  5400 | train_loss 0.1230
+  paso  5500 | train_loss 0.1058 | val_loss 0.1735 | val_acc 0.9479
+  paso  5600 | train_loss 0.1361
+  paso  5700 | train_loss 0.1123
+  paso  5800 | train_loss 0.1060
+  paso  5900 | train_loss 0.1066
+  paso  6000 | train_loss 0.1217 | val_loss 0.1708 | val_acc 0.9473
+  paso  6100 | train_loss 0.1177
+  paso  6200 | train_loss 0.1121
+  paso  6300 | train_loss 0.1418
+  paso  6400 | train_loss 0.1230
+  paso  6500 | train_loss 0.1280 | val_loss 0.1638 | val_acc 0.9487
+  paso  6600 | train_loss 0.1094
+  paso  6700 | train_loss 0.1243
+  [fin epoca 2] val_loss 0.1645 | acc 0.9483 | f1 0.9481
+  -> mejor modelo hasta ahora (f1 = 0.9481)
+
+Entrenamiento completado en 9.0 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9453
+  Precision : 0.9456
+  Recall    : 0.9453
+  F1-score  : 0.9453
+
+  Por clase:
+    World      P 0.963  R 0.949  F1 0.956  (n=1900)
+    Sports     P 0.987  R 0.988  F1 0.988  (n=1900)
+    Business   P 0.929  R 0.905  F1 0.917  (n=1900)
+    Sci/Tech   P 0.904  R 0.938  F1 0.921  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 109,485,316
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 3.46 +/- 0.03 ms
+  Memoria GPU pico  : 1726.6 MB
+
+Resultados guardados en results/metrics/bert_ag_news_abl-lineal_20260921-031149.json
+
+############ bert | yelp | abl-lineal ############
+Using the latest cached version of the dataset since fancyzhx/yelp_polarity couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'plain_text' at data/raw/fancyzhx___yelp_polarity/plain_text/0.0.0/bbf1c97a1f0cf005e5aded43839fd814654a1557 (last modified on Mon Sep 21 00:22:03 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 2036.69it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+==============================================================
+Fine-tuning BERT-base | tarea: yelp
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : yelp (2 clases)
+  train / val / test : 100,000 / 20,000 / 38,000
+  max_length         : 256
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,483,778 (417.7 MB en fp32)
+  cabeza     : lineal (dropout 0.1)
+  congelado  : encoder=False capas=0
+  entrenables: 109,483,778 (100.0% del total)
+Optimizador : AdamW lr=2e-05, warmup 625/6250 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 0.6537
+  paso   200 | train_loss 0.3040
+  paso   300 | train_loss 0.2036
+  paso   400 | train_loss 0.1944
+  paso   500 | train_loss 0.1685 | val_loss 0.1640 | val_acc 0.9366
+  paso   600 | train_loss 0.1703
+  paso   700 | train_loss 0.1594
+  paso   800 | train_loss 0.1801
+  paso   900 | train_loss 0.1500
+  paso  1000 | train_loss 0.1626 | val_loss 0.1488 | val_acc 0.9470
+  paso  1100 | train_loss 0.1593
+  paso  1200 | train_loss 0.1505
+  paso  1300 | train_loss 0.1378
+  paso  1400 | train_loss 0.1244
+  paso  1500 | train_loss 0.1210 | val_loss 0.1458 | val_acc 0.9474
+  paso  1600 | train_loss 0.1366
+  paso  1700 | train_loss 0.1373
+  paso  1800 | train_loss 0.1238
+  paso  1900 | train_loss 0.1218
+  paso  2000 | train_loss 0.1236 | val_loss 0.1326 | val_acc 0.9537
+  paso  2100 | train_loss 0.1292
+  paso  2200 | train_loss 0.1125
+  paso  2300 | train_loss 0.1299
+  paso  2400 | train_loss 0.1238
+  paso  2500 | train_loss 0.1232 | val_loss 0.1130 | val_acc 0.9587
+  paso  2600 | train_loss 0.1205
+  paso  2700 | train_loss 0.1197
+  paso  2800 | train_loss 0.1177
+  paso  2900 | train_loss 0.1211
+  paso  3000 | train_loss 0.1208 | val_loss 0.0978 | val_acc 0.9624
+  paso  3100 | train_loss 0.1147
+  [fin epoca 1] val_loss 0.0992 | acc 0.9619 | f1 0.9619
+  -> mejor modelo hasta ahora (f1 = 0.9619)
+
+--- Epoca 2/2 ---
+  paso  3200 | train_loss 0.0837
+  paso  3300 | train_loss 0.0852
+  paso  3400 | train_loss 0.0673
+  paso  3500 | train_loss 0.0805 | val_loss 0.1217 | val_acc 0.9621
+  paso  3600 | train_loss 0.0731
+  paso  3700 | train_loss 0.0698
+  paso  3800 | train_loss 0.0670
+  paso  3900 | train_loss 0.0637
+  paso  4000 | train_loss 0.0763 | val_loss 0.1167 | val_acc 0.9628
+  paso  4100 | train_loss 0.0738
+  paso  4200 | train_loss 0.0777
+  paso  4300 | train_loss 0.0632
+  paso  4400 | train_loss 0.0830
+  paso  4500 | train_loss 0.0700 | val_loss 0.1179 | val_acc 0.9648
+  paso  4600 | train_loss 0.0679
+  paso  4700 | train_loss 0.0724
+  paso  4800 | train_loss 0.0633
+  paso  4900 | train_loss 0.0553
+  paso  5000 | train_loss 0.0771 | val_loss 0.1355 | val_acc 0.9585
+  paso  5100 | train_loss 0.0576
+  paso  5200 | train_loss 0.0655
+  paso  5300 | train_loss 0.0811
+  paso  5400 | train_loss 0.0790
+  paso  5500 | train_loss 0.0771 | val_loss 0.1112 | val_acc 0.9638
+  paso  5600 | train_loss 0.0673
+  paso  5700 | train_loss 0.0609
+  paso  5800 | train_loss 0.0685
+  paso  5900 | train_loss 0.0777
+  paso  6000 | train_loss 0.0557 | val_loss 0.1167 | val_acc 0.9655
+  paso  6100 | train_loss 0.0570
+  paso  6200 | train_loss 0.0699
+  [fin epoca 2] val_loss 0.1158 | acc 0.9661 | f1 0.9661
+  -> mejor modelo hasta ahora (f1 = 0.9661)
+
+Entrenamiento completado en 16.0 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | yelp
+==============================================================
+  Accuracy  : 0.9653
+  Precision : 0.9653
+  Recall    : 0.9653
+  F1-score  : 0.9653
+
+  Por clase:
+    negative   P 0.968  R 0.963  F1 0.965  (n=19000)
+    positive   P 0.963  R 0.968  F1 0.965  (n=19000)
+
+--- Eficiencia ---
+  Parametros        : 109,483,778
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 5.33 +/- 0.03 ms
+  Memoria GPU pico  : 1715.5 MB
+
+Resultados guardados en results/metrics/bert_yelp_abl-lineal_20260921-032947.json
+
+=== terminado: 1 configuraciones x 3 datasets, 0 fallos ===

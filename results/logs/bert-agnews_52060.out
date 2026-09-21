@@ -1,0 +1,135 @@
+=== job 52060 en g002 ===
+NVIDIA RTX A6000, 49140 MiB, 610.57.04
+=== args: --model bert --epochs 2 --batch-size 32 --lr 2e-5 --tag base --task ag_news --log-every 100 --eval-every 500 ===
+Using the latest cached version of the dataset since fancyzhx/ag_news couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'default' at data/raw/fancyzhx___ag_news/default/0.0.0/eb185aade064a813bc0b7f42de02595523103ca4 (last modified on Mon Sep 21 00:15:30 2026).
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 4819.93it/s]
+[transformers] [1mBertForSequenceClassification LOAD REPORT[0m from: bert-base-uncased
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.seq_relationship.weight                | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.seq_relationship.bias                  | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+classifier.bias                            | MISSING    | 
+classifier.weight                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+==============================================================
+Fine-tuning BERT-base | tarea: ag_news
+==============================================================
+Dispositivo : NVIDIA RTX A6000
+Precision   : fp16 (AMP)
+
+Dataset     : ag_news (4 clases)
+  train / val / test : 108,000 / 12,000 / 7,600
+  max_length         : 128
+
+Modelo      : bert-base-uncased
+  capas      : 12
+  parametros : 109,485,316 (417.7 MB en fp32)
+Optimizador : AdamW lr=2e-05, warmup 675/6750 pasos
+
+--- Epoca 1/2 ---
+  paso   100 | train_loss 1.3438
+  paso   200 | train_loss 0.9154
+  paso   300 | train_loss 0.4018
+  paso   400 | train_loss 0.3130
+  paso   500 | train_loss 0.2750 | val_loss 0.2626 | val_acc 0.9100
+  paso   600 | train_loss 0.2658
+  paso   700 | train_loss 0.2598
+  paso   800 | train_loss 0.2686
+  paso   900 | train_loss 0.2232
+  paso  1000 | train_loss 0.2080 | val_loss 0.2388 | val_acc 0.9213
+  paso  1100 | train_loss 0.2676
+  paso  1200 | train_loss 0.2363
+  paso  1300 | train_loss 0.1987
+  paso  1400 | train_loss 0.2245
+  paso  1500 | train_loss 0.2212 | val_loss 0.2104 | val_acc 0.9282
+  paso  1600 | train_loss 0.2179
+  paso  1700 | train_loss 0.2229
+  paso  1800 | train_loss 0.2057
+  paso  1900 | train_loss 0.1908
+  paso  2000 | train_loss 0.1925 | val_loss 0.1998 | val_acc 0.9350
+  paso  2100 | train_loss 0.2099
+  paso  2200 | train_loss 0.1968
+  paso  2300 | train_loss 0.2068
+  paso  2400 | train_loss 0.1841
+  paso  2500 | train_loss 0.1948 | val_loss 0.1876 | val_acc 0.9374
+  paso  2600 | train_loss 0.1856
+  paso  2700 | train_loss 0.1920
+  paso  2800 | train_loss 0.1885
+  paso  2900 | train_loss 0.1846
+  paso  3000 | train_loss 0.1817 | val_loss 0.1726 | val_acc 0.9407
+  paso  3100 | train_loss 0.1818
+  paso  3200 | train_loss 0.1663
+  paso  3300 | train_loss 0.1777
+  [fin epoca 1] val_loss 0.1749 | acc 0.9417 | f1 0.9415
+  -> mejor modelo hasta ahora (f1 = 0.9415)
+
+--- Epoca 2/2 ---
+  paso  3400 | train_loss 0.1381
+  paso  3500 | train_loss 0.1163 | val_loss 0.1827 | val_acc 0.9443
+  paso  3600 | train_loss 0.1483
+  paso  3700 | train_loss 0.1370
+  paso  3800 | train_loss 0.1392
+  paso  3900 | train_loss 0.1221
+  paso  4000 | train_loss 0.1429 | val_loss 0.1755 | val_acc 0.9437
+  paso  4100 | train_loss 0.1149
+  paso  4200 | train_loss 0.1266
+  paso  4300 | train_loss 0.1301
+  paso  4400 | train_loss 0.1500
+  paso  4500 | train_loss 0.1376 | val_loss 0.1732 | val_acc 0.9437
+  paso  4600 | train_loss 0.1360
+  paso  4700 | train_loss 0.1181
+  paso  4800 | train_loss 0.1261
+  paso  4900 | train_loss 0.1186
+  paso  5000 | train_loss 0.1327 | val_loss 0.1770 | val_acc 0.9463
+  paso  5100 | train_loss 0.1341
+  paso  5200 | train_loss 0.1067
+  paso  5300 | train_loss 0.1235
+  paso  5400 | train_loss 0.1286
+  paso  5500 | train_loss 0.1286 | val_loss 0.1690 | val_acc 0.9456
+  paso  5600 | train_loss 0.1205
+  paso  5700 | train_loss 0.1428
+  paso  5800 | train_loss 0.1064
+  paso  5900 | train_loss 0.1326
+  paso  6000 | train_loss 0.1171 | val_loss 0.1657 | val_acc 0.9486
+  paso  6100 | train_loss 0.1299
+  paso  6200 | train_loss 0.1152
+  paso  6300 | train_loss 0.1293
+  paso  6400 | train_loss 0.1126
+  paso  6500 | train_loss 0.1310 | val_loss 0.1653 | val_acc 0.9486
+  paso  6600 | train_loss 0.1199
+  paso  6700 | train_loss 0.1174
+  [fin epoca 2] val_loss 0.1658 | acc 0.9486 | f1 0.9483
+  -> mejor modelo hasta ahora (f1 = 0.9483)
+
+Entrenamiento completado en 9.1 min
+
+==============================================================
+RESULTADOS EN TEST | BERT-base | ag_news
+==============================================================
+  Accuracy  : 0.9441
+  Precision : 0.9443
+  Recall    : 0.9441
+  F1-score  : 0.9441
+
+  Por clase:
+    World      P 0.958  R 0.955  F1 0.956  (n=1900)
+    Sports     P 0.987  R 0.985  F1 0.986  (n=1900)
+    Business   P 0.927  R 0.903  F1 0.915  (n=1900)
+    Sci/Tech   P 0.905  R 0.934  F1 0.919  (n=1900)
+
+--- Eficiencia ---
+  Parametros        : 109,485,316
+  Tamano (fp32)     : 417.7 MB
+  Latencia (batch=1): 3.46 +/- 0.02 ms
+  Memoria GPU pico  : 1721.8 MB
+
+Resultados guardados en results/metrics/bert_ag_news_base_20260921-005403.json
