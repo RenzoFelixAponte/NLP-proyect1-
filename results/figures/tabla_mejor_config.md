@@ -1,4 +1,4 @@
-Configuracion `lineal`, misma receta en los dos modelos.
+Configuracion `lineal`: cabeza lineal (0 ocultas), misma receta en los dos modelos.
 
 | Dataset | Modelo | Acc | P | R | F1 | F1 val | Params (M) | Train (min) |
 |---|---|---|---|---|---|---|---|---|
