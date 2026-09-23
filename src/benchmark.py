@@ -25,6 +25,7 @@ import time
 import argparse
 from pathlib import Path
 
+from src.paths import RESULTS_DIR
 from src.models import build_model, list_models, count_parameters
 from src.metrics import measure_latency, measure_gpu_memory, model_size_mb
 
@@ -82,7 +83,8 @@ def main():
     parser.add_argument("--batch-sizes", type=int, nargs="+", default=[1, 8, 32])
     parser.add_argument("--seq-lens", type=int, nargs="+", default=[64, 128, 256])
     parser.add_argument("--n-runs", type=int, default=50)
-    parser.add_argument("--out", default="results")
+    parser.add_argument("--out", default=str(RESULTS_DIR),
+                        help="Raiz de salida (por defecto results/ del repo)")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

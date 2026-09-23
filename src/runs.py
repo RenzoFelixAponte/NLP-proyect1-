@@ -20,7 +20,7 @@ Uso:
 import json
 from pathlib import Path
 
-METRICS_DIR = Path("results/metrics")
+from src.paths import METRICS_DIR
 
 
 def load_all(metrics_dir=METRICS_DIR):

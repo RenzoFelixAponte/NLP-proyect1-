@@ -34,6 +34,7 @@ from pathlib import Path
 
 import numpy as np
 
+from src.paths import RESULTS_DIR
 from src.models import (
     build_model,
     build_ablation_model,
@@ -185,7 +186,8 @@ def main():
     parser.add_argument("--tag", default=None,
                         help="Etiqueta para distinguir corridas "
                              "(ej. 'smoke', 'final', '3epocas')")
-    parser.add_argument("--out", default="results")
+    parser.add_argument("--out", default=str(RESULTS_DIR),
+                        help="Raiz de salida (por defecto results/ del repo)")
     args = parser.parse_args()
 
     set_seed()

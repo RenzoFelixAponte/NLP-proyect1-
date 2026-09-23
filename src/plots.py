@@ -24,9 +24,8 @@ import matplotlib
 matplotlib.use("Agg")           # sin pantalla: se ejecuta en un nodo de calculo
 import matplotlib.pyplot as plt
 
+from src.paths import FIG_DIR, METRICS_DIR
 from src.runs import load_all, filtrar
-
-FIG_DIR = Path("results/figures")
 
 # Paleta categorica validada para vision con deficiencia de color
 # (separacion deutan/protan suficiente entre pares adyacentes).
@@ -277,7 +276,7 @@ def tabla_benchmark(benchmark, destino):
     return destino
 
 
-def ultimo_benchmark(metrics_dir=Path("results/metrics")):
+def ultimo_benchmark(metrics_dir=METRICS_DIR):
     """El JSON de benchmark mas reciente, o None si no hay ninguno."""
     import json
     archivos = sorted(Path(metrics_dir).glob("benchmark_*.json"))
