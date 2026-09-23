@@ -1,0 +1,41 @@
+\section{Conclusiones}
+
+\begin{enumerate}
+
+\item \textbf{DistilBERT es la elección por defecto para estas tareas.}
+Conserva entre el \SI{98,9}{\percent} y el \SI{99,5}{\percent} de la
+\textit{accuracy} de BERT con el \SI{61}{\percent} de los parámetros, el
+\SI{62}{\percent} de la memoria y la mitad de la latencia. La pregunta
+relevante no es si BERT es mejor --- lo es, por poco --- sino si ese margen
+justifica duplicar el costo de inferencia. En AG News no lo justifica en
+absoluto; en SST-2, donde la brecha llega a \num{1,95} puntos con la cabeza
+lineal, podría hacerlo si la aplicación es sensible a esos puntos.
+
+\item \textbf{La brecha entre los modelos depende de la tarea, no es una
+constante.} Va de \num{0,11} puntos en AG News a \num{1,95} en SST-2. La
+clasificación de temas se resuelve en buena medida con vocabulario; el
+análisis de sentimiento sobre frases cortas, con negación y contraste, exige
+la composición que aportan las capas adicionales. Extrapolar un único número
+de ``retención de desempeño'' entre tareas sería un error.
+
+\item \textbf{La capacidad que importa está en el \textit{encoder}, no en la
+cabeza.} Cinco arquitecturas de cabeza --- de un clasificador lineal a un MLP
+de dos capas ocultas --- caben en \num{0,0014} de F1, mientras que congelar el
+\textit{transformer} cuesta entre \num{3,4} y \num{8,4} puntos. El corolario
+práctico es que el esfuerzo de diseño debe ir a qué se adapta y con qué datos,
+no a la arquitectura del clasificador.
+
+\item \textbf{La medición de eficiencia exige condiciones controladas.} La
+latencia registrada al final de cada entrenamiento sugería que BERT era más
+rápido que DistilBERT en SST-2. Medidos en la misma rejilla, mismo proceso y
+misma GPU, DistilBERT resulta \num{2}$\times$ más rápido en los nueve puntos.
+La diferencia entre las dos mediciones no está en los modelos sino en el
+protocolo, y es un recordatorio de que una métrica de sistema sin condiciones
+explícitas no es un resultado.
+
+\item \textbf{Congelar el \textit{encoder} es un intercambio, no un error.}
+Entrena \num{0,6}~M de parámetros en lugar de \num{66,4}~M y tarda menos de la
+mitad. En AG News el costo es de \num{3,4} puntos de F1, que puede ser
+aceptable si el presupuesto de entrenamiento es el factor limitante.
+
+\end{enumerate}

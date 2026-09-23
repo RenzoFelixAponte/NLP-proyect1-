@@ -1,0 +1,80 @@
+\section{Reproducibilidad}
+\label{sec:reproducibilidad}
+
+\subsection{Estructura del repositorio}
+
+\begin{lstlisting}
+src/
+  paths.py          rutas del repo, ancladas a la raiz
+  data_adapter.py   carga y normaliza SST-2, AG News y Yelp
+  models.py         fabrica de modelos, cabeza configurable y congelado
+  train.py          bucle de fine-tuning (escrito a mano, sin Trainer)
+  metrics.py        accuracy/precision/recall/F1 + latencia, memoria, tamano
+  runs.py           consulta y seleccion de las corridas guardadas
+  style.py          paleta y estilo comun de las figuras
+  plots.py          figuras del informe (PDF + PNG)
+  tables.py         tablas del informe, en Markdown
+  benchmark.py      latencia y memoria en una rejilla controlada
+scripts/            lanzadores de Slurm
+results/
+  metrics/          un JSON por corrida (nada se sobrescribe)
+  figures/          figuras y tablas generadas por src/plots.py
+  logs/             salida de los jobs de Slurm
+docs/informe/       este documento
+\end{lstlisting}
+
+\subsection{Cómo se reproduce}
+
+\begin{lstlisting}
+bash scripts/launch_base.sh distilbert    # 3 corridas base
+bash scripts/launch_base.sh bert          # 3 corridas base
+CONFIGS=6 sbatch scripts/ablation.sbatch  # 18 corridas del ablation
+MODELO=bert CONFIGS=mejor MEJOR="lineal|--head-hidden none" \
+    sbatch scripts/ablation.sbatch        # 3 corridas de la ganadora con BERT
+sbatch scripts/benchmark.sbatch           # latencia y memoria controladas
+python -m src.plots                       # figuras y tablas
+\end{lstlisting}
+
+Son \num{24} corridas, unas \num{2,5} horas de GPU en una RTX A6000, en serie
+porque la QOS del clúster permite una GPU a la vez.
+
+\subsection{Trazabilidad de las cifras}
+
+Ninguna cifra de este informe se transcribió a mano desde una consola. Cada
+entrenamiento escribe un JSON con nombre único
+(\texttt{\{modelo\}\_\{tarea\}[\_\{tag\}]\_\{fecha-hora\}.json}) que contiene
+las métricas, la configuración completa (\texttt{vars(args)}), el historial de
+\textit{loss} por iteración, el desglose por clase y la matriz de confusión.
+Nada se sobrescribe nunca. Las tablas y figuras se generan desde esos archivos
+con \texttt{python -m src.plots}, que produce además las versiones en Markdown
+de cada tabla en \texttt{results/figures/}.
+
+Las etiquetas (\texttt{--tag}) distinguen el propósito de cada corrida:
+\texttt{base} para las del informe, \texttt{abl-<config>} para el estudio de
+ablación, y \texttt{smoke} o \texttt{pilot} para pruebas y exploraciones, que
+quedan excluidas automáticamente de las figuras.
+
+\subsection{Regenerar las figuras sin GPU}
+
+Los JSON están versionados, de modo que todas las figuras y tablas se
+reconstruyen sin GPU, sin \texttt{torch} y sin volver a entrenar:
+
+\begin{lstlisting}
+pip install matplotlib numpy
+python -m src.plots
+\end{lstlisting}
+
+La salida es determinista: dos ejecuciones consecutivas producen archivos
+idénticos byte a byte, de modo que un archivo marcado como modificado
+significa que algún dato cambió.
+
+\subsection{Compilar este informe}
+
+\begin{lstlisting}
+cd docs/informe
+make              # usa tectonic; genera main.pdf
+\end{lstlisting}
+
+Las figuras se leen de \texttt{../../results/figures/} en su versión PDF
+(vectorial). El informe nunca contiene una copia de una figura, así que no
+puede quedar desincronizado respecto del \textit{pipeline}.

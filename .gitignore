@@ -11,3 +11,19 @@ checkpoints/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# LaTeX: auxiliares de compilacion del informe.
+# main.pdf SI se versiona: es el entregable.
+docs/informe/*.aux
+docs/informe/*.log
+docs/informe/*.out
+docs/informe/*.bbl
+docs/informe/*.blg
+docs/informe/*.toc
+# Copia local de las figuras que crea `make standalone`. No se versiona:
+# duplicaria results/figures/ y se quedaria vieja al regenerar el pipeline.
+docs/informe/figuras/
+
+# Entorno virtual local
+.venv/
+venv/

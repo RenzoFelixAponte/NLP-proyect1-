@@ -50,7 +50,7 @@ results/
   logs/             salida de los jobs de Slurm
 docs/
   papers/           articulos de referencia
-  informe/          el informe final
+  informe/          informe en LaTeX (main.pdf es el entregable)
 requirements.txt    dependencias (torch aparte: depende de la CUDA local)
 ```
 
@@ -375,6 +375,23 @@ longitud, que es cuando la medida significa algo. La conclusion practica: la
 ventaja de DistilBERT se cobra igual en los dos regimenes, pero por motivos
 distintos -- menos kernels que lanzar cuando se sirve de a una peticion, y la
 mitad de calculo cuando se procesa en lote.
+
+## Informe
+
+El informe completo esta en [`docs/informe/`](docs/informe/), en LaTeX, y el
+PDF compilado en [`docs/informe/main.pdf`](docs/informe/main.pdf). Cubre la
+metodologia (incluido el tratamiento de los pesos pre-entrenados), los
+resultados, el ablation study, la eficiencia, las limitaciones y un apendice
+de reproducibilidad.
+
+```bash
+brew install tectonic     # una vez
+cd docs/informe && make   # genera main.pdf
+```
+
+Las figuras no se copian dentro del informe: se leen de `results/figures/` en
+su version PDF, asi que el documento no puede quedar desincronizado del
+pipeline.
 
 ## Referencias
 

@@ -1,0 +1,118 @@
+\section{Resultados de desempeño}
+\label{sec:resultados}
+
+\subsection{Comparación global}
+
+La Tabla~\ref{tab:desempeno} recoge las seis corridas base. Todas las cifras
+salen de los JSON versionados en \texttt{results/metrics/}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llcccc r}
+\toprule
+\textbf{Dataset} & \textbf{Modelo} & \textbf{Accuracy} & \textbf{Precision} &
+\textbf{Recall} & \textbf{F1} & \textbf{Train (min)} \\
+\midrule
+SST-2   & BERT-base       & \best{0,9232} & 0,9232 & 0,9231 & \best{0,9231} & 4,2 \\
+SST-2   & DistilBERT-base & 0,9128 & 0,9134 & 0,9125 & 0,9127 & 2,7 \\
+\midrule
+AG News & BERT-base       & 0,9441 & 0,9443 & 0,9441 & 0,9441 & 9,1 \\
+AG News & DistilBERT-base & \best{0,9450} & 0,9452 & 0,9450 & \best{0,9450} & 5,5 \\
+\midrule
+Yelp    & BERT-base       & \best{0,9652} & 0,9652 & 0,9652 & \best{0,9652} & 16,0 \\
+Yelp    & DistilBERT-base & 0,9606 & 0,9606 & 0,9606 & 0,9606 & 8,2 \\
+\bottomrule
+\end{tabular}
+\caption{Desempeño en test. \textit{Precision}, \textit{recall} y F1 son
+promedio macro. Mismo protocolo en las seis corridas: 2 épocas,
+\textit{batch} 32, \texttt{lr} $2\times10^{-5}$, fp16, RTX A6000.}
+\label{tab:desempeno}
+\end{table}
+
+DistilBERT conserva el \SI{98,9}{\percent} de la \textit{accuracy} de BERT en
+SST-2 y el \SI{99,5}{\percent} en Yelp, con el \SI{61}{\percent} de los
+parámetros. En AG News la diferencia cambia de signo (\num{+0,09} puntos para
+DistilBERT), pero conviene no sobreinterpretarla: sobre \num{7600} ejemplos de
+test, \num{0,09} puntos son \textbf{siete ejemplos}. La lectura honesta es un
+empate, no una victoria.
+
+Lo que sí es un patrón es la \emph{dependencia de la tarea}: la brecha entre
+los dos modelos es de \num{1,04} puntos en SST-2, \num{0,46} en Yelp y
+esencialmente nula en AG News. Clasificar temas de noticias no necesita las
+seis capas adicionales; el análisis de sentimiento sobre frases cortas --- con
+negaciones, ironía y contraste --- sí las aprovecha.
+
+Como referencia externa, el valor de DistilBERT en SST-2 (\num{91,3}) cae
+donde caen los publicados, lo que sugiere que el protocolo está bien
+calibrado y que no hay fugas entre splits.
+
+\subsection{Curvas de entrenamiento}
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{curvas_bert_sst2.pdf}
+  \caption{BERT en SST-2: 37 registros, 2 épocas.}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+  \includegraphics[width=\linewidth]{curvas_bert_yelp.pdf}
+  \caption{BERT en Yelp: 62 registros sobre \num{100000} ejemplos.}
+\end{subfigure}
+\caption{\textit{Cross-entropy loss} de entrenamiento y de validación frente
+al número de iteraciones. La validación se evalúa cada 500 pasos, de ahí que
+tenga menos puntos. Las curvas de las seis corridas están en
+\texttt{results/figures/}.}
+\label{fig:curvas}
+\end{figure}
+
+Las curvas (Figura~\ref{fig:curvas}) muestran el comportamiento esperado de un
+\textit{fine-tuning} corto: la \textit{loss} de entrenamiento cae con rapidez
+en los primeros cientos de pasos y después se aplana, mientras la de
+validación se estabiliza. En SST-2, el dataset más pequeño, la validación
+empieza a separarse del entrenamiento hacia el final de la segunda época
+--- el inicio del sobreajuste ---, que es exactamente la razón por la que el
+protocolo conserva el \textit{checkpoint} de la mejor época de validación en
+lugar del último.
+
+\subsection{Análisis por clase}
+
+El promedio macro oculta dónde se equivoca cada modelo. En AG News, la única
+tarea con más de dos clases, los errores no se reparten de forma uniforme
+(Tabla~\ref{tab:porclase}).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{BERT-base}} & \multicolumn{3}{c}{\textbf{DistilBERT-base}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\textbf{Clase} & P & R & F1 & P & R & F1 \\
+\midrule
+World     & 0,958 & 0,955 & 0,956 & 0,963 & 0,952 & 0,957 \\
+Sports    & 0,987 & 0,985 & \best{0,986} & 0,987 & 0,990 & \best{0,988} \\
+Business  & 0,927 & 0,903 & 0,915 & 0,924 & 0,905 & 0,915 \\
+Sci/Tech  & 0,905 & 0,934 & 0,919 & 0,906 & 0,933 & 0,920 \\
+\bottomrule
+\end{tabular}
+\caption{Desempeño por clase en AG News (\num{1900} ejemplos de test por
+clase).}
+\label{tab:porclase}
+\end{table}
+
+El patrón es idéntico en los dos modelos. \textit{Sports} es casi perfecta
+(F1 $\approx 0{,}99$): su vocabulario es distintivo y apenas se solapa con el
+resto. \textit{Business} y \textit{Sci/Tech} son las dos peores, y la matriz
+de confusión explica por qué: BERT clasifica \num{140} noticias de
+\textit{Business} como \textit{Sci/Tech} y \num{90} en sentido contrario;
+DistilBERT comete \num{140} y \num{92}. Esos dos flujos concentran la mayor
+parte del error de ambos modelos.
+
+La interpretación es que el límite no está en la capacidad del modelo sino en
+la tarea: una noticia sobre los resultados trimestrales de una empresa de
+semiconductores pertenece legítimamente a las dos categorías. Que BERT, con el
+doble de capas, cometa \emph{el mismo} número de confusiones
+\textit{Business} $\to$ \textit{Sci/Tech} que DistilBERT es la evidencia más
+clara de este informe de que la capacidad adicional no se está
+desaprovechando: sencillamente no hay nada más que extraer de esos ejemplos.

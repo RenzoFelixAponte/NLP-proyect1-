@@ -1,0 +1,84 @@
+\section{La configuración ganadora en los dos modelos}
+\label{sec:mejor}
+
+El último paso aplica la configuración ganadora del estudio de ablación
+--- \texttt{lineal}: cabeza $\mathrm{Linear}(768 \to C)$, \textit{encoder}
+entrenable --- a BERT y a DistilBERT con el mismo protocolo y los mismos
+datos.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llccccc r}
+\toprule
+\textbf{Dataset} & \textbf{Modelo} & \textbf{Accuracy} & \textbf{Precision} &
+\textbf{Recall} & \textbf{F1} & \textbf{F1 val.} & \textbf{Train (min)} \\
+\midrule
+SST-2   & BERT       & \best{0,9289} & 0,9294 & 0,9286 & \best{0,9288} & 0,9541 & 4,2 \\
+SST-2   & DistilBERT & 0,9094 & 0,9099 & 0,9091 & 0,9093 & 0,9483 & \best{1,7} \\
+\midrule
+AG News & BERT       & \best{0,9453} & 0,9456 & 0,9453 & \best{0,9453} & 0,9481 & 9,0 \\
+AG News & DistilBERT & 0,9442 & 0,9443 & 0,9442 & 0,9442 & 0,9462 & \best{5,4} \\
+\midrule
+Yelp    & BERT       & \best{0,9653} & 0,9653 & 0,9653 & \best{0,9653} & 0,9661 & 16,0 \\
+Yelp    & DistilBERT & 0,9610 & 0,9610 & 0,9610 & 0,9610 & 0,9603 & \best{8,2} \\
+\bottomrule
+\end{tabular}
+\caption{Configuración \texttt{lineal} en los dos modelos. BERT tiene
+\num{109,5}~M de parámetros y DistilBERT \num{66,4}~M.}
+\label{tab:mejor}
+\end{table}
+
+Con la cabeza lineal, BERT gana en los tres datasets: por \num{1,95} puntos en
+SST-2, \num{0,43} en Yelp y \num{0,11} en AG News. Es el mismo patrón de las
+corridas base --- la distancia entre los dos modelos depende de la tarea y se
+estrecha casi hasta desaparecer en clasificación de temas --- solo que ahora
+BERT también gana en AG News, aunque por un margen que sigue dentro del ruido.
+
+\paragraph{Un hallazgo secundario que merece atención.} La cabeza lineal
+\emph{mejora} a BERT respecto de su propia corrida base: \num{0,9289} frente a
+\num{0,9232} de \textit{accuracy} en SST-2. La corrida base usa la cabeza por
+defecto de HuggingFace, que en BERT pasa el \texttt{[CLS]} por un
+\textit{pooler} con \texttt{tanh} más \textit{dropout}. Es decir: ese
+preprocesado adicional no aporta nada en estas tareas y en SST-2 incluso
+estorba. Es coherente con la conclusión del estudio de ablación --- la
+capacidad que importa está en el \textit{encoder} --- y llevado un paso más
+allá: no solo las capas extra de la cabeza son innecesarias, sino que la
+transformación no lineal por defecto puede ser contraproducente.
+
+\section{Limitaciones}
+\label{sec:limitaciones}
+
+Cuatro, en orden de importancia para la interpretación de los resultados.
+
+\paragraph{Una sola semilla.} Todas las corridas usan la semilla 42. Sin
+repeticiones no hay estimación de la varianza, y por eso a lo largo del
+informe las diferencias por debajo de unas décimas se describen como empates
+en lugar de como victorias. La afirmación ``la cabeza no importa'' se apoya en
+que cinco configuraciones caben en \num{0,0014} de F1, lo cual es consistente
+con el ruido esperable pero no es una prueba formal. Repetir con tres o cinco
+semillas y reportar media y desviación sería la mejora más valiosa a este
+trabajo, y es barata: unas \num{7,5} horas de GPU.
+
+\paragraph{Presupuesto de dos épocas.} El artículo de BERT recomienda entre 2
+y 4 épocas para \textit{fine-tuning}. Con 2 se favorece ligeramente al modelo
+que converge más rápido, y las curvas de SST-2 sugieren que ahí BERT aún
+tenía margen. Es un presupuesto idéntico para los dos modelos, así que no
+invalida la comparación, pero sí acota su alcance.
+
+\paragraph{Yelp submuestreado.} Se usan \num{100000} de \num{560000} ejemplos
+de train. Los valores absolutos de Yelp están por debajo de lo alcanzable con
+el conjunto completo; las diferencias \emph{entre} modelos, que es lo que
+interesa, no deberían verse afectadas, porque ambos reciben exactamente el
+mismo subconjunto.
+
+\paragraph{Registro de validación incompleto en las corridas base.} Cinco de
+las seis corridas base se ejecutaron con una revisión anterior del código de
+entrenamiento que no serializaba el resumen de validación por época
+(\texttt{desempeno\_val}) en el JSON. La \emph{selección} del mejor
+\textit{checkpoint} por F1 de validación sí se aplicó en todas --- está en
+las tres revisiones del código ---, y la validación se evaluó durante el
+entrenamiento, como demuestran los puntos de \texttt{val\_loss} registrados en
+el historial. Lo que falta es solo el registro agregado, motivo por el cual la
+Tabla~\ref{tab:desempeno} no incluye columna de F1 de validación y la
+Tabla~\ref{tab:mejor}, que proviene de corridas posteriores, sí.
