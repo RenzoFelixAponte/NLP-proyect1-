@@ -24,19 +24,29 @@ y las diferencias que se midan son del modelo y no del codigo.
 
 ```
 src/
+  paths.py          rutas del repo, ancladas a la raiz
   data_adapter.py   carga y normaliza SST-2, AG News y Yelp
   models.py         fabrica de modelos, cabeza configurable y congelado
   train.py          bucle de fine-tuning (escrito a mano, sin Trainer)
   metrics.py        accuracy/precision/recall/F1 + latencia, memoria, tamano
-  plots.py          figuras y tablas del informe
   runs.py           consulta de las corridas guardadas
+  style.py          paleta y estilo comun de las figuras
+  plots.py          figuras del informe (PDF + PNG)
+  tables.py         tablas del informe, en Markdown
+  benchmark.py      latencia y memoria en una rejilla controlada
 scripts/
   train.sbatch      lanza un fine-tuning en un nodo GPU (Slurm)
+  ablation.sbatch   las N configuraciones del ablation, en serie
+  benchmark.sbatch  la medicion de eficiencia controlada
   launch_base.sh    los tres datasets de un modelo, de una vez
 results/
   metrics/          un JSON por corrida (no se sobrescribe nada)
-  figures/          figuras generadas por src/plots.py
+  figures/          figuras y tablas generadas por src/plots.py
   logs/             salida de los jobs de Slurm
+docs/
+  papers/           articulos de referencia
+  informe/          el informe final
+requirements.txt    dependencias (torch aparte: depende de la CUDA local)
 ```
 
 ## Datasets
@@ -64,8 +74,19 @@ Dos decisiones que conviene tener presentes al leer los resultados:
 ```bash
 conda create -y -n nlp-p1 python=3.11
 conda activate nlp-p1
-pip install torch --index-url https://download.pytorch.org/whl/cu128
-pip install "transformers>=4.44" "datasets>=2.20" scikit-learn matplotlib pandas
+pip install torch --index-url https://download.pytorch.org/whl/cu128   # ver nota
+pip install -r requirements.txt
+```
+
+`torch` va aparte a proposito: la rueda depende de la version de CUDA de la
+maquina y pip no la resuelve solo. En CPU basta con `pip install torch`.
+
+Para **solo regenerar las figuras y las tablas** desde los JSON que ya estan
+en el repo no hace falta ni GPU ni torch:
+
+```bash
+pip install matplotlib numpy
+python -m src.plots
 ```
 
 Los datasets y los checkpoints se descargan solos la primera vez. Si se
@@ -320,6 +341,6 @@ mitad de calculo cuando se procesa en lote.
 ## Referencias
 
 - Devlin et al. (2019). *BERT: Pre-training of Deep Bidirectional Transformers
-  for Language Understanding.* NAACL. (`bert/paper/`)
+  for Language Understanding.* NAACL. (`docs/papers/`)
 - Sanh et al. (2019). *DistilBERT, a distilled version of BERT: smaller,
   faster, cheaper and lighter.* NeurIPS EMC^2 Workshop.
