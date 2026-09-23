@@ -87,6 +87,14 @@ def nombre_corto(modelo_nombre):
     return modelo_nombre.split("-")[0]
 
 
+# Sin esto, matplotlib estampa la fecha de generacion dentro de cada PDF y de
+# cada PNG. El archivo cambia byte a byte aunque los datos sean identicos, asi
+# que regenerar las figuras ensucia el `git status` con 11 archivos modificados
+# y el diff no dice nada. Con la fecha fuera, la salida es reproducible: si un
+# archivo aparece modificado, es porque los numeros cambiaron.
+_SIN_FECHA = {"pdf": {"CreationDate": None}, "png": {"Software": None}}
+
+
 def guardar(fig, destino, formatos=("pdf", "png")):
     """
     Guarda una figura en varios formatos y devuelve la ruta principal.
@@ -101,7 +109,7 @@ def guardar(fig, destino, formatos=("pdf", "png")):
     principal = None
     for fmt in formatos:
         ruta = destino.with_suffix(f".{fmt}")
-        fig.savefig(ruta, format=fmt)
+        fig.savefig(ruta, format=fmt, metadata=_SIN_FECHA.get(fmt))
         if principal is None:
             principal = ruta
     plt.close(fig)
