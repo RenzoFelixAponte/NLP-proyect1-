@@ -5,6 +5,11 @@ Proyecto 1 del curso de NLP. Se hace fine-tuning de **BERT-base** y
 AG News y Yelp Polarity), se comparan en desempeno y en eficiencia, y se
 estudia con un *ablation study* que partes del modelo importan realmente.
 
+![Tamano vs desempeno](results/figures/burbujas_params_acc.png)
+
+Con el 61 % de los parametros de BERT, DistilBERT conserva entre el 98,9 % y
+el 99,5 % de su accuracy y responde el doble de rapido.
+
 ## Idea del repositorio
 
 Un solo pipeline sirve para todos los modelos y todos los datasets. Para
@@ -137,6 +142,11 @@ python -m src.plots               # results/figures/
 python -m src.runs                # tabla resumen de todas las corridas
 ```
 
+Cada figura se escribe en **PDF** (vectorial, para el informe) y en **PNG**
+(que es lo que GitHub renderiza dentro de este README). Se regeneran desde
+los JSON que ya estan versionados en `results/metrics/`, asi que no hacen
+falta ni GPU ni torch: basta `pip install matplotlib numpy`.
+
 ## Protocolo de entrenamiento
 
 Identico para los dos modelos, que es la condicion para que la comparacion
@@ -156,6 +166,13 @@ Las metricas de eficiencia (latencia y memoria) se miden todas en la misma
 GPU (NVIDIA RTX A6000), con warm-up previo y `torch.cuda.synchronize()`:
 sin sincronizar se estaria midiendo el tiempo de encolar la operacion, no el
 de ejecutarla.
+
+Las curvas de loss de las seis corridas base estan en `results/figures/`.
+Dos ejemplos, el dataset mas facil y el mas dificil:
+
+| SST-2 | Yelp |
+|---|---|
+| ![Curvas BERT SST-2](results/figures/curvas_bert_sst2.png) | ![Curvas BERT Yelp](results/figures/curvas_bert_yelp.png) |
 
 ## Ablation study
 
@@ -207,6 +224,8 @@ datasets. El test no participa en la eleccion: se mira una sola vez, al final.
 | `c2` | 0,9476 | 0,9434 | 0,9604 | 0,9505 | 66,9 M | 15,9 min |
 | `h768` | 0,9485 | 0,9427 | 0,9596 | 0,9503 | 67,0 M | 16,3 min |
 | `frz` | 0,8574 | 0,9084 | 0,9005 | 0,8887 | 0,6 M | 6,0 min |
+
+![Ablation study](results/figures/ablation.png)
 
 Lo que dice el estudio, en dos frases:
 
@@ -301,6 +320,10 @@ lo que indica que el protocolo esta bien calibrado y no hay fugas entre splits.
 | Memoria GPU en inferencia | ~1.720 MB | ~1.060 MB (−38 %) |
 | Tiempo de entrenamiento | 29,3 min (3 datasets) | 16,4 min (−44 %) |
 
+| Latencia por corrida | Memoria GPU |
+|---|---|
+| ![Latencia](results/figures/latencia.png) | ![Memoria](results/figures/memoria.png) |
+
 **La latencia hay que medirla aparte.** El campo `latencia_ms_media` que
 guarda cada corrida se mide con la longitud de secuencia de SU dataset y justo
 al terminar ese entrenamiento, asi que esos numeros no son comparables entre
@@ -327,8 +350,9 @@ Medido asi, DistilBERT es **2× mas rapido** en los nueve puntos de la rejilla,
 que es exactamente lo que predice pasar de 12 capas a 6. En rendimiento, con
 batch 32 y 64 tokens: 2.535 frente a 1.282 muestras por segundo.
 
-La figura `results/figures/benchmark_latencia.pdf` muestra ademas por que los
-numeros por corrida no servian: **con batch = 1 la latencia es plana** respecto
+![Latencia en la rejilla controlada](results/figures/benchmark_latencia.png)
+
+Esta figura muestra ademas por que los numeros por corrida no servian: **con batch = 1 la latencia es plana** respecto
 a la longitud de secuencia (BERT 5,56 / 5,61 / 5,11 ms para 64 / 128 / 256
 tokens; DistilBERT 2,60 / 2,61 / 2,74). Multiplicar por cuatro la longitud no
 cuesta nada porque la GPU no esta calculando, esta esperando a que se lancen
