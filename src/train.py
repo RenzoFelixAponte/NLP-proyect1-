@@ -184,8 +184,10 @@ def main():
     parser.add_argument("--freeze-layers", type=int, default=0,
                         help="Congelar embeddings + las primeras N capas")
     parser.add_argument("--tag", default=None,
-                        help="Etiqueta para distinguir corridas "
-                             "(ej. 'smoke', 'final', '3epocas')")
+                        help="Etiqueta de la corrida. Convencion: 'base' para "
+                             "las del informe, 'abl-<config>' para el ablation, "
+                             "'smoke' para pruebas y 'pilot' para exploratorias. "
+                             "Las dos ultimas quedan fuera de las figuras")
     parser.add_argument("--out", default=str(RESULTS_DIR),
                         help="Raiz de salida (por defecto results/ del repo)")
     args = parser.parse_args()
