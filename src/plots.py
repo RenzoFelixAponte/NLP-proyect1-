@@ -232,10 +232,18 @@ def figura_benchmark(benchmark, destino):
     if len(batches) == 1:
         axes = [axes]
 
+    # Las longitudes salen de la rejilla completa, no del ultimo modelo que
+    # toco el bucle: si un modelo no tuviera mediciones para este batch, los
+    # xticks se quedarian fijados con los de otro, o directamente sin definir.
+    longitudes = sorted({m["seq_len"] for mod in modelos
+                         for m in mod["mediciones"]})
+
     for ax, bs in zip(axes, batches):
         for mod in modelos:
             puntos = sorted([m for m in mod["mediciones"] if m["batch_size"] == bs],
                             key=lambda m: m["seq_len"])
+            if not puntos:
+                continue
             ax.plot([m["seq_len"] for m in puntos],
                     [m["latencia_ms_media"] for m in puntos],
                     color=COLOR_MODELO.get(mod["modelo"], TINTA_TENUE),
@@ -243,7 +251,7 @@ def figura_benchmark(benchmark, destino):
                     label=mod["modelo_nombre"])
         ax.set_title(f"batch = {bs}", loc="left")
         ax.set_xlabel("Longitud de secuencia")
-        ax.set_xticks([m["seq_len"] for m in puntos])
+        ax.set_xticks(longitudes)
     axes[0].set_ylabel("Latencia (ms)")
     axes[-1].legend(loc="upper left")
 
@@ -359,8 +367,6 @@ def figura_ablation(ablaciones, destino, modelo="distilbert"):
         for cfg in ORDEN_CONFIG:
             clave = (modelo, tarea, cfg)
             if clave not in ablaciones:
-                clave = None
-            if clave is None:
                 continue
             val = (ablaciones[clave].get("desempeno_val") or {}).get("mejor_f1")
             if val is None:
@@ -413,8 +419,10 @@ def tabla_ablation(ablaciones, destino, modelo="distilbert"):
     lineas = ["| Dataset | Config | Cabeza | Congelado | Params entren. | "
               "F1 val | Acc test | F1 test | Train (min) |",
               "|" + "---|" * 9]
-    for (modelo, tarea, cfg), c in sorted(ablaciones.items(),
-                                          key=lambda kv: (kv[0][1], kv[0][2])):
+    # El desempaquetado usa `_` para el modelo: ya se filtro por el argumento
+    # `modelo` arriba, y nombrarlo igual pisaba el parametro de la funcion.
+    for (_, tarea, cfg), c in sorted(ablaciones.items(),
+                                     key=lambda kv: (kv[0][1], kv[0][2])):
         abl = c.get("ablacion") or {}
         val = (c.get("desempeno_val") or {}).get("mejor_f1")
         cabeza = abl.get("head_hidden") or "lineal"
