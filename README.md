@@ -128,6 +128,20 @@ Cada ejecucion escribe `results/metrics/<modelo>_<tarea>[_<tag>]_<fecha>.json`
 con todas las metricas, la configuracion y el historial de loss. Nunca se
 sobrescribe una corrida anterior.
 
+**Convencion de etiquetas.** Como nada se borra, la etiqueta es lo unico que
+distingue una corrida del informe de una prueba. Las figuras y las tablas
+descartan `smoke` y `pilot` (ver `TAGS_DESCARTADOS` en `src/runs.py`):
+
+| Tag | Que es |
+|---|---|
+| `base` | corrida del informe, protocolo completo |
+| `abl-<config>` | una configuracion del ablation study |
+| `smoke` | prueba rapida de que el pipeline arranca |
+| `pilot` | exploratoria, con el train submuestreado |
+
+Conviene respetarla: una corrida exploratoria etiquetada como si fuera
+definitiva acaba en el informe sin que nadie lo note.
+
 ### En un cluster con Slurm
 
 ```bash
