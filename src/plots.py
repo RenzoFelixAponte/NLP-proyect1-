@@ -61,7 +61,7 @@ def figura_curvas(corrida, destino):
         ax.plot([p for p, _ in val], [v for _, v in val], color=NARANJA,
                 linewidth=2, marker="o", markersize=4, label="Validation loss")
 
-    ax.set_xlabel("Iteracion (paso de optimizacion)")
+    ax.set_xlabel("Iteración (paso de optimización)")
     ax.set_ylabel("Cross-entropy loss")
     ax.set_title(f"{corrida['modelo_nombre']} · {nombre_tarea(corrida['tarea'])}",
                  loc="left")
@@ -108,7 +108,11 @@ def figura_burbujas(corridas, destino):
         # al lado. El desplazamiento sale del radio de la burbuja (el area
         # esta en puntos^2) mas un margen fijo.
         radio = (area / 3.14159) ** 0.5
-        izquierda = params_m > x_medio     # a la derecha -> etiqueta a la izquierda
+        # La etiqueta sale HACIA AFUERA: los puntos de la columna izquierda la
+        # llevan a su izquierda y los de la derecha a su derecha. Al reves --
+        # que es lo que se hacia antes -- las dos columnas empujan sus
+        # etiquetas hacia el centro y se solapan entre si.
+        izquierda = params_m < x_medio
         dx = -(radio + 6) if izquierda else (radio + 6)
         ax.annotate(f"{nombre_corto(c['modelo_nombre'])} · {nombre_tarea(tarea)}\n"
                     f"{lat:.1f} ms",
@@ -117,10 +121,19 @@ def figura_burbujas(corridas, destino):
                     ha="right" if izquierda else "left",
                     fontsize=7, color=TINTA_TENUE)
 
-    ax.set_xlabel("Parametros (millones)")
+    ax.set_xlabel("Parámetros (millones)")
     ax.set_ylabel("Accuracy en test")
-    ax.set_title("Tamano vs desempeno (area = latencia por muestra)", loc="left")
-    ax.margins(x=0.32, y=0.22)
+    ax.set_title("Tamaño vs desempeño (área = latencia por muestra)", loc="left")
+
+    # Los limites del eje X se fijan a mano en vez de con margins(): las
+    # etiquetas se desplazan en PUNTOS, no en unidades de dato, asi que un
+    # margen relativo no sabe cuanto texto tiene que acomodar y las de la
+    # columna izquierda -- las mas largas, por el prefijo 'DistilBERT' -- se
+    # salian del lienzo. El hueco de la izquierda es mayor por ese motivo.
+    if xs:
+        span = (max(xs) - min(xs)) or max(xs) or 1.0
+        ax.set_xlim(min(xs) - 0.85 * span, max(xs) + 0.55 * span)
+    ax.margins(y=0.22)
     return guardar(fig, destino)
 
 
@@ -270,10 +283,10 @@ def figura_ablation(ablaciones, destino, modelo="distilbert"):
                 transform=ax.get_yaxis_transform(), color=TINTA)
     ax.invert_yaxis()
     ax.set_xlim(0.80, 1.0)
-    ax.set_xlabel("F1 de validacion")
+    ax.set_xlabel("F1 de validación")
     # Titulo neutro: la interpretacion va en el texto del informe, no dentro
     # de la figura, y un titulo largo se sale del ancho de columna.
-    ax.set_title("Ablation study · F1 de validacion", loc="left")
+    ax.set_title("Estudio de ablación · F1 de validación", loc="left")
     ax.grid(axis="y", visible=False)
     return guardar(fig, destino)
 
