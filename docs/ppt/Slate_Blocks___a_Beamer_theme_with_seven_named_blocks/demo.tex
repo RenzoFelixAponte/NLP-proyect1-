@@ -1,0 +1,149 @@
+% =============================================================================
+% demo.tex — the template with every construct filled to a realistic length.
+%
+%   ./check.sh demo     build it and report overflows
+%
+% Two jobs:
+%   1. a test. slides.tex is deliberately sparse, so it passes whatever you do
+%      to the style; this one carries enough text to make a spacing regression
+%      visible. Build it after editing style.tex.
+%   2. the screenshots in README.md come from here.
+%
+% The prose is \lipsum, which is the point: it is uniform, so anything that
+% looks uneven on these pages is the template's doing and not the writing's.
+% =============================================================================
+\documentclass[xcolor=dvipsnames, aspectratio=1610]{beamer}
+
+\usetheme{Madrid}
+\useoutertheme{miniframes}
+\useinnertheme{circles}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{lipsum}
+
+\input{style}
+
+\slateWatermark{figures/background.png}
+
+\renewcommand{\slateTitle}    {\large\textbf{\textrm{Seven blocks and one colour}}}
+\renewcommand{\slateSubTitle} {\small\textrm{Every construct, at a length that would really be used}}
+\renewcommand{\slateAuthor}   {A Presenter}
+\renewcommand{\slateAffiliate}{Your institution, City, Country}
+
+\title[slate-blocks]{Seven blocks and one colour}
+\subtitle{Every construct, at a length that would really be used}
+\author[Presenter]{A Presenter}
+\institute[Institution]{Your institution}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \slatetitlepage
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{\textsc{Prose and blocks}}
+
+\begin{frame}{\textsc{A page of prose}}
+
+  \begin{itemize}
+    \item A point, stated in a sentence. \textbf{Bold} carries the term the
+      point turns on, and nothing else on the page competes with it.
+    \item A second point, longer, to show where a bullet wraps and how the
+      second line sits under the first.
+  \end{itemize}
+
+  \vspace{2.5mm}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        \small\lipsum[1][1-2]
+      \end{ExampleBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{CommentBox}
+        \small\lipsum[2][1-2]
+      \end{CommentBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% All seven, so a palette change can be judged on one page rather than by
+% paging through a deck.
+% -----------------------------------------------------------------------------
+\begin{frame}{\textsc{The seven blocks}}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        \scriptsize The theme colour itself. For the instance that makes an
+        abstract point concrete.
+      \end{ExampleBox}
+      \begin{CommentBox}
+        \scriptsize An aside that is worth keeping but is not the argument.
+      \end{CommentBox}
+      \begin{ProposalBox}
+        \scriptsize What is being put forward, as against what is being
+        reported.
+      \end{ProposalBox}
+      \begin{ReminderBox}
+        \scriptsize Something established earlier that the next page depends
+        on.
+      \end{ReminderBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{ProblemBox}
+        \scriptsize What does not work yet. Kept distinct from the challenge:
+        a problem is observed.
+      \end{ProblemBox}
+      \begin{ChallengeBox}
+        \scriptsize What would be hard to do about it. A challenge is
+        anticipated.
+      \end{ChallengeBox}
+      \begin{DefinitionBox}
+        \scriptsize A term fixed for the rest of the deck, so it can be used
+        without hedging afterwards.
+      \end{DefinitionBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{\textsc{Revealing a page in steps}}
+
+  % \onslide<n-> is the deck's own pacing: each point appears when it is
+  % spoken. It costs one PDF page per step, so a 16-frame deck becomes 80.
+  \begin{itemize}
+    \onslide<1->{\item The first point, visible from the start.}
+    \onslide<2->{\item The second, on the next click.}
+    \onslide<3->{\item The third, and the one the block below answers.}
+  \end{itemize}
+
+  \onslide<4->{
+    \begin{ProposalBox}
+      \small\lipsum[3][1-2]
+    \end{ProposalBox}}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section{\textsc{The grid}}
+
+% SWOT. \swot takes the four quadrants; the axes and the mixing are in the
+% style file. Keep the contents short — the grid gives each quadrant a quarter
+% of the slide, and about four lines is what fits.
+\begin{frame}{\textsc{A SWOT grid}}
+
+  \swot
+    {\scriptsize a strength, and a second one under it}
+    {\scriptsize a weakness, stated as plainly}
+    {\scriptsize an opportunity, and a second}
+    {\scriptsize a threat, which is the quadrant most often left empty}
+
+\end{frame}
+
+\end{document}

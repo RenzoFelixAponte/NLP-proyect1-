@@ -1,0 +1,106 @@
+% =============================================================================
+% slate-blocks — skeleton.
+%
+%   ./check.sh          build twice, report overflows
+%   ./check.sh demo     build the filled-out sample instead
+%
+% pdfLaTeX or XeLaTeX; either works. Nothing here loads a font by filename.
+% =============================================================================
+\documentclass[xcolor=dvipsnames, aspectratio=1610]{beamer}
+
+% Stock beamer themes. Madrid gives the footer, miniframes the row of section
+% dots along the top, circles the itemize bullets.
+\usetheme{Madrid}
+\useoutertheme{miniframes}
+\useinnertheme{circles}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+
+\input{style}
+
+% The watermark: the cover photograph on every slide at 6.7%. Comment out to
+% drop it.
+\slateWatermark{figures/background.png}
+
+% --- the title page's five fields ---------------------------------------------
+\renewcommand{\slateTitle}    {\large\textbf{\textrm{The title of the talk}}}
+\renewcommand{\slateSubTitle} {\small\textrm{What kind of talk it is}}
+\renewcommand{\slateAuthor}   {Given Family}
+\renewcommand{\slateAffiliate}{Your institution, City, Country}
+
+% --- and beamer's own, for the footer and the navigation row ------------------
+\title[Short title]{The title of the talk}
+\subtitle{What kind of talk it is}
+\author[Family]{Given Family}
+\institute[Short]{Your institution}
+\date{\today}
+
+\begin{document}
+
+% [plain] so the footer and the navigation row stay off the cover.
+\begin{frame}[plain]
+  \slatetitlepage
+\end{frame}
+
+\section{\textsc{A first section}}
+
+\begin{frame}{\textsc{A page of prose}}
+
+  \begin{itemize}
+    \item A point, stated in a sentence. \textbf{Bold} carries the term the
+      point turns on.
+    \item A second point.
+  \end{itemize}
+
+  \vspace{2.5mm}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        Blocks are named, and each has its own hue. This one is the theme
+        colour itself.
+      \end{ExampleBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{CommentBox}
+        The seven are defined at the foot of \texttt{style.tex}. Rename them
+        into your own language there.
+      \end{CommentBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{\textsc{Revealing a page in steps}}
+
+  % \onslide<n-> is the deck's own pacing: each point appears when it is
+  % spoken. It costs one PDF page per step, so a 16-frame deck becomes 80.
+  \begin{itemize}
+    \onslide<1->{\item The first point, visible from the start.}
+    \onslide<2->{\item The second, on the next click.}
+    \onslide<3->{\item The third.}
+  \end{itemize}
+
+  \onslide<4->{
+    \begin{ProposalBox}
+      And a block, last.
+    \end{ProposalBox}}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SWOT. \swot takes the four quadrants; the axes and the mixing are in the
+% style file. Keep the contents short — the grid gives each quadrant a quarter
+% of the slide, and four lines is what fits.
+% -----------------------------------------------------------------------------
+\begin{frame}{A SWOT grid}
+
+  \swot
+    {\scriptsize a strength, and a second one}
+    {\scriptsize a weakness}
+    {\scriptsize an opportunity, and a second}
+    {\scriptsize a threat}
+
+\end{frame}
+
+\end{document}

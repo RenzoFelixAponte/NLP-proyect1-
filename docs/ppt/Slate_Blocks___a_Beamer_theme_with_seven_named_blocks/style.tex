@@ -1,0 +1,291 @@
+% =============================================================================
+% style.tex — the palette, the named blocks, and the title page.
+%
+% Extracted from a course presentation given in 2025. Everything here is the
+% author's own; the beamer themes underneath (Madrid, miniframes, circles) ship
+% with beamer itself, so there is no third-party licence to carry.
+%
+% Load after \documentclass and the \usetheme lines. See README.md.
+% =============================================================================
+
+\usepackage{xcolor}
+\usepackage{etoolbox}   % \BeforeBeginEnvironment, used by the block factory
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{makecell}   % multi-line table cells
+\usepackage[most]{tcolorbox}   % the SWOT grid at the foot of this file
+
+% -----------------------------------------------------------------------------
+% THE PALETTE
+%
+% One colour is chosen; the rest are derived from it by colour-wheel relations,
+% so the whole deck re-tints from a single line.
+%
+%   #bec2cb is a desaturated blue-grey. It is light, which is the point: at
+%   full strength it is a background, and at !250 — beamer's syntax for a tint
+%   past 100%, i.e. a darkening — it becomes the body text colour. One value
+%   doing both ends of the range is what keeps the deck quiet.
+%
+%   Analogous          neighbours on the wheel. Closest to the theme colour,
+%                      so they read as variations rather than contrasts.
+%   Tetradic           two complementary pairs. Furthest apart, so these carry
+%                      the blocks that must not be confused with each other.
+%   Split-complementary  either side of the true complement. A softer contrast
+%                      than the complement itself, which at this saturation
+%                      would look like a mistake.
+%
+% All seven sit at the same lightness and saturation. That is deliberate: the
+% hue distinguishes them, nothing else, so no block shouts louder than another.
+% -----------------------------------------------------------------------------
+\definecolor{ThemeColor}{RGB}{190, 194, 203}              % #bec2cb
+
+\definecolor{AnalogousColor-1}{RGB}{193, 190, 203}        % #c1becb
+\definecolor{AnalogousColor-2}{RGB}{190, 201, 203}        % #bec9cb
+
+\definecolor{TetradicColor-1}{RGB}{203, 190, 194}         % #cbbec2
+\definecolor{TetradicColor-2}{RGB}{203, 199, 190}         % #cbc7be
+\definecolor{TetradicColor-3}{RGB}{190, 203, 199}         % #becbc7
+
+\definecolor{SplitComplementaryColor-1}{RGB}{203, 193, 190} % #cbc1be
+\definecolor{SplitComplementaryColor-2}{RGB}{201, 203, 190} % #c9cbbe
+
+\setbeamercolor{normal text}{fg=ThemeColor!250}
+
+\setbeamercolor{palette primary}   {bg=ThemeColor,           fg=ThemeColor!12.5!white}
+\setbeamercolor{palette secondary} {bg=ThemeColor!87.5!white, fg=ThemeColor!12.5!white}
+\setbeamercolor{palette tertiary}  {bg=ThemeColor!75!white,   fg=ThemeColor!12.5!white}
+\setbeamercolor{palette quaternary}{bg=ThemeColor!62.5!white, fg=ThemeColor!12.5!white}
+\setbeamercolor{structure}    {fg=AnalogousColor-1}
+\setbeamercolor{section in toc}{fg=AnalogousColor-1!150}
+
+\setbeamersize{text margin left=10mm, text margin right=10mm}
+\setbeamertemplate{navigation symbols}{}
+
+% -----------------------------------------------------------------------------
+% NAMED BLOCKS
+%
+% Beamer gives you three: block, example, alert. This deck wanted seven, each
+% naming what it holds — an example, a comment, a proposal, a reminder — and
+% each in its own hue.
+%
+% \newcolouredblock{Environment}{Printed label}{colour} builds one. It uses
+% \newtheorem for the numbering and label, and swaps the block colours around
+% the environment, because beamer has no per-block colour and \setbeamercolor
+% inside a frame leaks into whatever follows.
+%
+% The original wrote those eight lines out once per block, seven times over.
+% The colours are the design; the repetition was not.
+% -----------------------------------------------------------------------------
+\newcommand{\blockcolours}[1]{%
+  \setbeamercolor{block title}{use=example text, fg=white, bg=#1}%
+  \setbeamercolor{block body} {parent=normal text, use=block title example,
+                               bg=#1!25}%
+}
+\newcommand{\blockcoloursreset}{%
+  \setbeamercolor{block title}{use=structure, fg=white, bg=structure.fg!75!white}%
+  \setbeamercolor{block body} {parent=normal text, use=block title,
+                               bg=block title.bg!10!bg}%
+}
+
+\newcommand{\newcolouredblock}[3]{%
+  \newtheorem{#1}{\textsc{#2}}%
+  \BeforeBeginEnvironment{#1}{\blockcolours{#3}}%
+  \AfterEndEnvironment{#1}{\blockcoloursreset}%
+}
+
+% The seven. Rename them into your own language — the label is the second
+% argument and nothing else depends on it.
+%
+% The environment names carry a suffix. \Example, \Definition and friends are
+% already taken: amsmath and beamer's own theorem set define several of them,
+% and \newtheorem fails on a name that exists. A suffix is uglier than the bare
+% word and cheaper than finding out which words are free in every package a
+% future deck might load.
+\newcolouredblock{ExampleBox}   {Example}    {ThemeColor}
+\newcolouredblock{CommentBox}   {Comment}    {AnalogousColor-1}
+\newcolouredblock{ProposalBox}  {Proposal}   {AnalogousColor-2}
+\newcolouredblock{ReminderBox}  {Reminder}   {TetradicColor-1}
+\newcolouredblock{ProblemBox}   {Problem}    {TetradicColor-2}
+\newcolouredblock{ChallengeBox} {Challenge}  {TetradicColor-3}
+\newcolouredblock{DefinitionBox}{Definition} {SplitComplementaryColor-1}
+
+% -----------------------------------------------------------------------------
+% COVERING THE PAGE WITH A PHOTOGRAPH
+%
+% \slatecover{file} scales an image to cover the whole slide, whatever its
+% aspect ratio, without distorting it. Place the result at the page centre and
+% whichever dimension overruns is cropped evenly by the page edge.
+%
+% \includegraphics[width=\paperwidth] alone does NOT do this. The deck is 16:10
+% and most photographs are 16:9; scaled to the paper's width, a 16:9 image
+% comes up about a tenth of the page short and leaves a white band across the
+% top. Giving both width and height distorts the picture, and adding
+% keepaspectratio letterboxes it — the same gap, politely.
+%
+% So: measure it at full width, and if that is not tall enough, scale by height
+% instead.
+% -----------------------------------------------------------------------------
+\makeatletter
+\newsavebox{\slate@coverbox}
+\newcommand{\slatecover}[1]{%
+  \sbox{\slate@coverbox}{\includegraphics[width=\paperwidth]{#1}}%
+  \ifdim\ht\slate@coverbox<\paperheight
+    \includegraphics[height=\paperheight]{#1}%
+  \else
+    \usebox{\slate@coverbox}%
+  \fi
+}
+\makeatother
+
+% -----------------------------------------------------------------------------
+% THE WATERMARK
+%
+% The cover photograph again, on every slide, at 6.7% — far enough down that it
+% reads as paper texture rather than as an image. Anything stronger and the
+% body text has to fight it.
+%
+% Comment this out and the deck still works; it is the one part of the design
+% that costs nothing to lose.
+% -----------------------------------------------------------------------------
+\newcommand{\slateWatermark}[1]{%
+  \usebackgroundtemplate{%
+    \tikz[remember picture, overlay]{%
+      \node[opacity=0.067, inner sep=0]
+        at (current page.center)
+        {\slatecover{#1}};%
+    }%
+  }%
+}
+
+% -----------------------------------------------------------------------------
+% THE TITLE PAGE
+%
+% \slatetitlepage — a full-bleed photograph with the title in a double-stroked
+% box over it, the box shaded from one analogous colour to the other.
+%
+% Set the five commands below it first. They are separate commands rather than
+% arguments because the title page is the one place a deck wants long strings
+% with markup in them, and five arguments to one command is unreadable.
+% -----------------------------------------------------------------------------
+\newcommand{\slateBackground}{figures/background.png}
+\newcommand{\slateTitle}    {\large\textbf{\textrm{Title}}}
+\newcommand{\slateSubTitle} {\small\textrm{Subtitle}}
+\newcommand{\slateAuthor}   {Author}
+\newcommand{\slateAffiliate}{Affiliation}
+\newcommand{\slateDate}     {\today}
+\newcommand{\slateLogo}     {\includegraphics[width=0.25\paperwidth]{figures/logo.png}}
+
+\newcommand{\slatetitlepage}{%
+  \begin{tikzpicture}[remember picture, overlay]
+
+    % opacity=0.55 — the photograph held back far enough that the title box
+    % reads as something laid over it rather than as another thing at the same
+    % weight. The sky keeps its blue and the maple its red down to about here;
+    % below 0.5 the picture stops looking held back and starts looking faded.
+    %
+    % The usual recipe for this is two layers — the image at 0.65 and a white
+    % rectangle at 0.15 over it. Do not bother. The page behind is white, so
+    % the veil does nothing the opacity cannot: the two render to within one
+    % part in 255 of a single opacity of 0.5525, which was measured, not
+    % assumed. One number, one place to change it.
+    \node[inner sep=0pt, opacity=0.55] at (current page.center)
+      {\slatecover{\slateBackground}};
+
+    % The double stroke and the shading are what lift the box off a photograph
+    % busy enough to swallow a plain panel. shading angle=60 runs the gradient
+    % across the diagonal rather than flat, so neither edge matches the photo
+    % behind it for long.
+    \node[
+      above=0.5cm, align=center,
+      draw=AnalogousColor-1!50,
+      left color=AnalogousColor-1!75, right color=AnalogousColor-1!25,
+      shading angle=60,
+      double, double distance=0.1cm,
+      inner xsep=15pt, inner ysep=10pt,
+      minimum width=0.7\textwidth, text width=0.6\textwidth,
+      color=AnalogousColor-2!250,
+    ] (title) at (current page.center)
+      {\LARGE\slateTitle \\[5pt] \small\slateSubTitle};
+
+    \node[below=0.5cm]  (author)    at (title.south)
+      {\color{AnalogousColor-1!250}\slateAuthor};
+    \node[below=0.25cm] (affiliate) at (author.south)
+      {\color{AnalogousColor-1!250}\small\slateAffiliate};
+    \node[below=0.25cm] (date)      at (affiliate.south)
+      {\color{AnalogousColor-1!250}\large\slateDate};
+    \node[opacity=0.67, below=1cm]  at (affiliate.south) {\slateLogo};
+
+  \end{tikzpicture}%
+}
+
+
+% ---- the palette this template mixes from ----------------------------------
+%
+% The helpful/harmful pair is taken from the two TETRADIC colours, which are
+% the furthest apart on the wheel this palette has: greenish against pinkish,
+% which is the one contrast a reader will read as good against bad without
+% being told. The analogous colours are too close to the theme colour to do
+% this job — at this saturation #bec9cb and #bec2cb are the same colour, and
+% the two axis headers came out indistinguishable.
+%
+% Internal/external is the weaker distinction and gets the weaker contrast,
+% at a third strength so the row bands stay under the quadrants.
+\colorlet{swotHelpful} {TetradicColor-3!67}
+\colorlet{swotHarmful} {TetradicColor-1!67}
+\colorlet{swotInternal}{ThemeColor!33}
+\colorlet{swotExternal}{TetradicColor-2!33}
+\colorlet{swotInk}{AnalogousColor-1!250}
+\colorlet{S}{swotHelpful!50!swotInternal}
+\colorlet{W}{swotHarmful!50!swotInternal}
+\colorlet{O}{swotHelpful!50!swotExternal}
+\colorlet{T}{swotHarmful!50!swotExternal}
+
+\tcbset{
+  swotbox/.style     ={size=normal, boxrule=0pt, colback=#1,
+                       watermark text=#1, width=.5\linewidth-5mm},
+  swotheader/.style  ={size=small, boxrule=0pt, width=.5\linewidth-5mm,
+                       colback=#1, valign=center, halign=center},
+  swotfirstcol/.style={swotheader=#1, width=1cm},
+}
+% -----------------------------------------------------------------------------
+% SWOT
+%
+% \swot{strengths}{weaknesses}{opportunities}{threats} — a 3x3 raster: a blank
+% corner, two column headers, and two rows each opening with a rotated label.
+%
+% The four quadrant colours are MIXED rather than picked, which is what keeps
+% the grid readable: every quadrant is half "helpful/harmful" and half
+% "internal/external", so the two axes are legible in the colour itself and a
+% reader can place a quadrant without reading its label.
+%
+% The letter watermarked in each quadrant is the tcolorbox colour name. That is
+% deliberate — it labels the quadrant without spending a line on a heading.
+% -----------------------------------------------------------------------------
+\newcommand{\swotAxisHelpful}{Helpful\par\tiny (to achieve the objective)}
+\newcommand{\swotAxisHarmful}{Harmful\par\tiny (to achieve the objective)}
+\newcommand{\swotAxisInternal}{Internal origin\\\tiny (attributes of the thing itself)}
+\newcommand{\swotAxisExternal}{External origin\\\tiny (attributes of its environment)}
+
+\newcommand{\swot}[4]{%
+  \begin{center}
+  \begin{tcbitemize}[raster columns=3, raster rows=3, enhanced, sharp corners,
+                     raster equal height=rows, raster force size=false,
+                     raster column skip=0pt, raster row skip=0pt]
+    \tcbitem[blankest, width=1cm]
+    \tcbitem[swotheader=swotHelpful] {\color{swotInk}\swotAxisHelpful}
+    \tcbitem[swotheader=swotHarmful] {\color{swotInk}\swotAxisHarmful}
+
+    \tcbitem[swotfirstcol=swotInternal]
+      {\rotatebox[origin=c]{90}{\parbox[t]{2.4cm}{\centering
+        \color{swotInk}\swotAxisInternal\par}}}
+    \tcbitem[swotbox=S] #1
+    \tcbitem[swotbox=W] #2
+
+    \tcbitem[swotfirstcol=swotExternal]
+      {\rotatebox[origin=c]{90}{\parbox[b]{2.4cm}{\centering
+        \color{swotInk}\swotAxisExternal\par}}}
+    \tcbitem[swotbox=O] #3
+    \tcbitem[swotbox=T] #4
+  \end{tcbitemize}
+  \end{center}%
+}

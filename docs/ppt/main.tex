@@ -1,0 +1,292 @@
+% ---------------------------------------------------------------------------
+% Project 1 slides, NLP course. DistilBERT vs BERT for text classification.
+% Theme: slate-blocks (Slate_Blocks___a_Beamer_theme_with_seven_named_blocks/).
+%
+% Build:  tectonic -X compile main.tex     (tectonic reruns until stable)
+%
+% Same rule as the report: figures and tables are read from
+% ../../results/figures/, where `python -m src.plots` writes them, so no
+% number on a slide was typed by hand except in the prose.
+% ---------------------------------------------------------------------------
+\documentclass[xcolor={dvipsnames,table}, aspectratio=1610]{beamer}
+
+\usetheme{Madrid}
+\useoutertheme{miniframes}
+\useinnertheme{circles}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+
+% The theme lives in its own folder; style.tex and its figures are found
+% through the input and graphics paths instead of being copied here.
+\makeatletter
+\def\input@path{{Slate_Blocks___a_Beamer_theme_with_seven_named_blocks/}}
+\makeatother
+\graphicspath{{Slate_Blocks___a_Beamer_theme_with_seven_named_blocks/}{../../results/figures/}}
+
+\input{style}
+
+% Colours the generated tabulars expect (same as docs/informe/main.tex).
+\definecolor{cabecera}{HTML}{DCDCEF}
+\definecolor{lila}{HTML}{E6E1F5}
+
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth}%
+  \input{../../results/figures/#1.tex}%
+\end{adjustbox}}
+
+\slateWatermark{figures/background.png}
+
+\renewcommand{\slateTitle}    {\large\textbf{\textrm{How Much of BERT Does Text Classification Need?}}}
+\renewcommand{\slateSubTitle} {\small\textrm{A controlled comparison with DistilBERT}}
+\renewcommand{\slateAuthor}   {Jose Huamani, Renzo Felix, Diego Quispe}
+\renewcommand{\slateAffiliate}{Universidad de Ingenier\'ia y Tecnolog\'ia (UTEC), Lima, Peru}
+% The template's logo is a placeholder; no institutional mark ships here.
+\renewcommand{\slateLogo}{}
+
+\title[BERT vs DistilBERT]{How Much of BERT Does Text Classification Need?}
+\subtitle{A controlled comparison with DistilBERT}
+\author[Huamani, Felix, Quispe]{Jose Huamani, Renzo Felix, Diego Quispe}
+\institute[UTEC]{UTEC}
+\date{NLP 2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \slatetitlepage
+\end{frame}
+
+% ===========================================================================
+\section{\textsc{Setup}}
+
+\begin{frame}{\textsc{The question and the setup}}
+
+  \begin{ProblemBox}
+    \small DistilBERT claims 97\% of BERT's GLUE score with half the layers.
+    We tested that on three datasets.
+  \end{ProblemBox}
+
+  \vspace{1mm}
+  \begin{center}\scriptsize
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Models} & \texttt{bert-base-uncased} (12 layers, 109.5\,M) and
+      \texttt{distilbert-base-uncased} (6 layers, 67.0\,M) \\
+    \textbf{Data} & SST-2 (872 test sentences), AG News (7{,}600), Yelp
+      Polarity (38{,}000, train cut to 100\,k) \\
+    \textbf{Recipe} & AdamW at $2\times10^{-5}$, 10\% warm-up, 2 epochs, batch
+      32, fp16, seed 42 \\
+    \textbf{Selection} & best validation macro-F1, then one pass over test \\
+    \textbf{Runs} & 24 fine-tunings plus a latency benchmark, all on one RTX A6000 \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \begin{ReminderBox}
+    \small Only the model changes between two columns of any table. Training
+    loop, splits, seed and GPU stay the same for both.
+  \end{ReminderBox}
+
+\end{frame}
+
+% ===========================================================================
+\section{\textsc{Performance}}
+
+\begin{frame}{\textsc{Base runs}}
+
+  \tabla{tabla_resultados}
+
+  \vspace{2mm}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        \scriptsize BERT leads SST-2 by 1.04 points and Yelp by 0.46. On AG
+        News DistilBERT is ahead by 0.09, which is seven test items out of
+        7{,}600. We call that a tie.
+      \end{ExampleBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{ReminderBox}
+        \scriptsize DistilBERT scores 91.28\% on SST-2. Sanh et al.\ report
+        91.3, so our splits and recipe reproduce the published number.
+      \end{ReminderBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{\textsc{Size, accuracy and latency}}
+
+  \begin{columns}[c]
+    \begin{column}{0.55\linewidth}
+      \includegraphics[width=\linewidth]{burbujas_params_acc.pdf}
+    \end{column}
+    \begin{column}{0.42\linewidth}
+      \small DistilBERT sits 42.5\,M parameters to the left of BERT, with
+      bubbles half the size. The vertical distance inside each pair is what
+      the smaller model costs in accuracy.
+
+      \vspace{3mm}
+      \begin{ExampleBox}
+        \scriptsize With 61\% of the parameters, DistilBERT keeps 98.9\% of
+        BERT's accuracy on SST-2 and 99.5\% on Yelp. On AG News it keeps
+        all of it.
+      \end{ExampleBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ===========================================================================
+\section{\textsc{Efficiency}}
+
+\begin{frame}{\textsc{Controlled latency benchmark}}
+
+  \begin{center}
+    \includegraphics[width=\linewidth]{benchmark_eficiencia.pdf}
+  \end{center}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        \scriptsize DistilBERT wins all nine grid points, by 1.86$\times$ to
+        2.15$\times$. At batch 32 and 64 tokens it handles 2{,}535 samples per
+        second against 1{,}282. Its peak memory is 62\% of BERT's at batch 1
+        and 77\% at batch 32 with 256 tokens.
+      \end{ExampleBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{ChallengeBox}
+        \scriptsize The timings logged after each run put BERT ahead on SST-2
+        (3.16 against 3.50\,ms). Twice the layers can't be faster. We threw
+        those out and timed both models again in one process, in fp32, with
+        20 warm-up passes and 50 synchronized ones.
+      \end{ChallengeBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ===========================================================================
+\section{\textsc{Ablation}}
+
+\begin{frame}{\textsc{Six classifier heads on DistilBERT}}
+
+  \begin{columns}[T]
+    \begin{column}{0.46\linewidth}
+      \vspace{2mm}
+      \includegraphics[width=\linewidth]{ablation.pdf}
+    \end{column}
+    \begin{column}{0.5\linewidth}
+      \scriptsize Every head reads the \texttt{[CLS]} state. Width goes from
+      128 to 2048, depth from zero to two hidden layers, and one run freezes
+      the encoder.
+
+      \vspace{2mm}
+      \begin{ExampleBox}
+        \scriptsize With a trainable encoder the five heads land between 95.03
+        and 95.16 mean validation F1. Their order changes from dataset to
+        dataset.
+      \end{ExampleBox}
+      \begin{ProblemBox}
+        \scriptsize Freezing drops the mean to 88.87. With the same head it
+        loses 9.1 points on SST-2, 5.9 on Yelp and 3.4 on AG News.
+      \end{ProblemBox}
+      \begin{ProposalBox}
+        \scriptsize The linear head wins on the mean. It is also the smallest
+        and trains fastest.
+      \end{ProposalBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{\textsc{The linear head on both models}}
+
+  \tabla{tabla_mejor_config}
+
+  \vspace{2mm}
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{ExampleBox}
+        \scriptsize BERT takes all three datasets: 1.95 points on SST-2, 0.43
+        on Yelp and 0.11 on AG News.
+      \end{ExampleBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{CommentBox}
+        \scriptsize Without its $\tanh$ pooler, BERT climbs to 92.89 on SST-2
+        from 92.32. DistilBERT slips from 91.28 to 90.94, so the gap opens
+        from both ends.
+      \end{CommentBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+% ===========================================================================
+\section{\textsc{Takeaways}}
+
+\begin{frame}{\textsc{Why the numbers look like this}}
+
+  \begin{columns}[T]
+    \begin{column}{0.48\linewidth}
+      \begin{DefinitionBox}
+        \scriptsize\textbf{Task.} AG News labels hang on words like
+        \emph{earnings} or \emph{playoffs}, and six layers already see them.
+        Both models trip on the same stories. BERT sends 140 Business items to
+        Sci/Tech and 90 back, DistilBERT 140 and 92. SST-2 sentences turn on
+        negation and contrast, where depth pays.
+      \end{DefinitionBox}
+      \begin{DefinitionBox}
+        \scriptsize\textbf{Head.} Fine-tuning bends the \texttt{[CLS]} vector
+        until one linear layer separates the classes.
+      \end{DefinitionBox}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+      \begin{DefinitionBox}
+        \scriptsize\textbf{Latency.} At batch 1, BERT barely moves with length
+        (5.56, 5.61 and 5.11\,ms). The GPU waits on kernel launches, and
+        DistilBERT has half as many. From batch 8 up, time grows with input
+        length and DistilBERT does half the arithmetic.
+      \end{DefinitionBox}
+      \begin{CommentBox}
+        \scriptsize Memory closes in as the batch grows. Activations add about
+        the same amount to both models.
+      \end{CommentBox}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{\textsc{Conclusion}}
+
+  \begin{itemize}\small
+    \item DistilBERT is our default for these tasks. It keeps 98.9\% to 100\%
+      of BERT's accuracy with 61\% of the parameters, two thirds of the memory
+      and half the latency.
+    \item BERT's margin has a price. On AG News, 0.11 points will rarely
+      justify doubling the inference bill. On SST-2, 1.95 might.
+    \item One linear layer on \texttt{[CLS]} is enough. Freezing the encoder
+      is the choice that hurts.
+  \end{itemize}
+
+  \vspace{3mm}
+  \begin{ProblemBox}
+    \scriptsize\textbf{Limitations.} Every run used seed 42, so we have no
+    intervals and gaps of a few tenths count as ties. SST-2 has 872 test
+    sentences, and 1.04 points is nine of them. Two epochs is the low end of
+    what BERT's authors recommend.
+  \end{ProblemBox}
+
+\end{frame}
+
+\begin{frame}[plain]
+  \centering\vfill
+  {\Huge\textsc{Thank you}}\\[6mm]
+  {\large Questions?}
+  \vfill
+\end{frame}
+
+\end{document}
