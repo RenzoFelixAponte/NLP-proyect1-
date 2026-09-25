@@ -1,0 +1,21 @@
+\section{Introduction}
+
+BERT \citep{devlin2019bert} made pre-training followed by fine-tuning the
+default recipe for text classification. Its cost shows up at inference, where
+a deployed model spends most of its life and every request crosses 12
+transformer layers. DistilBERT \citep{sanh2019distilbert} halves the depth
+through knowledge distillation and reports 97\% of BERT's GLUE score.
+
+We set one rule for this project: the model is the only thing allowed to
+differ between two columns of any table, so both networks share the training
+loop, splits and seed. The rule broke once, for latency. The per-run timing logged after each
+fine-tuning claimed that BERT answered faster than DistilBERT on SST-2
+(3.16 against 3.50\,ms), which a network with twice the layers cannot do. We
+threw those numbers away and measured both models again on a fixed grid
+(Section~\ref{sec:efficiency}).
+
+We fine-tune both models on SST-2 \citep{socher2013sst,wang2019glue},
+AG News and Yelp Polarity \citep{zhang2015character} and report accuracy,
+macro precision, recall and F1, along with parameters, latency and GPU
+memory. An ablation on DistilBERT varies the classifier head and freezes the
+encoder, and the best configuration is re-run on BERT with every metric.

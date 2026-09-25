@@ -1,0 +1,9 @@
+\section{Conclusion}
+
+DistilBERT is the sensible default for these tasks: 98.9\% to 99.5\% of
+BERT's accuracy with 61\% of the parameters, two thirds of the memory and half
+the latency. BERT's margin is what a team has to price. On AG News, 0.11
+points will rarely justify doubling the inference bill. On SST-2, 1.95 points
+might. For either model the classifier can stay a single linear layer on
+\texttt{[CLS]}, which matched the 2048-unit and two-layer heads within 0.13
+points.

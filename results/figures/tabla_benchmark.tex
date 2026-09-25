@@ -1,0 +1,19 @@
+\begin{tabular}{llcccccc}
+\toprule
+\rowcolor{cabecera} &  & \multicolumn{3}{c}{\textbf{Latency (ms)}} & \multicolumn{3}{c}{\textbf{Peak memory (MB)}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+\rowcolor{cabecera}\textbf{Batch} & \textbf{Length} & \textbf{BERT} & \textbf{DistilBERT} & \textbf{Speedup} & \textbf{BERT} & \textbf{DistilBERT} & \textbf{Ratio} \\
+\midrule
+1 & 64 & 5.56 & 2.60 & 2.14$\times$ & 430 & 269 & 0.62$\times$ \\
+1 & 128 & 5.61 & 2.61 & 2.15$\times$ & 433 & 272 & 0.63$\times$ \\
+1 & 256 & 5.11 & 2.74 & 1.86$\times$ & 436 & 275 & 0.63$\times$ \\
+\midrule
+8 & 64 & 7.72 & 4.01 & 1.93$\times$ & 446 & 285 & 0.64$\times$ \\
+8 & 128 & 13.62 & 6.95 & 1.96$\times$ & 462 & 300 & 0.65$\times$ \\
+8 & 256 & 26.59 & 13.39 & 1.99$\times$ & 494 & 333 & 0.67$\times$ \\
+\midrule
+32 & 64 & 24.97 & 12.62 & 1.98$\times$ & 494 & 333 & 0.67$\times$ \\
+32 & 128 & 49.85 & 25.10 & 1.99$\times$ & 560 & 399 & 0.71$\times$ \\
+32 & 256 & 98.10 & 49.25 & 1.99$\times$ & 692 & 531 & 0.77$\times$ \\
+\bottomrule
+\end{tabular}

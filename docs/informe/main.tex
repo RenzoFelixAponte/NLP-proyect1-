@@ -1,94 +1,87 @@
 % ---------------------------------------------------------------------------
-% Informe del Proyecto 1 -- Curso de NLP
-% DistilBERT vs BERT en clasificacion de texto
+% Project 1 report, NLP course. DistilBERT vs BERT for text classification.
+% Template: NeurIPS 2025 (neurips_2025.sty, copied from Styles/).
 %
-% Compilar:  make            (usa tectonic)
-%            tectonic -X compile main.tex
+% Build:  make            (uses tectonic)
+%         tectonic -X compile main.tex
 %
-% Las figuras NO se copian aqui: se leen de ../../results/figures/, que es
-% donde las escribe `python -m src.plots`. Asi el informe nunca muestra una
-% version vieja de una figura que ya se regenero.
+% Figures and tables are NOT copied here. They are read from
+% ../../results/figures/, where `python -m src.plots` writes them: the PDF
+% figures and the tabla_*.tex tabulars. The report cannot drift from the
+% pipeline, and no number in it was typed by hand.
 % ---------------------------------------------------------------------------
-\documentclass[11pt,a4paper]{article}
+\documentclass{article}
 
-\usepackage[T1]{fontenc}
+% preprint: no line numbers and no anonymisation. The footer text is replaced
+% below, since this is a course report and was never submitted to NeurIPS.
+\usepackage[preprint]{neurips_2025}
+
 \usepackage[utf8]{inputenc}
-\usepackage[spanish,es-noquoting,es-tabla]{babel}
-\usepackage[margin=2.5cm]{geometry}
-\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
 \usepackage{booktabs}
-\usepackage{siunitx}
+\usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{xcolor}
-\usepackage{enumitem}
-\usepackage{listings}
-\usepackage[hidelinks]{hyperref}
 
-% Las figuras vienen del pipeline; el segundo camino permite distribuir la
-% carpeta del informe por separado copiando las figuras dentro.
+\makeatletter
+\renewcommand{\@noticestring}{Course project report, Natural Language
+Processing, UTEC, 2026.}
+\makeatother
+
 \graphicspath{{../../results/figures/}{figuras/}}
 
-% babel-spanish reconfigura siunitx al cargarse, asi que un \sisetup en el
-% preambulo se pierde: con el separador por defecto, 109483778 salia como
-% "109,483,778" con la misma coma que el separador decimal ("0,9232"), y
-% ademas \num{0.9232} se agrupaba como "0,923,2". Aplicado al inicio del
-% documento, la configuracion es la ultima en ejecutarse y gana.
-\AtBeginDocument{\sisetup{
-  output-decimal-marker = {,},
-  group-separator       = {\,},   % espacio fino: no se confunde con la coma
-  group-digits          = integer, % nunca agrupar la parte decimal
-  group-minimum-digits  = 4,
-  detect-weight         = true,
-}}
+% Table style taken from the reference paper (ChangeTitans, IEEE TGRS 2025):
+% shaded header, lilac row for the selected configuration.
+\definecolor{cabecera}{HTML}{DCDCEF}
+\definecolor{lila}{HTML}{E6E1F5}
+\definecolor{linkblue}{HTML}{1F5F8B}
+\hypersetup{colorlinks=true, linkcolor=linkblue, citecolor=linkblue,
+            urlcolor=linkblue}
+\captionsetup{font=small, labelfont=bf, skip=4pt}
+\captionsetup[table]{position=top}
+% Seven floats in four pages: tighter spacing around them instead of cutting
+% content. Margins and font sizes stay as the template sets them.
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setcounter{topnumber}{3}
+\renewcommand{\topfraction}{0.8}
 
-% Los identificadores largos en \texttt (ClasificadorConCabeza,
-% AutoModelForSequenceClassification) no se pueden partir, y en un parrafo
-% justificado desbordan el margen. emergencystretch deja a TeX estirar los
-% espacios de esas lineas en lugar de salirse.
-\setlength{\emergencystretch}{3em}
+% Generated tabulars can be wider than the text block; shrink them to fit.
+\usepackage{adjustbox}
+% The second path is the copy that `make standalone` leaves in figuras/.
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth}%
+  \InputIfFileExists{../../results/figures/#1.tex}{}{\input{figuras/#1.tex}}%
+\end{adjustbox}}
 
-\captionsetup{font=small, labelfont=bf, width=0.92\textwidth}
-\setlist[itemize]{itemsep=2pt, topsep=4pt}
-\setlist[enumerate]{itemsep=2pt, topsep=4pt}
+\title{How Much of BERT Does Text Classification Need?\\
+A Controlled Comparison with DistilBERT}
 
-\definecolor{codebg}{HTML}{F4F4F1}
-\lstset{
-  basicstyle=\ttfamily\footnotesize,
-  backgroundcolor=\color{codebg},
-  frame=none, breaklines=true, columns=fullflexible, keepspaces=true,
-  xleftmargin=8pt, framexleftmargin=8pt, aboveskip=8pt, belowskip=8pt,
-  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1,
+\author{%
+  Jose Huamani, Renzo Felix, Diego Quispe \\
+  Universidad de Ingenier\'ia y Tecnolog\'ia (UTEC), Lima, Peru \\
+  \texttt{\{jose.huamani, renzo.felix, diego.quispe.ap\}@utec.edu.pe}
 }
-
-\newcommand{\best}[1]{\textbf{#1}}
-
-\title{\vspace{-1.5cm}\textbf{DistilBERT frente a BERT en clasificación de texto}\\[2pt]
-       \large Desempeño, eficiencia y un estudio de ablación sobre tres datasets}
-\author{Proyecto 1 --- Curso de Procesamiento de Lenguaje Natural}
-\date{}
 
 \begin{document}
 \maketitle
 
-\input{secciones/00-resumen}
+\input{secciones/00-abstract}
+\input{secciones/01-introduction}
+\input{secciones/02-approach}
+\input{secciones/03-experiments}
+\input{secciones/04-analysis}
+\input{secciones/05-conclusion}
 
-{\small\tableofcontents}
-\vspace{0.6cm}
-\input{secciones/01-introduccion}
-\input{secciones/02-datos}
-\input{secciones/03-metodologia}
-\input{secciones/04-resultados}
-\input{secciones/05-ablation}
-\input{secciones/06-eficiencia}
-\input{secciones/07-discusion}
-\input{secciones/08-conclusiones}
-
-\bibliographystyle{plain}
+{\small
+\bibliographystyle{plainnat}
 \bibliography{referencias}
-
-\appendix
-\input{secciones/A-reproducibilidad}
+}
 
 \end{document}

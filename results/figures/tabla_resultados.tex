@@ -1,0 +1,16 @@
+\begin{tabular}{llcccccccc}
+\toprule
+\rowcolor{cabecera} &  & \multicolumn{4}{c}{\textbf{Test (\%)}} & \multicolumn{4}{c}{\textbf{Efficiency}} \\
+\cmidrule(lr){3-6}\cmidrule(lr){7-10}
+\rowcolor{cabecera}\textbf{Dataset} & \textbf{Model} & \textbf{Acc} & \textbf{Prec} & \textbf{Rec} & \textbf{F1} & \textbf{Params (M)} & \textbf{Latency (ms)} & \textbf{Memory (MB)} & \textbf{Train (min)} \\
+\midrule
+SST-2 & BERT & \textbf{92.32} & \textbf{92.32} & \textbf{92.31} & \textbf{92.31} & 109.5 & 5.56 & 430 & 4.2 \\
+SST-2 & DistilBERT & 91.28 & 91.34 & 91.25 & 91.27 & \textbf{67.0} & \textbf{2.60} & \textbf{269} & \textbf{2.7} \\
+\midrule
+AG News & BERT & 94.41 & 94.43 & 94.41 & 94.41 & 109.5 & 5.61 & 433 & 9.1 \\
+AG News & DistilBERT & \textbf{94.50} & \textbf{94.52} & \textbf{94.50} & \textbf{94.50} & \textbf{67.0} & \textbf{2.61} & \textbf{272} & \textbf{5.5} \\
+\midrule
+Yelp & BERT & \textbf{96.52} & \textbf{96.52} & \textbf{96.52} & \textbf{96.52} & 109.5 & 5.11 & 436 & 16.0 \\
+Yelp & DistilBERT & 96.06 & 96.06 & 96.06 & 96.06 & \textbf{67.0} & \textbf{2.74} & \textbf{275} & \textbf{8.2} \\
+\bottomrule
+\end{tabular}

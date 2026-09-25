@@ -162,6 +162,26 @@ def ultimo_benchmark(metrics_dir=METRICS_DIR):
     return json.loads(archivos[-1].read_text(encoding="utf-8"))
 
 
+def medicion_benchmark(benchmark, modelo, seq_len, batch_size=1):
+    """
+    El punto de la rejilla del benchmark para (modelo, longitud, batch), o None.
+
+    Las figuras y tablas que cruzan desempeno con eficiencia toman de aqui la
+    latencia y la memoria, con la longitud de secuencia de cada dataset. Los
+    campos de eficiencia que guarda cada corrida no sirven para eso: se miden
+    en procesos distintos y justo despues de entrenar (ver src/benchmark.py).
+    """
+    if not benchmark:
+        return None
+    for mod in benchmark.get("modelos", []):
+        if mod.get("modelo") != modelo:
+            continue
+        for m in mod.get("mediciones", []):
+            if m["seq_len"] == seq_len and m["batch_size"] == batch_size:
+                return m
+    return None
+
+
 if __name__ == "__main__":
     import argparse
 

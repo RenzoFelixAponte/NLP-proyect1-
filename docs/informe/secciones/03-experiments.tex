@@ -1,0 +1,112 @@
+\section{Experiments}
+\label{sec:experiments}
+
+The study has 24 runs: six base runs, 18 ablation runs on DistilBERT and
+three runs of the winning configuration on BERT, all on one RTX A6000.
+
+\subsection{Performance}
+
+\begin{table}[t]
+\centering
+\caption{Base runs with each library's default head. Test metrics in \%.
+Precision, recall and F1 are macro averages. Latency and memory come from the
+controlled benchmark at batch 1 and the dataset's input length. Bold marks the
+better model per dataset.}
+\label{tab:results}
+\small\setlength{\tabcolsep}{3.6pt}
+\tabla{tabla_resultados}
+\end{table}
+
+Table~\ref{tab:results} holds the six base runs. BERT wins on SST-2 by 1.04
+accuracy points and on Yelp by 0.46. On AG News the sign flips to
+DistilBERT by 0.09 points, which is seven test items out of 7{,}600. We read
+that as a tie. DistilBERT's 91.28\% on SST-2 matches the 91.3 reported by
+\citet{sanh2019distilbert}, a sign that the splits leak nothing and the recipe
+is sound.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{curvas_todas.pdf}
+\caption{Training loss (logged every 100 steps) and validation loss (every
+500 steps) against optimizer iterations for the six base runs.}
+\label{fig:curves}
+\end{figure}
+
+In Figure~\ref{fig:curves} both models trace almost the same loss path. On
+SST-2, training loss keeps falling in the second epoch while validation loss
+stalls near 0.17, which is why we select checkpoints on validation F1.
+
+\subsection{Efficiency}
+\label{sec:efficiency}
+
+\begin{figure}[t]
+\centering
+\begin{minipage}[t]{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{burbujas_params_acc.pdf}
+  \caption{Parameters against test accuracy. Bubble area is latency at
+  batch 1 and the dataset's input length.}
+  \label{fig:bubbles}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{ablation.pdf}
+  \caption{Validation F1 of the six DistilBERT configurations. The lilac row
+  is the selected one. The right column is the mean over datasets.}
+  \label{fig:ablation}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{benchmark_eficiencia.pdf}
+\caption{Controlled benchmark (RTX A6000, fp32, one process). Three latency
+panels, one per batch size, with the mean speed-up of DistilBERT written in
+each. The last panel shows peak GPU memory at batch 1 and batch 32.}
+\label{fig:benchmark}
+\end{figure}
+
+Figure~\ref{fig:bubbles} puts size, accuracy and latency in one picture. The
+DistilBERT column sits 42.5\,M parameters to the left of BERT with bubbles
+half as large, and the vertical distance between each pair is the accuracy
+price. On the controlled grid (Figure~\ref{fig:benchmark}) DistilBERT is
+faster at all nine points, by $1.86\times$ to $2.15\times$. At batch 32 and
+64 tokens it processes 2{,}535 samples per second against 1{,}282, and its peak
+memory is 62\% of BERT's at batch 1 and 77\% at batch 32 with 256 tokens.
+Training the three datasets took 16.4 minutes against 29.3.
+
+\subsection{Ablation study}
+
+\begin{table}[t]
+\centering
+\caption{Ablation on DistilBERT. Validation F1 in \%. The lilac row is the
+selected configuration (highest mean), and bold marks the best value per column.
+Time is the sum over the three datasets.}
+\label{tab:ablation}
+\small\setlength{\tabcolsep}{3.6pt}
+\tabla{tabla_ablation}
+\end{table}
+
+Table~\ref{tab:ablation} and Figure~\ref{fig:ablation} cover the six
+configurations. The five heads with a trainable encoder span 95.03 to 95.16
+mean validation F1, and their order is unstable across datasets
+(\texttt{h768} is the best on SST-2 and the worst on average). The frozen
+encoder drops to 88.87. Against \texttt{h768}, which has the same head, it
+loses 9.1 points on SST-2, 5.9 on Yelp and 3.4 on AG News, in exchange for
+training 0.6\,M parameters in 6.0 minutes. The linear head wins on the mean,
+and it is also the smallest and fastest to train.
+
+\subsection{Best configuration on BERT}
+
+\begin{table}[t]
+\centering
+\caption{Linear head (\texttt{lineal}) on both models, same recipe. Test
+metrics and validation F1 in \%, efficiency as in Table~\ref{tab:results}.
+Bold marks the better model per dataset.}
+\label{tab:best}
+\small\setlength{\tabcolsep}{3.6pt}
+\tabla{tabla_mejor_config}
+\end{table}
+
+With the linear head (Table~\ref{tab:best}) BERT wins all three datasets,
+by 1.95 points on SST-2, 0.43 on Yelp and 0.11 on AG News.
