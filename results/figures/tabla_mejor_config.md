@@ -1,10 +1,10 @@
-Configuracion `lineal`, misma receta en los dos modelos.
+Configuracion `lineal` (linear) en los dos modelos, misma receta. En negrita, el mejor de cada dataset.
 
-| Dataset | Modelo | Acc | P | R | F1 | F1 val | Params (M) | Train (min) |
-|---|---|---|---|---|---|---|---|---|
-| SST-2 | BERT-base | 0.9289 | 0.9294 | 0.9286 | 0.9288 | 0.9541 | 109.5 | 4.2 |
-| SST-2 | DistilBERT-base | 0.9094 | 0.9099 | 0.9091 | 0.9093 | 0.9483 | 66.4 | 1.7 |
-| AG News | BERT-base | 0.9453 | 0.9456 | 0.9453 | 0.9453 | 0.9481 | 109.5 | 9.0 |
-| AG News | DistilBERT-base | 0.9442 | 0.9443 | 0.9442 | 0.9442 | 0.9462 | 66.4 | 5.4 |
-| Yelp | BERT-base | 0.9653 | 0.9653 | 0.9653 | 0.9653 | 0.9661 | 109.5 | 16.0 |
-| Yelp | DistilBERT-base | 0.9610 | 0.9610 | 0.9610 | 0.9610 | 0.9603 | 66.4 | 8.2 |
+| Dataset | Model | Performance (%): Acc | Performance (%): Prec | Performance (%): Rec | Performance (%): F1 | Performance (%): Val F1 | Efficiency: Params (M) | Efficiency: Latency (ms) | Efficiency: Memory (MB) | Efficiency: Train (min) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SST-2 | BERT | **92.89** | **92.94** | **92.86** | **92.88** | **95.41** | 109.5 | 5.56 | 430 | 4.2 |
+| SST-2 | DistilBERT | 90.94 | 90.99 | 90.91 | 90.93 | 94.83 | **66.4** | **2.60** | **269** | **1.7** |
+| AG News | BERT | **94.53** | **94.56** | **94.53** | **94.53** | **94.81** | 109.5 | 5.61 | 433 | 9.0 |
+| AG News | DistilBERT | 94.42 | 94.43 | 94.42 | 94.42 | 94.62 | **66.4** | **2.61** | **272** | **5.4** |
+| Yelp | BERT | **96.53** | **96.53** | **96.53** | **96.53** | **96.61** | 109.5 | 5.11 | 436 | 16.0 |
+| Yelp | DistilBERT | 96.10 | 96.10 | 96.10 | 96.10 | 96.03 | **66.4** | **2.74** | **275** | **8.2** |

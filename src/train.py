@@ -34,6 +34,7 @@ from pathlib import Path
 
 import numpy as np
 
+from src.paths import RESULTS_DIR
 from src.models import (
     build_model,
     build_ablation_model,
@@ -183,9 +184,12 @@ def main():
     parser.add_argument("--freeze-layers", type=int, default=0,
                         help="Congelar embeddings + las primeras N capas")
     parser.add_argument("--tag", default=None,
-                        help="Etiqueta para distinguir corridas "
-                             "(ej. 'smoke', 'final', '3epocas')")
-    parser.add_argument("--out", default="results")
+                        help="Etiqueta de la corrida. Convencion: 'base' para "
+                             "las del informe, 'abl-<config>' para el ablation, "
+                             "'smoke' para pruebas y 'pilot' para exploratorias. "
+                             "Las dos ultimas quedan fuera de las figuras")
+    parser.add_argument("--out", default=str(RESULTS_DIR),
+                        help="Raiz de salida (por defecto results/ del repo)")
     args = parser.parse_args()
 
     set_seed()

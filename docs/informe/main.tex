@@ -1,0 +1,87 @@
+% ---------------------------------------------------------------------------
+% Project 1 report, NLP course. DistilBERT vs BERT for text classification.
+% Template: NeurIPS 2025 (neurips_2025.sty, copied from Styles/).
+%
+% Build:  make            (uses tectonic)
+%         tectonic -X compile main.tex
+%
+% Figures and tables are NOT copied here. They are read from
+% ../../results/figures/, where `python -m src.plots` writes them: the PDF
+% figures and the tabla_*.tex tabulars. The report cannot drift from the
+% pipeline, and no number in it was typed by hand.
+% ---------------------------------------------------------------------------
+\documentclass{article}
+
+% preprint: no line numbers and no anonymisation. The footer text is replaced
+% below, since this is a course report and was never submitted to NeurIPS.
+\usepackage[preprint]{neurips_2025}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\makeatletter
+\renewcommand{\@noticestring}{Course project report, Natural Language
+Processing, UTEC, 2026.}
+\makeatother
+
+\graphicspath{{../../results/figures/}{figuras/}}
+
+% Table style taken from the reference paper (ChangeTitans, IEEE TGRS 2025):
+% shaded header, lilac row for the selected configuration.
+\definecolor{cabecera}{HTML}{DCDCEF}
+\definecolor{lila}{HTML}{E6E1F5}
+\definecolor{linkblue}{HTML}{1F5F8B}
+\hypersetup{colorlinks=true, linkcolor=linkblue, citecolor=linkblue,
+            urlcolor=linkblue}
+\captionsetup{font=small, labelfont=bf, skip=4pt}
+\captionsetup[table]{position=top}
+% Seven floats in four pages: tighter spacing around them instead of cutting
+% content. Margins and font sizes stay as the template sets them.
+\setlength{\textfloatsep}{9pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setcounter{topnumber}{3}
+\renewcommand{\topfraction}{0.8}
+
+% Generated tabulars can be wider than the text block; shrink them to fit.
+\usepackage{adjustbox}
+% The second path is the copy that `make standalone` leaves in figuras/.
+\newcommand{\tabla}[1]{\begin{adjustbox}{max width=\linewidth}%
+  \InputIfFileExists{../../results/figures/#1.tex}{}{\input{figuras/#1.tex}}%
+\end{adjustbox}}
+
+\title{How Much of BERT Does Text Classification Need?\\
+A Controlled Comparison with DistilBERT}
+
+\author{%
+  Jose Huamani, Renzo Felix, Diego Quispe \\
+  Universidad de Ingenier\'ia y Tecnolog\'ia (UTEC), Lima, Peru \\
+  \texttt{\{jose.huamani, renzo.felix, diego.quispe.ap\}@utec.edu.pe}
+}
+
+\begin{document}
+\maketitle
+
+\input{secciones/00-abstract}
+\input{secciones/01-introduction}
+\input{secciones/02-approach}
+\input{secciones/03-experiments}
+\input{secciones/04-analysis}
+\input{secciones/05-conclusion}
+
+{\small
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+}
+
+\end{document}

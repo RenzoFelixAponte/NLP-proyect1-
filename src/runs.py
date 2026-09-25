@@ -9,18 +9,23 @@ Nada se sobrescribe, asi que con el tiempo se acumulan varias corridas del
 mismo modelo y tarea. Este modulo sirve para elegir cual usar: normalmente
 la mas reciente, o la de una etiqueta concreta.
 
+Aqui vive TODA la logica de "que corrida usar": cargarlas, filtrarlas, y
+elegir la que representa a cada (modelo, tarea) en el informe. `src/plots.py`
+y `src/tables.py` solo dibujan lo que este modulo les entrega -- antes cada
+uno repetia su propio filtro y podian discrepar.
+
 Uso:
     python -m src.runs                    # listar todas
     python -m src.runs --tag final        # solo las etiquetadas 'final'
 
-    from src.runs import latest, load_all
+    from src.runs import latest, load_all, corridas_finales
     corrida = latest("bert", "sst2")
 """
 
 import json
 from pathlib import Path
 
-METRICS_DIR = Path("results/metrics")
+from src.paths import METRICS_DIR
 
 
 def load_all(metrics_dir=METRICS_DIR):
@@ -93,6 +98,88 @@ def resumen(corridas):
               f"{c.get('n_train', 0):>8,} "
               f"{d.get('accuracy', float('nan')):>7.4f} "
               f"{d.get('f1', float('nan')):>7.4f}")
+
+
+# ---------------------------------------------------------------------------
+# Seleccion de corridas para el informe
+# ---------------------------------------------------------------------------
+# Corridas que NO representan un experimento del informe y que hay que apartar
+# de las figuras salvo que se pidan a proposito:
+#   smoke  pruebas rapidas para ver que el pipeline arranca
+#   pilot  corridas exploratorias con el train submuestreado
+TAGS_DESCARTADOS = ("smoke", "pilot")
+
+
+def corridas_finales(tag=None, excluir_tags=TAGS_DESCARTADOS,
+                     incluir_ablation=False):
+    """
+    Una corrida por (modelo, tarea): la mas reciente que cumpla los filtros.
+
+    Se descartan dos cosas: las corridas que no son del informe (ver
+    TAGS_DESCARTADOS) y, salvo que se pida lo contrario, las del ablation
+    ('abl-...'). Sin este filtro las figuras de la comparacion BERT vs
+    DistilBERT acabarian mostrando la ultima configuracion del ablation, que
+    es mas reciente, en vez de la corrida base.
+    """
+    todas = [c for c in load_all() if c.get("tag") not in excluir_tags]
+    if not incluir_ablation:
+        todas = [c for c in todas
+                 if not str(c.get("tag") or "").startswith("abl-")]
+    if tag:
+        todas = filtrar(todas, tag=tag)
+
+    elegidas = {}
+    for c in todas:                      # load_all() ordena de nuevo a viejo
+        elegidas.setdefault((c.get("modelo"), c.get("tarea")), c)
+    return elegidas
+
+
+def corridas_ablation(metrics_dir=METRICS_DIR):
+    """
+    Corridas del ablation, indexadas por (modelo, tarea, config).
+
+    La config sale de la etiqueta: 'abl-h768' -> 'h768'.
+    """
+    salida = {}
+    for c in load_all(metrics_dir):
+        tag = str(c.get("tag") or "")
+        if not tag.startswith("abl-"):
+            continue
+        salida.setdefault((c["modelo"], c["tarea"], tag[4:]), c)
+    return salida
+
+
+def ultimo_benchmark(metrics_dir=METRICS_DIR):
+    """
+    El JSON de `src/benchmark.py` mas reciente, o None si no hay ninguno.
+
+    No pasa por load_all(): los benchmarks no son corridas de entrenamiento
+    y ese cargador los descarta a proposito.
+    """
+    archivos = sorted(Path(metrics_dir).glob("benchmark_*.json"))
+    if not archivos:
+        return None
+    return json.loads(archivos[-1].read_text(encoding="utf-8"))
+
+
+def medicion_benchmark(benchmark, modelo, seq_len, batch_size=1):
+    """
+    El punto de la rejilla del benchmark para (modelo, longitud, batch), o None.
+
+    Las figuras y tablas que cruzan desempeno con eficiencia toman de aqui la
+    latencia y la memoria, con la longitud de secuencia de cada dataset. Los
+    campos de eficiencia que guarda cada corrida no sirven para eso: se miden
+    en procesos distintos y justo despues de entrenar (ver src/benchmark.py).
+    """
+    if not benchmark:
+        return None
+    for mod in benchmark.get("modelos", []):
+        if mod.get("modelo") != modelo:
+            continue
+        for m in mod.get("mediciones", []):
+            if m["seq_len"] == seq_len and m["batch_size"] == batch_size:
+                return m
+    return None
 
 
 if __name__ == "__main__":

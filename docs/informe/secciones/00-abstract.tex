@@ -1,0 +1,14 @@
+\begin{abstract}
+DistilBERT promises most of BERT's accuracy at about half the inference cost,
+and we test that claim on SST-2, AG News and Yelp Polarity with one recipe
+shared by both models.
+With 61\% of BERT's parameters, DistilBERT keeps 98.9\% to 99.5\% of its test
+accuracy. The gap depends on the task. It reaches 1.04 points on SST-2 and
+disappears on AG News. On a controlled grid of nine batch and length settings,
+DistilBERT is 1.86 to 2.15 times faster and needs 23\% to 38\% less GPU
+memory. An ablation of six classifier configurations on DistilBERT finds that
+head width and depth barely matter, since five heads with a trainable encoder
+land within 0.13 points of mean validation F1, while freezing the encoder
+costs 3.4 to 9.1 points. Moved to BERT, the winning linear head widens the
+SST-2 gap to 1.95 points and leaves AG News at 0.11.
+\end{abstract}

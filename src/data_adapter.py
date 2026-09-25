@@ -13,12 +13,19 @@ Asi el codigo de fine-tuning no cambia: solo se cambia el nombre de la tarea.
     ds, info = load_task("sst2")
     ds, info = load_task("ag_news")
     ds, info = load_task("yelp", subsample={"train": 50_000, "test": 10_000})
+
+Para inspeccionar un dataset desde la terminal (como modulo, no como archivo
+suelto, porque importa src.paths):
+
+    python -m src.data_adapter sst2
 """
 
 from dataclasses import dataclass
 from typing import Optional
 
 from datasets import load_dataset, DatasetDict
+
+from src.paths import RAW_DIR
 
 SEED = 42
 # Fraccion de "train" que se aparta como validacion cuando el dataset
@@ -101,7 +108,7 @@ def list_tasks():
 
 def load_task(task_name: str,
               subsample: Optional[dict] = None,
-              cache_dir: str = "data/raw",
+              cache_dir=None,
               seed: int = SEED):
     """
     Carga una tarea y la normaliza a columnas "text" / "label".
@@ -111,7 +118,8 @@ def load_task(task_name: str,
         subsample: dict opcional {"train": n, "validation": n, "test": n} para
                    quedarse con n ejemplos de ese split (muestreo aleatorio
                    con semilla fija, para que sea reproducible).
-        cache_dir: donde HuggingFace guarda los archivos descargados.
+        cache_dir: donde HuggingFace guarda los archivos descargados. Por
+                   defecto, data/raw/ en la raiz del repo.
         seed:      semilla para el split de validacion y el subsampling.
 
     Returns:
@@ -123,7 +131,8 @@ def load_task(task_name: str,
         )
 
     info = REGISTRY[task_name]
-    raw = load_dataset(info.hf_id, info.hf_config, cache_dir=cache_dir)
+    raw = load_dataset(info.hf_id, info.hf_config,
+                       cache_dir=str(cache_dir or RAW_DIR))
 
     # --- 1. Decidir que split original hace de test -----------------------
     if task_name == "sst2":

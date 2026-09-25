@@ -1,0 +1,43 @@
+\section{Approach}
+\label{sec:approach}
+
+\paragraph{Models.} We start from the public \texttt{bert-base-uncased}
+(12 layers, 109.5\,M parameters) and \texttt{distilbert-base-uncased}
+(6 layers, 67.0\,M) checkpoints on the HuggingFace Hub. DistilBERT keeps every
+second layer, the hidden size of 768 and the vocabulary, and drops the
+token-type embeddings and the pooler. Its parameter count falls by 39\%
+instead of 50\% because the 23.4\,M-weight embedding matrix survives intact.
+
+\paragraph{Data.} A single adapter maps the three datasets to one schema
+(\texttt{text}, \texttt{label}) and three splits. GLUE ships the SST-2 test
+split without labels, so the official validation set (872 sentences) acts as
+our test set and 10\% of the training data becomes validation. AG News
+(4 classes, 7{,}600 test items) and Yelp Polarity (2 classes, 38{,}000) have
+no validation split either, and we hold out 10\% of training with a fixed
+seed. Yelp is subsampled to 100{,}000 training and 20{,}000 validation reviews
+out of 560{,}000. The subset is identical for both models. Inputs are padded
+to 64, 128 and 256 tokens for SST-2, AG News and Yelp.
+
+\paragraph{Training recipe.} AdamW with learning rate $2\times10^{-5}$ and
+weight decay 0.01 (none on biases or LayerNorm), 10\% linear warm-up and
+linear decay, 2 epochs, batch 32, fp16 mixed precision, gradients unscaled
+before clipping at norm 1.0, seed 42. We keep the checkpoint with the best
+validation macro-F1 and touch the test set once. The base runs use each
+library's default head. For BERT that is the pooler ($\tanh$) plus a linear
+layer, and for DistilBERT a \texttt{pre\_classifier} with ReLU.
+
+\paragraph{Ablation head.} The two default heads differ, so the ablation
+replaces both with one module on the \texttt{[CLS]} state: a stack of
+Linear--ReLU--Dropout(0.1) layers followed by a linear output over $C$
+classes. We vary the width (128, 768 or 2048 units), the depth (zero, one or
+two hidden layers) and freezing. A frozen encoder is also removed from the
+optimizer, so weight decay cannot touch it. Its head trains at $10^{-3}$, since a head learned from scratch
+barely moves at $2\times10^{-5}$. The configuration with the highest validation F1 averaged over the
+three datasets wins.
+
+\paragraph{Efficiency measurement.} Latency is the mean of 50 forward passes
+after 20 warm-up passes, with \texttt{torch.cuda.synchronize()} around each
+one, in fp32 on an NVIDIA RTX A6000. Both models run in the same process over
+a grid of batch sizes $\{1, 8, 32\}$ and lengths $\{64, 128, 256\}$, which
+also records peak GPU memory. Tables quote the point at batch 1
+and the dataset's input length.

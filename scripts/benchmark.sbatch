@@ -2,9 +2,15 @@
 # ---------------------------------------------------------------------------
 # Mide la eficiencia de los modelos en un nodo GPU (src/benchmark.py).
 #
-# Todo lo que se le pase se reenvia tal cual a src/train.py:
+# Todo lo que se le pase se reenvia tal cual a src/benchmark.py:
 #
-#   sbatch scripts/train.sbatch --model distilbert --task sst2 --epochs 2
+#   sbatch scripts/benchmark.sbatch
+#   sbatch scripts/benchmark.sbatch --models bert distilbert --batch-sizes 1 32
+#
+# Mide los dos modelos en la MISMA rejilla de (batch, longitud), en la misma
+# GPU y en el mismo proceso. Es lo que hace comparables los numeros: la
+# latencia que guarda cada fine-tuning se mide con la longitud de SU dataset
+# y no se puede poner en la misma tabla.
 #
 # Los nodos de computo NO tienen salida a internet: los datasets y los
 # checkpoints se descargan antes desde el nodo de login (ver README) y aqui

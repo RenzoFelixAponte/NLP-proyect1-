@@ -1,0 +1,15 @@
+\begin{tabular}{lllcccccc}
+\toprule
+\rowcolor{cabecera} &  &  & \multicolumn{4}{c}{\textbf{Validation F1 (\%)}} &  &  \\
+\cmidrule(lr){4-7}
+\rowcolor{cabecera}\textbf{Config} & \textbf{Head} & \textbf{Encoder} & \textbf{SST-2} & \textbf{AG News} & \textbf{Yelp} & \textbf{Mean} & \textbf{Trainable (M)} & \textbf{Train (min)} \\
+\midrule
+\rowcolor{lila}lineal & 768 $\to$ C & trained & 94.83 & \textbf{94.62} & 96.03 & \textbf{95.16} & 66.4 & 15.3 \\
+h128 & 768 $\to$ 128 $\to$ C & trained & 94.80 & 94.54 & 95.93 & 95.09 & 66.5 & 15.9 \\
+h768 & 768 $\to$ 768 $\to$ C & trained & \textbf{94.85} & 94.27 & 95.96 & 95.03 & 67.0 & 16.3 \\
+h2048 & 768 $\to$ 2048 $\to$ C & trained & 94.70 & 94.59 & 96.01 & 95.10 & 67.9 & 16.3 \\
+c2 & 768 $\to$ 512 $\to$ 256 $\to$ C & trained & 94.76 & 94.34 & \textbf{96.04} & 95.05 & 66.9 & 15.9 \\
+\midrule
+frz & 768 $\to$ 768 $\to$ C & frozen & 85.74 & 90.84 & 90.05 & 88.87 & \textbf{0.6} & \textbf{6.0} \\
+\bottomrule
+\end{tabular}

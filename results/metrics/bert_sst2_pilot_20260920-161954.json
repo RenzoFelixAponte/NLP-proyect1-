@@ -1,6 +1,6 @@
 {
   "timestamp": "2026-09-20 16:19:54",
-  "tag": "final",
+  "tag": "pilot",
   "modelo": "bert",
   "modelo_nombre": "BERT-base",
   "modelo_hf_id": "bert-base-uncased",
@@ -22,7 +22,7 @@
     "no_amp": false,
     "max_temp": 80,
     "cooldown": 30,
-    "tag": "final",
+    "tag": "pilot",
     "out": "results"
   },
   "n_train": 15000,
@@ -88,5 +88,6 @@
       "lr": 3.262411347517731e-06,
       "val_accuracy": 0.9144766146993318
     }
-  ]
+  ],
+  "nota": "Corrida exploratoria previa a las definitivas: 1 epoca sobre 15.000 de los 60.614 ejemplos de train. Estaba etiquetada 'final' por error. Se conserva como registro; no entra en ninguna figura ni tabla del informe."
 }

@@ -1,0 +1,27 @@
+\section{Analysis}
+\label{sec:analysis}
+
+\paragraph{Task dependence.} Topic labels in AG News hinge on
+vocabulary that six layers already capture, and the per-class errors show it.
+BERT sends 140 Business stories to Sci/Tech and 90 the other way. DistilBERT
+makes 140 and 92. The extra depth finds nothing more in those items. Short SST-2
+sentences full of negation and contrast are where the extra layers pay off.
+
+\paragraph{Head versus encoder.} Five heads, from one linear layer
+to two hidden layers, fit inside 0.13 points. Fine-tuning shapes the
+\texttt{[CLS]} vector until a linear boundary separates the classes, which
+leaves extra head layers nothing to do. The linear head
+even lifts BERT above its own base run on SST-2 (92.89 against 92.32
+accuracy), so the default $\tanh$ pooler adds nothing here.
+
+\paragraph{Latency regimes.} At batch 1 latency stays flat from 64 to 256
+tokens (BERT 5.56, 5.61 and 5.11\,ms) because the GPU is waiting on kernel
+launches. From batch 8 on, latency tracks the input length. DistilBERT wins
+both regimes, with half the kernels to launch in the first and half the
+arithmetic in the second. Its memory edge shrinks as activations outgrow the
+weights.
+
+\paragraph{Limitations.} All runs use seed 42, so gaps of a few tenths are
+ties and we cannot give intervals. Two epochs sit at the low end of what
+\citet{devlin2019bert} recommend. Yelp is subsampled for both models alike. Five base runs predate the logging of
+validation F1, hence its absence from Table~\ref{tab:results}.
